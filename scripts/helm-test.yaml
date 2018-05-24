@@ -1,0 +1,9 @@
+# Override default settings for test env
+
+server:
+  env:
+    S3_BUCKET: wordpress-template-test
+
+worker:
+  env:
+    S3_BUCKET: wordpress-template-test

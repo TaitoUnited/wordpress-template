@@ -1,0 +1,74 @@
+{
+  "name": "wordpress-template",
+  "scripts": {
+    "install-ci": "echo '# No additional dependencies need to be installed in ci mode'",
+    "install-dev": "echo '# No additional dependencies need to be installed'",
+    "taito-init:local": "npm run import-db-data",
+    "taito-init:local:clean": "echo TODO clean database && npm run import-db-data",
+    "import-db-data": "taito db-import:${taito_env} ./database/data/${taito_env}.sql",
+    "show-basic-auth": "echo Temporary basic auth username/password: TODO",
+    "info:local": "echo '* Admin user: user / bitnami'",
+    "info:dev": "npm run show-basic-auth && echo '* Admin user: user / bitnami'",
+    "info:prod": "echo '* TODO how to get an user account?'",
+    "project-contacts": "cat PROJECT.md | sed -n -e '/^## Contacts.*$/,/^#.*$/{ /^## Contacts.*$/d; /^#.*$/d; p; }'",
+    "commit": "echo 'Running commitizen locally' && git-cz",
+    "commitmsg": "echo 'NOTE: Running validate-commit-msg locally' && validate-commit-msg",
+    "release-pre:prod": "semantic-release pre",
+    "release-post:prod": "semantic-release post"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    },
+    "validate-commit-msg": {
+      "types": [
+        "wip",
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "perf",
+        "test",
+        "build",
+        "ci",
+        "chore",
+        "revert"
+      ],
+      "scope": {
+        "required": false,
+        "allowed": [
+          "*"
+        ],
+        "validate": false,
+        "multiple": false
+      },
+      "warnOnFail": false,
+      "maxSubjectLength": 100,
+      "subjectPattern": ".+",
+      "subjectPatternErrorMsg": "subject does not match subject pattern!",
+      "helpMessage": "",
+      "autoFix": false
+    }
+  },
+  "release": {
+    "getLastRelease": "last-release-git",
+    "debug": false,
+    "verifyConditions": {
+      "path": "./node_modules/semantic-release/src/lib/plugin-noop.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:TaitoUnited/wordpress-template.git"
+  },
+  "devDependencies": {
+    "commitizen": "^2.9.6",
+    "cz-conventional-changelog": "^2.1.0",
+    "husky": "^0.14.3",
+    "last-release-git": "0.0.3",
+    "npm-run-all": "^4.1.3",
+    "semantic-release": "^8.1.2",
+    "validate-commit-msg": "^2.14.0"
+  }
+}

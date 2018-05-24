@@ -1,0 +1,30 @@
+# Override default settings for production env
+
+repository: eu.gcr.io/gcloud-temp1/github-taitounited-wordpress-template
+domains:
+  # TODO set production domain
+
+admin:
+  replicas: 2
+
+client:
+  replicas: 2
+
+server:
+  replicas: 2
+  env:
+    S3_BUCKET: wordpress-template-prod
+
+worker:
+  replicas: 2
+  env:
+    S3_BUCKET: wordpress-template-prod
+
+storage:
+  replicas: 2
+
+cache:
+  replicas: 1 # TODO multiple replicas as redis cluster
+
+queue:
+  replicas: 1 # TODO multiple replicas as queue cluster
