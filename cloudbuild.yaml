@@ -189,24 +189,24 @@ steps:
 
 # Deploy to target environment
 
-- id: db-deploy
-  name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
-  args: ['db-deploy:$BRANCH_NAME']
-  env:
-    - taito_mode=ci
-    - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
-    - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
-    - template_default_domain=${_TEMPLATE_DEFAULT_DOMAIN}
-    - template_default_zone=${_TEMPLATE_DEFAULT_ZONE}
-    - template_default_zone_prod=${_TEMPLATE_DEFAULT_ZONE_PROD}
-    - template_default_provider=${_TEMPLATE_DEFAULT_PROVIDER}
-    - template_default_provider_org_id=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID}
-    - template_default_provider_org_id_prod=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID_PROD}
-    - template_default_provider_region=${_TEMPLATE_DEFAULT_PROVIDER_REGION}
-    - template_default_provider_region_prod=${_TEMPLATE_DEFAULT_PROVIDER_REGION_PROD}
-    - template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
-    - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
-    - template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
+# - id: db-deploy
+#   name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
+#   args: ['db-deploy:$BRANCH_NAME']
+#   env:
+#     - taito_mode=ci
+#     - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
+#     - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
+#     - template_default_domain=${_TEMPLATE_DEFAULT_DOMAIN}
+#     - template_default_zone=${_TEMPLATE_DEFAULT_ZONE}
+#     - template_default_zone_prod=${_TEMPLATE_DEFAULT_ZONE_PROD}
+#     - template_default_provider=${_TEMPLATE_DEFAULT_PROVIDER}
+#     - template_default_provider_org_id=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID}
+#     - template_default_provider_org_id_prod=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID_PROD}
+#     - template_default_provider_region=${_TEMPLATE_DEFAULT_PROVIDER_REGION}
+#     - template_default_provider_region_prod=${_TEMPLATE_DEFAULT_PROVIDER_REGION_PROD}
+#     - template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
+#     - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
+#     - template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
 
 - id: ci-deploy
   name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'

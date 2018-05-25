@@ -5,7 +5,6 @@ export taito_image="taitounited/taito-cli:latest"
 export taito_extensions=""
 export taito_plugins=" \
   mysql-db \
-  wordpress \
   docker \
   docker-compose:local \
   terraform:-local secrets:-local kube-secrets:-local \
@@ -13,6 +12,11 @@ export taito_plugins=" \
   gcloud:-local gcloud-builder:-local \
   semantic npm git links-global \
 "
+
+# Helm plugin
+export helm_chart="stable/wordpress"
+export helm_chart_version="" # Leave empty to use the latest
+export helm_deploy_options="--recreate-pods" # Force restart
 
 # Basic project settings for all plugins
 export taito_organization="${template_default_organization:?}"
@@ -131,14 +135,12 @@ export kubectl_user="${kubectl_cluster}"
 export link_urls="\
   * app[:ENV]#app=${taito_app_url} Application (:ENV) \
   * admin[:ENV]#admin=${taito_admin_url} Admin user interface (:ENV) \
-  * api[:ENV]#app=${taito_app_url}/wp-json/wp/v2/ API (:ENV) \
   * docs=https://github.com/${taito_organization}/${taito_repo_name}/wiki Project documentation \
   * git=https://github.com/${taito_organization}/${taito_repo_name} GitHub repository \
   * kanban=https://github.com/${taito_organization}/${taito_repo_name}/projects Kanban boards \
   * project[:ENV]=https://console.cloud.google.com/home/dashboard?project=${gcloud_resource_project_id} Google project (:ENV) \
   * builds=https://console.cloud.google.com/gcr/builds?project=${taito_zone}&query=source.repo_source.repo_name%3D%22${taito_repo_location}-${taito_repo_name}%22 Build logs \
   * images=https://console.cloud.google.com/gcr/images/${taito_zone}/EU/${taito_repo_location}-${taito_repo_name}?project=${taito_zone} Container images \
-  * artifacts=https://TODO-DOCS-AND-TEST-REPORTS Generated documentation and test reports \
   * storage:ENV#storage=https://console.cloud.google.com/storage/browser/${taito_project}-${taito_env}?project=${gcloud_resource_project_id} Storage bucket (:ENV) \
   * logs:ENV#logs=https://console.cloud.google.com/logs/viewer?project=${taito_zone}&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2F${kubectl_name}%2Fnamespace_id%2F${taito_namespace} Logs (:ENV) \
   * uptime=https://app.google.stackdriver.com/uptime?project=${taito_zone} Uptime monitoring (Stackdriver) \
@@ -153,5 +155,4 @@ export taito_secrets="
   db.${db_database_name}.app:random
   storage.${taito_project}.gateway:random
   gcloud.${taito_project}-${taito_env}.multi:file
-  jwt.${taito_project}.auth:random
 "
