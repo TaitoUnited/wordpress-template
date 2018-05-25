@@ -25,7 +25,7 @@ wordpress-template is a project template for WordPress sites. Create a new proje
 * [Project documentation](https://github.com/taitounited/wordpress-template/wiki)
 * [Storage bucket (dev)](https://console.cloud.google.com/storage/browser/wordpress-template-dev?project=taitounited-companyname-dev)
 * [Storage bucket (prod)](https://console.cloud.google.com/storage/browser/wordpress-template-prod?project=taitounited-companyname-prod)
-* [Uptime monitoring (Stackdriver)](https://app.google.stackdriver.com/uptime?project=gcloud-temp1)  
+* [Uptime monitoring (Stackdriver)](https://app.google.stackdriver.com/uptime?project=gcloud-temp1)
 
 [//]: # (GENERATED LINKS END)
 
@@ -33,10 +33,62 @@ wordpress-template is a project template for WordPress sites. Create a new proje
 
 ## Prerequisites
 
-* [docker-compose](https://docs.docker.com/compose/install/)
 * Optional but highly recommended: [taito-cli](https://github.com/TaitoUnited/taito-cli#readme)
+* Optional: [docker-compose](https://docs.docker.com/compose/install/)
 
-## Quick start
+## Quick start for remote development
+
+If multiple developers are working on the same site simultaneously, migrating all changes together may be an error-prone process. Developers can, however, use a remote development environment that is shared among developers.
+
+Install git hooks and some libraries on host (add `--clean` for clean reinstall):
+
+    taito install
+
+Open remote admin GUI, data storage and database:
+
+    taito open admin:dev
+    taito open storage:dev
+    taito info:dev
+    taito db connect:dev    # Alternatively: taito db proxy:dev
+
+> If you run into authorization errors, authenticate with the `taito --auth:ENV` command.
+
+> It's common that idle applications are run down to save resources on non-production environments. If your application seems to be down, you can start it by running `taito start:ENV`, or by pushing some changes to git.
+
+Mount remote data storage so that you can make changes directly:
+
+    * Run `taito storage mount:dev`
+    * Modify files located in `remote/data`
+
+Commit changes made to remote data:
+
+    * Warn other developers that you are going to sync the data to git
+    * Pull latest changes: `git pull --rebase`
+    * Sync remote data to local disk `taito storage sync to:local dev`
+    * Commit and push changes
+
+Deploying changes from dev to production:
+
+    * Deploy taito and helm configuration changes: `taito vc env merge`
+    * Migrate files and database manually or by using a migration plugin (support for automation coming later)
+
+Migrating changes from production to dev:
+
+    * Migrate files and database manually or by using a migration plugin (support for automation coming later)
+    * NOTE: You should not migrate/copy the whole database and all the files, if the data contains confidential data like personal accounts, personal photos, contact details, payments or private messaging.
+
+Some additional commands for operating remote environments:
+
+    taito status:dev                        # Show status of dev environment
+    taito shell:wordpress:dev               # Start a shell on wordpress container
+    taito logs:wordpress:dev                # Tail logs of wordpress container
+    taito open logs:dev                     # Open logs on browser
+    taito db import:dev ./database/file.sql # Import a file to database
+    taito db dump:dev                       # Dump database to a file
+    taito db diff:dev prod                  # Show diff between dev and prod schemas
+    taito db copy to:dev prod               # Copy prod database to dev
+
+## Quick start for local development
 
 Install some libraries on host (add `--clean` for clean reinstall):
 
@@ -46,7 +98,7 @@ Start containers (add `--clean` for clean rebuild):
 
     taito start
 
-Make sure that everything has been initialized (e.g database) (add `--clean` for clean reinit):
+Initislize local database with a database dump taken from dev:
 
     taito init
 
@@ -70,9 +122,7 @@ Access database:
 
 Start a shell on a container:
 
-    taito shell:admin
-    taito shell:client
-    taito shell:server
+    taito shell:wordpress
 
 Stop containers:
 
@@ -95,18 +145,16 @@ The commands mentioned above work also for server environments (`feature`, `dev`
     taito open admin:dev                    # Open admin GUI in browser
     taito info:dev                          # Show info
     taito status:dev                        # Show status of dev environment
-    taito shell:server:dev                  # Start a shell on server container
-    taito logs:server:dev                   # Tail logs of server container
+    taito shell:wordpress:dev               # Start a shell on wordpress container
+    taito logs:wordpress:dev                # Tail logs of wordpress container
     taito open logs:dev                     # Open logs on browser
     taito open storage:dev                  # Open storage bucket on browser
-    taito init:dev --clean                  # Clean reinit for dev environment
     taito db connect:dev                    # Access database on command line
     taito db proxy:dev                      # Start a proxy for database access
     taito db import:dev ./database/file.sql # Import a file to database
     taito db dump:dev                       # Dump database to a file
-    taito db log:dev                        # Show database migration logs
     taito db diff:dev test                  # Show diff between dev and test schemas
-    taito db copy to:dev test               # Copy test database to dev
+    taito db copy to:dev prod               # Copy prod database to dev
 
 Run `taito -h` to get detailed instructions for all commands. Run `taito COMMAND -h` to show command help (e.g `taito vc -h`, `taito db -h`, `taito db import -h`). For troubleshooting run `taito --trouble`. See PROJECT.md for project specific conventions and documentation.
 
@@ -116,16 +164,7 @@ Run `taito -h` to get detailed instructions for all commands. Run `taito COMMAND
 
 ### Running without taito-cli
 
-You can run this project without taito-cli, but it is not recommended as you'll lose many of the additional features that taito-cli provides.
-
-Local development:
-
-    npm install
-    docker-compose up
-
-Continuous integration:
-
-Taito-cli supports various infrastructures and technologies out-of-the-box, and you can also extend it by writing custom plugins. But if you want to build and deploy the project without taito-cli, you'll have to write the CI scripts yourself.
+TODO
 
 ## Version control
 
@@ -232,6 +271,8 @@ Advanced features:
 NOTE: Some of the advanced operations might require admin credentials (e.g. staging/production operations). If you don't have an admin account, ask devops personnel to execute the operation for you.
 
 ## Configuration
+
+TODO
 
 ### Configuration for local development
 
