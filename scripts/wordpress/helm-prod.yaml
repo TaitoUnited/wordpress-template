@@ -1,5 +1,7 @@
 # https://hub.kubeapps.com/charts/stable/wordpress
 
+# TODO get these from taito-config.sh
+
 ingress:
   hosts:
     - name: wordpress-template-prod.taitodev.com

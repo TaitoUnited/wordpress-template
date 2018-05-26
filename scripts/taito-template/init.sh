@@ -29,6 +29,9 @@ else
  sedi="-i"
 fi
 
+# Remove .gitignore to allow committing data to git
+rm wordpress/data/.gitignore
+
 # Remove MIT license
 # TODO leave a reference to the original?
 rm LICENSE

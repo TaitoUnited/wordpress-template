@@ -14,8 +14,7 @@ export taito_plugins=" \
 "
 
 # Helm plugin
-export helm_chart="stable/wordpress"
-export helm_chart_version="" # Leave empty to use the latest
+export helm_charts="stable/wordpress stable/gcloud-sqlproxy"
 export helm_deploy_options="--recreate-pods" # Force restart
 
 # Basic project settings for all plugins
@@ -140,7 +139,6 @@ export link_urls="\
   * kanban=https://github.com/${taito_organization}/${taito_repo_name}/projects Kanban boards \
   * project[:ENV]=https://console.cloud.google.com/home/dashboard?project=${gcloud_resource_project_id} Google project (:ENV) \
   * builds=https://console.cloud.google.com/gcr/builds?project=${taito_zone}&query=source.repo_source.repo_name%3D%22${taito_repo_location}-${taito_repo_name}%22 Build logs \
-  * images=https://console.cloud.google.com/gcr/images/${taito_zone}/EU/${taito_repo_location}-${taito_repo_name}?project=${taito_zone} Container images \
   * storage:ENV#storage=https://console.cloud.google.com/storage/browser/${taito_project}-${taito_env}?project=${gcloud_resource_project_id} Storage bucket (:ENV) \
   * logs:ENV#logs=https://console.cloud.google.com/logs/viewer?project=${taito_zone}&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2F${kubectl_name}%2Fnamespace_id%2F${taito_namespace} Logs (:ENV) \
   * uptime=https://app.google.stackdriver.com/uptime?project=${taito_zone} Uptime monitoring (Stackdriver) \

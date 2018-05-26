@@ -2,7 +2,7 @@
 
 [//]: # (TEMPLATE NOTE START)
 
-wordpress-template is a project template for WordPress sites. Create a new project from this template by running `taito template create: wordpress-template`.
+Wordpress-template is a project template for WordPress sites. Create a new project from this template by running `taito template create: wordpress-template`.
 
 [//]: # (TEMPLATE NOTE END)
 
@@ -15,7 +15,6 @@ wordpress-template is a project template for WordPress sites. Create a new proje
 * [Application (dev)](https://wordpress-template-dev.taitodev.com)
 * [Application (prod)](https://wordpress-template-prod.taitodev.com)
 * [Build logs](https://console.cloud.google.com/gcr/builds?project=gcloud-temp1&query=source.repo_source.repo_name%3D%22github-taitounited-wordpress-template%22)
-* [Container images](https://console.cloud.google.com/gcr/images/gcloud-temp1/EU/github-taitounited-wordpress-template?project=gcloud-temp1)
 * [GitHub repository](https://github.com/taitounited/wordpress-template)
 * [Google project (dev)](https://console.cloud.google.com/home/dashboard?project=taitounited-companyname-dev)
 * [Google project (prod)](https://console.cloud.google.com/home/dashboard?project=taitounited-companyname-prod)
@@ -33,8 +32,16 @@ wordpress-template is a project template for WordPress sites. Create a new proje
 
 ## Prerequisites
 
-* Optional but highly recommended: [taito-cli](https://github.com/TaitoUnited/taito-cli#readme)
+* Optional: [taito-cli](https://github.com/TaitoUnited/taito-cli#readme)
 * Optional: [docker-compose](https://docs.docker.com/compose/install/)
+
+### Editing the site without taito-cli
+
+It is recommended to do most modifications in dev environment first (excluding daily blog posts, user management, etc).
+
+Just edit the site and data files using your browser (see links at the beginning of this README.md). Hopefully someone will commit your changes to git eventually and migrate them to production.
+
+### Editing the site without taito-cli
 
 ## Quick start for remote development
 
@@ -57,25 +64,25 @@ Open remote admin GUI, data storage and database:
 
 Mount remote data storage so that you can make changes directly:
 
-    * Run `taito storage mount:dev`
-    * Modify files located in `remote/data`
+* Run `taito storage mount:dev`
+* Modify files located in `remote/data`
 
 Commit changes made to remote data:
 
-    * Warn other developers that you are going to sync the data to git
-    * Pull latest changes: `git pull --rebase`
-    * Sync remote data to local disk `taito storage sync to:local dev`
-    * Commit and push changes
+* Warn other developers that you are going to sync the data to git
+* Pull latest changes: `git pull --rebase`
+* Sync remote data to local disk `taito storage sync to:local dev`
+* Commit and push changes
 
-Deploying changes from dev to production:
+Deploy changes from dev to production:
 
-    * Deploy taito and helm configuration changes: `taito vc env merge`
-    * Migrate files and database manually or by using a migration plugin (support for automation coming later)
+* Deploy taito and helm configuration changes: `taito vc env merge`
+* Migrate files and database manually or by using a migration plugin (support for automation coming later)
 
-Migrating changes from production to dev:
+Migrate changes from production to dev:
 
-    * Migrate files and database manually or by using a migration plugin (support for automation coming later)
-    * NOTE: You should not migrate/copy the whole database and all the files, if the data contains confidential data like personal accounts, personal photos, contact details, payments or private messaging.
+* Migrate files and database manually or by using a migration plugin (support for automation coming later)
+* NOTE: You should not migrate/copy the whole database and all the files, if the data contains confidential data like personal accounts, personal photos, contact details, payments or private messaging.
 
 Some additional commands for operating remote environments:
 
@@ -87,6 +94,8 @@ Some additional commands for operating remote environments:
     taito db dump:dev                       # Dump database to a file
     taito db diff:dev prod                  # Show diff between dev and prod schemas
     taito db copy to:dev prod               # Copy prod database to dev
+
+Run `taito -h` to get detailed instructions for all commands. Run `taito COMMAND -h` to show command help (e.g `taito vc -h`, `taito db -h`, `taito db import -h`). For troubleshooting run `taito --trouble`. See PROJECT.md for project specific conventions and documentation.
 
 ## Quick start for local development
 
@@ -161,10 +170,6 @@ Run `taito -h` to get detailed instructions for all commands. Run `taito COMMAND
 > If you run into authorization errors, authenticate with the `taito --auth:ENV` command.
 
 > It's common that idle applications are run down to save resources on non-production environments. If your application seems to be down, you can start it by running `taito start:ENV`, or by pushing some changes to git.
-
-### Running without taito-cli
-
-TODO
 
 ## Version control
 

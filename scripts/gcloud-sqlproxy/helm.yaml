@@ -1,0 +1,9 @@
+
+# TODO get these from taito-config.sh
+
+cloudSql:
+  instances:
+    instance: common-postgres
+    project: gcloud-temp1
+    region: europe-west1
+    port: 3306
