@@ -1,3 +1,4 @@
+mnt
 node_modules
 site-packages
 tmp
@@ -11,4 +12,3 @@ template-tmp
 *.tmp
 *.pyc
 *~
-mounts

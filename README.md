@@ -35,17 +35,21 @@ Wordpress-template is a project template for WordPress sites. Create a new proje
 * Optional: [taito-cli](https://github.com/TaitoUnited/taito-cli#readme)
 * Optional: [docker-compose](https://docs.docker.com/compose/install/)
 
-## Editing the site without taito-cli
+## Editing the site
 
-It is recommended to do most modifications in dev environment first and use production environment only for making frequent modifications like creating new blog posts and managing users.
+It is recommended to do most modifications in dev environment first and use the production environment only for making frequent modifications like creating new blog posts and managing users.
 
-Just edit the site and data files using your browser (see links at the beginning of this README.md). Hopefully someone will commit your changes to git and eventually migrate them to production.
+Just edit the site with the WordPress Admin GUI (see links at the beginning of this README). You can also modify WordPress data files located in the storage bucket by using your browser. Ask someone to commit your changes to git and to migrate them to production, if you cannot do it yourself.
 
 ## Upgrading WordPress
 
-TODO
+* Upgrade WordPress in dev: `taito deployment trigger:dev`
+* Check that everything seems ok.
+* Upgrade WordPress in prod: `taito deployment trigger:prod`
 
-## Quick start for remote development
+TODO automatic upgrade process: check for new versions, upgrade all non-production wordpresses, send notifications about the upgrade, wait for a few days, upgrade all production wordpresses.
+
+## Remote development
 
 If multiple developers are working on the same site simultaneously using a local development environment, migrating all changes together may be an error-prone process. To mitigate this problem, developers can use a remote development environment that is shared among all developers.
 
@@ -53,38 +57,51 @@ Install git hooks and some libraries on host (add `--clean` for clean reinstall)
 
     taito install
 
-Open remote admin GUI, data storage and database:
+Open the WordPress site, the admin GUI and the storage bucket:
 
+    taito info:dev
+    taito open app:dev
     taito open admin:dev
     taito open storage:dev
-    taito info:dev
-    taito db connect:dev    # Alternatively: taito db proxy:dev
-
-> If you run into authorization errors, authenticate with the `taito --auth:ENV` command.
 
 > It's common that idle applications are run down to save resources on non-production environments. If your application seems to be down, you can start it by running `taito start:ENV`, or by pushing some changes to git.
 
-Mount remote data storage so that you can make changes directly:
+> If you run into authorization errors, authenticate with the `taito --auth:ENV` command.
+
+Access the database:
+
+    taito db connect:dev    # Connect from command-line
+    taito db proxy:dev      # Start a proxy for connecting with a GUI tool
+
+Mount remote storage bucket to your local disk (FOR LINUX ONLY):
 
 * Run `taito storage mount:dev`
 * Modify files located in `./mounts/wordpress-template-dev`
 
-Commit changes made to remote data:
+Commit all data files located in remote storage bucket to git:
 
 * Warn other developers that you are going to sync the data to git
-* Pull latest changes: `git pull --rebase`
-* Sync remote data to local disk `taito storage sync to:local dev`
+* Pull latest changes from git: `git pull --rebase`
+* Sync data from the remote bucket to your local disk `taito storage sync from:dev ./wordpress/data`
+* Add such directories/files to `.gitignore` that should not be committed to git.
 * Commit and push changes
 
-Deploy changes from dev to production:
+Sync data files from git to the remote storage bucket:
+
+* Warn other developers that you are going to sync the data from git
+* Pull latest changes from git: `git pull --rebase`
+* Sync data to the remote bucket `taito storage sync to:dev ./wordpress/data`
+
+> TODO how about database data?
+
+Migrate changes from dev to production:
 
 * Deploy taito and helm configuration changes: `taito vc env merge`
-* Migrate files and database manually or by using a migration plugin (support for automation coming later).
+* Migrate storage bucket files and database changes either manually or by using a WordPress migration plugin (support for automation coming later). NOTE: You should not migrate/copy the whole database and all the files, if they contain development data or development user accounts.
 
 Migrate changes from production to dev:
 
-* Migrate files and database manually or by using a migration plugin (support for automation coming later)
-* NOTE: You should not migrate/copy the whole database and all the files, if the data contains confidential data like personal accounts, personal photos, contact details, payments or private messaging.
+* Migrate storage bucket files and database changes either manually or by using a WordPress migration plugin (support for automation coming later). NOTE: You should not migrate/copy the whole database and all the files, if they contain confidential data like personal accounts, personal photos, contact details, payments or private messaging.
 
 Some additional commands for operating remote environments:
 
@@ -99,7 +116,7 @@ Some additional commands for operating remote environments:
 
 Run `taito -h` to get detailed instructions for all commands. Run `taito COMMAND -h` to show command help (e.g `taito vc -h`, `taito db -h`, `taito db import -h`). For troubleshooting run `taito --trouble`. See PROJECT.md for project specific conventions and documentation.
 
-## Quick start for local development
+## Local development
 
 Install some libraries on host (add `--clean` for clean reinstall):
 
@@ -282,8 +299,8 @@ NOTE: Some of the advanced operations might require admin credentials (e.g. stag
 Done:
 * [ ] GitHub settings
 * [ ] Basic project settings
-* [ ] Dev environment
-* [ ] Prod environment
+* [ ] Server environments: dev
+* [ ] Server environments: prod
 
 ### GitHub settings
 
@@ -314,8 +331,10 @@ Collaborators & teams:
 Creating a new server environment:
 
 * Run `taito env apply:ENV` to create an environment for `dev` or `prod`.
-* Deploy wordpress to the environment either by pushing changes to the correct branch or by triggering the deployment manually: `taito deployment trigger:ENV`.
-* Immediately generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`). The default password is: `initial-password-change-it-on-wp-admin-immediately`. If it's a non-production environment, you can write the new admin username/password to info:ENV script of `package.json` file.
+* For production environment: Configure hostname in `scripts/wordpress/helm-prod.yaml` file.
+* Deploy wordpress to the environment either by merging some changes to the correct environment branch or by triggering the deployment manually: `taito deployment trigger:ENV`.
+* Immediately generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`). The default password is: `initial-password-change-it-on-wp-admin-immediately`.
+* For a non-production environment: You should write the new admin username/password to `info:ENV` script of `package.json` file.
 * For a non-production environment: Protect the environment from web crawlers by installing and activating the [HTTP Auth](https://wordpress.org/plugins/http-auth/) plugin for the `Complete Site`. Write the basic auth username/password to info:ENV script of `package.json` file.
 
 > All operations on production and staging environments require admin rights. Please contact devops personnel.
