@@ -37,15 +37,15 @@ Wordpress-template is a project template for WordPress sites. Create a new proje
 
 ### Editing the site without taito-cli
 
-It is recommended to do most modifications in dev environment first (excluding daily blog posts, user management, etc).
+It is recommended to do most modifications in dev environment first and use production environment only for making frequent modifications like creating new blog posts and managing users.
 
-Just edit the site and data files using your browser (see links at the beginning of this README.md). Hopefully someone will commit your changes to git eventually and migrate them to production.
+Just edit the site and data files using your browser (see links at the beginning of this README.md). Hopefully someone will commit your changes to git and eventually migrate them to production.
 
 ### Editing the site without taito-cli
 
 ## Quick start for remote development
 
-If multiple developers are working on the same site simultaneously, migrating all changes together may be an error-prone process. Developers can, however, use a remote development environment that is shared among developers.
+If multiple developers are working on the same site simultaneously using a local development environment, migrating all changes together may be an error-prone process. To mitigate this problem, developers can use a remote development environment that is shared among all developers.
 
 Install git hooks and some libraries on host (add `--clean` for clean reinstall):
 
@@ -65,7 +65,7 @@ Open remote admin GUI, data storage and database:
 Mount remote data storage so that you can make changes directly:
 
 * Run `taito storage mount:dev`
-* Modify files located in `remote/data`
+* Modify files located in `./mounts/wordpress-template-dev`
 
 Commit changes made to remote data:
 

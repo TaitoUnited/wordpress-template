@@ -1,5 +1,4 @@
 images: [
-  'eu.gcr.io/$PROJECT_ID/$REPO_NAME/wordpress:$COMMIT_SHA'
 ]
 
 timeout: 1200s
@@ -24,60 +23,60 @@ steps:
 # NOTE: This first ugly step is an optimization. We execute cancel with
 # the google provided kubectl container instead of taito-cli, because it
 # doesn't need to be pulled before execution -> cancel executes immediately.
-- id: manual-cancel
-  name: 'gcr.io/cloud-builders/kubectl'
-  entrypoint: 'bash'
-  env:
-    - branch_name=$BRANCH_NAME
-    - commit_sha=$COMMIT_SHA
-    - build_id=$BUILD_ID
-    - full_repo_name=$REPO_NAME
-    - image_path=eu.gcr.io/$PROJECT_ID/$REPO_NAME/wordpress:$COMMIT_SHA
-  args:
-  - '-c'
-  - |
-    export template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
-    export template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
-    export template_default_domain=${_TEMPLATE_DEFAULT_DOMAIN}
-    export template_default_zone=${_TEMPLATE_DEFAULT_ZONE}
-    export template_default_zone_prod=${_TEMPLATE_DEFAULT_ZONE_PROD}
-    export template_default_provider=${_TEMPLATE_DEFAULT_PROVIDER}
-    export template_default_provider_org_id=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID}
-    export template_default_provider_org_id_prod=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID_PROD}
-    export template_default_provider_region=${_TEMPLATE_DEFAULT_PROVIDER_REGION}
-    export template_default_provider_region_prod=${_TEMPLATE_DEFAULT_PROVIDER_REGION_PROD}
-    export template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
-    export template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
-    export template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
-    export taito_env
-    taito_env="$${branch_name}"
-    if [[ "$${taito_env}" == "master" ]]; then
-      taito_env="prod"
-    fi
-    source ./taito-config.sh
-
-    echo "- Get gcloud credentials"
-    gcloud container clusters get-credentials "$${kubectl_name}" \
-      --zone "$${gcloud_zone}"
-    if [[ $$? -gt 0 ]]; then
-      echo "WARNING! Get gcloud credentials failed. Build cancel not possible."
-      # exit 1
-    fi
-
-    echo "- Cancel all previous ongoing builds targetting the same branch"
-    # TODO just in case: filter builds that are newer than this build
-    # --> remeber to implement it also in the taito-cli cancel plugin
-    gcloud beta container builds list --ongoing | \
-      grep "$${full_repo_name}@$${branch_name}" | \
-      grep -v "$${build_id}" | \
-      cut -d ' ' -f 1 | \
-      xargs -L1 gcloud container builds cancel
-
-    # echo "Delete kube credentials to avoid gcloud/kubectl version mismatch"
-    # rm -rf ~/.kube
-
-    echo "- We ignore all fails during cancel (hence the last echo)"
-
+# - id: manual-cancel
+#   name: 'gcr.io/cloud-builders/kubectl'
+#   entrypoint: 'bash'
+#   env:
+#     - branch_name=$BRANCH_NAME
+#     - commit_sha=$COMMIT_SHA
+#     - build_id=$BUILD_ID
+#     - full_repo_name=$REPO_NAME
+#     - image_path=eu.gcr.io/$PROJECT_ID/$REPO_NAME/wordpress:$COMMIT_SHA
+#   args:
+#   - '-c'
+#   - |
+#     export template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
+#     export template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
+#     export template_default_domain=${_TEMPLATE_DEFAULT_DOMAIN}
+#     export template_default_zone=${_TEMPLATE_DEFAULT_ZONE}
+#     export template_default_zone_prod=${_TEMPLATE_DEFAULT_ZONE_PROD}
+#     export template_default_provider=${_TEMPLATE_DEFAULT_PROVIDER}
+#     export template_default_provider_org_id=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID}
+#     export template_default_provider_org_id_prod=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID_PROD}
+#     export template_default_provider_region=${_TEMPLATE_DEFAULT_PROVIDER_REGION}
+#     export template_default_provider_region_prod=${_TEMPLATE_DEFAULT_PROVIDER_REGION_PROD}
+#     export template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
+#     export template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
+#     export template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
+#     export taito_env
+#     taito_env="$${branch_name}"
+#     if [[ "$${taito_env}" == "master" ]]; then
+#       taito_env="prod"
+#     fi
+#     source ./taito-config.sh
+#
+#     echo "- Get gcloud credentials"
+#     gcloud container clusters get-credentials "$${kubectl_name}" \
+#       --zone "$${gcloud_zone}"
+#     if [[ $$? -gt 0 ]]; then
+#       echo "WARNING! Get gcloud credentials failed. Build cancel not possible."
+#       # exit 1
+#     fi
+#
+#     echo "- Cancel all previous ongoing builds targetting the same branch"
+#     # TODO just in case: filter builds that are newer than this build
+#     # --> remeber to implement it also in the taito-cli cancel plugin
+#     gcloud beta container builds list --ongoing | \
+#       grep "$${full_repo_name}@$${branch_name}" | \
+#       grep -v "$${build_id}" | \
+#       cut -d ' ' -f 1 | \
+#       xargs -L1 gcloud container builds cancel
+#
+#     # echo "Delete kube credentials to avoid gcloud/kubectl version mismatch"
+#     # rm -rf ~/.kube
+#
+#     echo "- We ignore all fails during cancel (hence the last echo)"
+#
 
 # ----------------------- Taito-cli ----------------------------------
 
@@ -147,45 +146,45 @@ steps:
 
 # Build artifacts
 
-- id: ci-build-wordpress
-  waitFor: ['ci-release-pre']
-  name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
-  args: ['ci-build:wordpress:$BRANCH_NAME', '$COMMIT_SHA', 'eu.gcr.io/$PROJECT_ID/$REPO_NAME']
-  env:
-    - taito_mode=ci
-    - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
-    - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
-    - template_default_domain=${_TEMPLATE_DEFAULT_DOMAIN}
-    - template_default_zone=${_TEMPLATE_DEFAULT_ZONE}
-    - template_default_zone_prod=${_TEMPLATE_DEFAULT_ZONE_PROD}
-    - template_default_provider=${_TEMPLATE_DEFAULT_PROVIDER}
-    - template_default_provider_org_id=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID}
-    - template_default_provider_org_id_prod=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID_PROD}
-    - template_default_provider_region=${_TEMPLATE_DEFAULT_PROVIDER_REGION}
-    - template_default_provider_region_prod=${_TEMPLATE_DEFAULT_PROVIDER_REGION_PROD}
-    - template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
-    - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
-    - template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
-
-- id: ci-push-wordpress
-  waitFor: ['ci-build-wordpress']
-  name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
-  args: ['ci-push:wordpress:$BRANCH_NAME', '$COMMIT_SHA', 'eu.gcr.io/$PROJECT_ID/$REPO_NAME']
-  env:
-    - taito_mode=ci
-    - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
-    - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
-    - template_default_domain=${_TEMPLATE_DEFAULT_DOMAIN}
-    - template_default_zone=${_TEMPLATE_DEFAULT_ZONE}
-    - template_default_zone_prod=${_TEMPLATE_DEFAULT_ZONE_PROD}
-    - template_default_provider=${_TEMPLATE_DEFAULT_PROVIDER}
-    - template_default_provider_org_id=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID}
-    - template_default_provider_org_id_prod=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID_PROD}
-    - template_default_provider_region=${_TEMPLATE_DEFAULT_PROVIDER_REGION}
-    - template_default_provider_region_prod=${_TEMPLATE_DEFAULT_PROVIDER_REGION_PROD}
-    - template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
-    - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
-    - template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
+# - id: ci-build-wordpress
+#   waitFor: ['ci-release-pre']
+#   name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
+#   args: ['ci-build:wordpress:$BRANCH_NAME', '$COMMIT_SHA', 'eu.gcr.io/$PROJECT_ID/$REPO_NAME']
+#   env:
+#     - taito_mode=ci
+#     - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
+#     - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
+#     - template_default_domain=${_TEMPLATE_DEFAULT_DOMAIN}
+#     - template_default_zone=${_TEMPLATE_DEFAULT_ZONE}
+#     - template_default_zone_prod=${_TEMPLATE_DEFAULT_ZONE_PROD}
+#     - template_default_provider=${_TEMPLATE_DEFAULT_PROVIDER}
+#     - template_default_provider_org_id=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID}
+#     - template_default_provider_org_id_prod=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID_PROD}
+#     - template_default_provider_region=${_TEMPLATE_DEFAULT_PROVIDER_REGION}
+#     - template_default_provider_region_prod=${_TEMPLATE_DEFAULT_PROVIDER_REGION_PROD}
+#     - template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
+#     - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
+#     - template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
+#
+# - id: ci-push-wordpress
+#   waitFor: ['ci-build-wordpress']
+#   name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
+#   args: ['ci-push:wordpress:$BRANCH_NAME', '$COMMIT_SHA', 'eu.gcr.io/$PROJECT_ID/$REPO_NAME']
+#   env:
+#     - taito_mode=ci
+#     - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
+#     - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
+#     - template_default_domain=${_TEMPLATE_DEFAULT_DOMAIN}
+#     - template_default_zone=${_TEMPLATE_DEFAULT_ZONE}
+#     - template_default_zone_prod=${_TEMPLATE_DEFAULT_ZONE_PROD}
+#     - template_default_provider=${_TEMPLATE_DEFAULT_PROVIDER}
+#     - template_default_provider_org_id=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID}
+#     - template_default_provider_org_id_prod=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID_PROD}
+#     - template_default_provider_region=${_TEMPLATE_DEFAULT_PROVIDER_REGION}
+#     - template_default_provider_region_prod=${_TEMPLATE_DEFAULT_PROVIDER_REGION_PROD}
+#     - template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
+#     - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
+#     - template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
 
 # Deploy to target environment
 
