@@ -35,13 +35,15 @@ Wordpress-template is a project template for WordPress sites. Create a new proje
 * Optional: [taito-cli](https://github.com/TaitoUnited/taito-cli#readme)
 * Optional: [docker-compose](https://docs.docker.com/compose/install/)
 
-### Editing the site without taito-cli
+## Editing the site without taito-cli
 
 It is recommended to do most modifications in dev environment first and use production environment only for making frequent modifications like creating new blog posts and managing users.
 
 Just edit the site and data files using your browser (see links at the beginning of this README.md). Hopefully someone will commit your changes to git and eventually migrate them to production.
 
-### Editing the site without taito-cli
+## Upgrading WordPress
+
+TODO
 
 ## Quick start for remote development
 
@@ -77,7 +79,7 @@ Commit changes made to remote data:
 Deploy changes from dev to production:
 
 * Deploy taito and helm configuration changes: `taito vc env merge`
-* Migrate files and database manually or by using a migration plugin (support for automation coming later)
+* Migrate files and database manually or by using a migration plugin (support for automation coming later).
 
 Migrate changes from production to dev:
 
@@ -277,23 +279,13 @@ NOTE: Some of the advanced operations might require admin credentials (e.g. stag
 
 ## Configuration
 
-TODO
-
-### Configuration for local development
-
 Done:
-* [ ] Temporary basic auth password
 * [ ] GitHub settings
+* [ ] Basic project settings
+* [ ] Dev environment
+* [ ] Prod environment
 
-#### Temporary basic auth password
-
-Write down the username/password to `show-basic-auth` script of `package.json`:
-
-```
-"show-basic-auth": "echo Temporary basic auth username/password: TODO",
-```
-
-#### GitHub settings
+### GitHub settings
 
 Recommended settings for most projects.
 
@@ -311,28 +303,26 @@ Collaborators & teams:
 * Collaborators: Add additional collaborators if required.
 * Collaborators: Remove repository creator (= yourself) from the collaborator list (NOTE: do this last!)
 
-### Configuration for server environments
-
-Done:
-* [ ] Basic project settings
-* [ ] Dev environment
-* [ ] Prod environment
-
-#### Basic settings
+### Basic project settings
 
 1. Configure `taito-config.sh` if you need to change some settings. The default settings are ok for most projects.
 2. Run `taito project apply`
 3. Commit and push changes
 
-#### Environments
+### Server environments
 
-Run `taito env apply:ENV` to create an environment (`feature`, `dev`, `test`, `staging` or `prod`).
+Creating a new server environment:
+
+* Run `taito env apply:ENV` to create an environment for `dev` or `prod`.
+* Deploy wordpress to the environment either by pushing changes to the correct branch or by triggering the deployment manually: `taito deployment trigger:ENV`.
+* Immediately generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`). The default password is: `initial-password-change-it-on-wp-admin-immediately`. If it's a non-production environment, you can write the new admin username/password to info:ENV script of `package.json` file.
+* For a non-production environment: Protect the environment from web crawlers by installing and activating the [HTTP Auth](https://wordpress.org/plugins/http-auth/) plugin for the `Complete Site`. Write the basic auth username/password to info:ENV script of `package.json` file.
 
 > All operations on production and staging environments require admin rights. Please contact devops personnel.
 
 #### Kubernetes
 
-The `scripts/heml.yaml` file contains default Kubernetes settings for all environments and the `scripts/helm-*.yaml` files contain environment specific overrides for them. By modying these files you can easily configure environment variables, resource requirements and autoscaling for your containers.
+TODO
 
 #### Secrets
 

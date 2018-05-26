@@ -2,7 +2,7 @@
 
 allowEmptyPassword: no
 wordpressUsername: admin
-wordpressPassword: initial-password-change-it-on-wp-admin
+wordpressPassword: initial-password-change-it-on-wp-admin-immediately
 
 ingress:
   enabled: true
