@@ -4,9 +4,13 @@
 
 Wordpress-template is a project template for WordPress sites. Create a new project from this template by running `taito template create: wordpress-template`.
 
+TIP: Using a static site generator combined with a CMS system and some additional services provides a more secure and care-free alternative for WordPress sites. However, such implementation doesn't offer as much plug-and-play functionality as WordPress does. See the [gatsby example](https://github.com/TaitoUnited/server-template-alt/tree/master/client-gatsby) that can be used with the [server-template](https://github.com/TaitoUnited/server-template).
+
 [//]: # (TEMPLATE NOTE END)
 
 ## Links
+
+> Basic auth credentials: TODO username / TODO password. If the admin account is shared among people, you can find the admin credentials from a shared password manager.
 
 [//]: # (GENERATED LINKS START)
 
@@ -39,9 +43,11 @@ Wordpress-template is a project template for WordPress sites. Create a new proje
 
 It is recommended to do most modifications in dev environment first and use the production environment only for making frequent modifications like creating new blog posts and managing users.
 
-Just edit the site with the WordPress Admin GUI (see links at the beginning of this README). You can also modify WordPress data files located in the storage bucket by using your browser. Ask someone to commit your changes to git and to migrate them to production, if you cannot do it yourself.
+Edit the site with the WordPress Admin GUI (see the links at the beginning of this README). You can also modify WordPress data files located in the storage bucket by using your browser. Ask someone to commit your changes to git and to migrate them to production, if you cannot do it yourself.
 
 ## Upgrading WordPress
+
+CI/CD trigger deploys the latest WordPress version by default:
 
 * Upgrade WordPress in dev: `taito deployment trigger:dev`
 * Check that everything seems ok.
@@ -68,40 +74,31 @@ Open the WordPress site, the admin GUI and the storage bucket:
 
 > If you run into authorization errors, authenticate with the `taito --auth:ENV` command.
 
-Access the database:
-
-    taito db connect:dev    # Connect from command-line
-    taito db proxy:dev      # Start a proxy for connecting with a GUI tool
-
-Mount remote storage bucket to your local disk (FOR LINUX ONLY):
+Mount remote storage bucket to your local disk so that you can make changes to remote files directly (FOR LINUX ONLY):
 
 * Run `taito storage mount:dev`
-* Modify files located in `./mounts/wordpress-template-dev`
+* Modify files located in `./mnt/wordpress-template-dev`
 
-Commit all data files located in remote storage bucket to git:
-
-* Warn other developers that you are going to sync the data to git
-* Pull latest changes from git: `git pull --rebase`
-* Sync data from the remote bucket to your local disk `taito storage sync from:dev ./wordpress/data`
-* Add such directories/files to `.gitignore` that should not be committed to git.
-* Commit and push changes
-
-Sync data files from git to the remote storage bucket:
+Sync data/files from local disk to the remote storage bucket:
 
 * Warn other developers that you are going to sync the data from git
-* Pull latest changes from git: `git pull --rebase`
-* Sync data to the remote bucket `taito storage sync to:dev ./wordpress/data`
+* Sync data/files to the remote bucket `taito sync to:dev`. The command retrieves latest changes from git before sync and it does not sync user accounts or other confidential data.
 
-> TODO how about database data?
+Sync data/files located in remote storage bucket to local disk and git:
+
+* Warn other developers that you are going to sync the data to git
+* Sync data and files from the remote dev environment to your local disk: `taito sync from:dev`. The command retrieves latest changes from git before sync. The command does not sync user accounts or other confidential data.
+* Add such directories/files to `.gitignore` that should not be committed to git.
+* Commit and push changes to git
 
 Migrate changes from dev to production:
 
-* Deploy taito and helm configuration changes: `taito vc env merge`
-* Migrate storage bucket files and database changes either manually or by using a WordPress migration plugin (support for automation coming later). NOTE: You should not migrate/copy the whole database and all the files, if they contain development data or development user accounts.
+* Deploy taito-cli and Kubernetes configuration changes: `taito vc env merge`
+* Migrate storage bucket files and database changes either manually or by using a WordPress migration plugin (TODO support for automation coming later). NOTE: You should not migrate/copy the whole database and all the files, if they contain development data or development user accounts.
 
 Migrate changes from production to dev:
 
-* Migrate storage bucket files and database changes either manually or by using a WordPress migration plugin (support for automation coming later). NOTE: You should not migrate/copy the whole database and all the files, if they contain confidential data like personal accounts, personal photos, contact details, payments or private messaging.
+* Migrate storage bucket files and database changes either manually or by using a WordPress migration plugin (TODO support for automation coming later). NOTE: You should not migrate/copy the whole database and all the files, if they contain confidential data like personal user accounts, personal photos, contact details, payments or private messaging.
 
 Some additional commands for operating remote environments:
 
@@ -109,9 +106,11 @@ Some additional commands for operating remote environments:
     taito shell:wordpress:dev               # Start a shell on wordpress container
     taito logs:wordpress:dev                # Tail logs of wordpress container
     taito open logs:dev                     # Open logs on browser
+    taito db connect:dev                    # Connect to database from command-line
+    taito db proxy:dev                      # Start a proxy for connecting database with a GUI tool
     taito db import:dev ./database/file.sql # Import a file to database
     taito db dump:dev                       # Dump database to a file
-    taito db diff:dev prod                  # Show diff between dev and prod schemas
+    taito db diff:dev prod                  # Show diff between dev and prod db schemas
     taito db copy to:dev prod               # Copy prod database to dev
 
 Run `taito -h` to get detailed instructions for all commands. Run `taito COMMAND -h` to show command help (e.g `taito vc -h`, `taito db -h`, `taito db import -h`). For troubleshooting run `taito --trouble`. See PROJECT.md for project specific conventions and documentation.
@@ -126,7 +125,7 @@ Start containers (add `--clean` for clean rebuild):
 
     taito start
 
-Initislize local database with a database dump taken from dev:
+Initialize local database (add `--clean` for clean init):
 
     taito init
 
@@ -318,7 +317,7 @@ Collaborators & teams:
 * Teams: Select admin permission for the Admins team
 * Teams: Select write permission for the Developers team
 * Collaborators: Add additional collaborators if required.
-* Collaborators: Remove repository creator (= yourself) from the collaborator list (NOTE: do this last!)
+* Collaborators: Remove repository creator (= yourself) from the collaborator list (NOTE: Set all the other GitHub settings before this one!)
 
 ### Basic project settings
 
@@ -331,22 +330,23 @@ Collaborators & teams:
 Creating a new server environment:
 
 * Run `taito env apply:ENV` to create an environment for `dev` or `prod`.
-* For production environment: Configure hostname in `scripts/wordpress/helm-prod.yaml` file.
-* Deploy wordpress to the environment either by merging some changes to the correct environment branch or by triggering the deployment manually: `taito deployment trigger:ENV`.
-* Immediately generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`). The default password is: `initial-password-change-it-on-wp-admin-immediately`.
-* For a non-production environment: You should write the new admin username/password to `info:ENV` script of `package.json` file.
-* For a non-production environment: Protect the environment from web crawlers by installing and activating the [HTTP Auth](https://wordpress.org/plugins/http-auth/) plugin for the `Complete Site`. Write the basic auth username/password to info:ENV script of `package.json` file.
+* For a production environment: Configure hostname in `scripts/wordpress/helm-prod.yaml` file.
+* Deploy wordpress to the environment either by pushing some changes to the environment branch or by triggering the deployment manually: `taito deployment trigger:ENV`.
+* Immediately generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`), and save the new password using a shared password manager. Also the dev environment admin password should be strong as eventually some of the dev environment data and installed plugins will be migrated to production. The initial admin password is: `initial-password-change-it-on-wp-admin-immediately`.
+* For a non-production environment: Protect the environment from web crawlers by installing and activating the [HTTP Auth](https://wordpress.org/plugins/http-auth/) plugin for the `Complete Site`. Write the basic auth username/password to the `package.json` file and to the beginning of this README. You should use the same basic auth credentials for all environments. Basic auth credentials don't have to be strong.
 
 > All operations on production and staging environments require admin rights. Please contact devops personnel.
 
 #### Kubernetes
 
-TODO
+If you need to, you can configure Kubernetes settings by modifying `heml*.yaml` files located under the `scripts`-directory. The default settings, however, are ok for most sites.
 
 #### Secrets
 
+If you need to, you can add new secrets like this:
+
 1. Add a secret definition to `taito-config.sh` (taito_secrets)
-2. Map secret to an environment variable in `scripts/helm.yaml`
+2. Map secret to an environment variable in some of the `helm.yaml` files located under the `scripts`-directory.
 3. Run `taito env rotate:ENV [SECRET]` to generate a secret value for an environment. Run the command for each environment separately. Note that the rotate command restarts all pods in the same namespace.
 
 > For local development you can just define secrets as normal environment variables in `docker-compose.yaml` given that they are not confidential.
