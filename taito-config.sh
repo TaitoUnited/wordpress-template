@@ -28,7 +28,6 @@ export taito_namespace="${taito_project}-${taito_env:?}"
 export taito_resource_namespace="${taito_company}-dev"
 export taito_registry="${template_default_registry:?}/${taito_zone}/${taito_repo_location}-${taito_repo_name}"
 export taito_app_url="https://${taito_namespace}.${template_default_domain:?}"
-export taito_admin_url="${taito_app_url}/admin/"
 
 # Structure definitions for all plugins
 export taito_environments="dev prod"
@@ -80,6 +79,7 @@ export ci_exec_revert=false       # revert deploy automatically on fail
 case "${taito_env}" in
   prod)
     # prod overrides
+    export taito_app_url="https://${taito_namespace}.${template_default_domain:?}"
     export taito_zone="${template_default_zone_prod:?}"
     export gcloud_org_id="${template_default_provider_org_id_prod:?}"
     export gcloud_region="${template_default_provider_region_prod:?}"
@@ -88,6 +88,7 @@ case "${taito_env}" in
     ;;
   staging)
     # staging overrides
+    export taito_app_url="https://${taito_namespace}.${template_default_domain:?}"
     export taito_zone="${template_default_zone_prod:?}"
     export gcloud_org_id="${template_default_provider_org_id_prod:?}"
     export gcloud_region="${template_default_provider_region_prod:?}"
@@ -110,7 +111,6 @@ case "${taito_env}" in
     # local overrides
     export ci_exec_test_init=false   # run 'init --clean' before each test suite
     export taito_app_url="http://localhost:4635"
-    export taito_admin_url="${taito_app_url}/admin/"
     export db_database_external_port="7587"
     export db_database_host="${taito_project}-database"
     export db_database_port="3306"
@@ -118,6 +118,9 @@ case "${taito_env}" in
 esac
 
 # --- Derived values ---
+
+# Basic project settings for all plugins
+export taito_admin_url="${taito_app_url}/admin/"
 
 # gcloud plugin
 export gcloud_project="${taito_zone}"
@@ -153,4 +156,5 @@ export taito_secrets="
   db.${db_database_name}.app:random
   storage.${taito_project}.gateway:random
   gcloud.${taito_project}-${taito_env}.multi:file
+  user.${taito_project}-user.basicauth:manual
 "

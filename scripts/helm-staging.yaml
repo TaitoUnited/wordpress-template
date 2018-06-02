@@ -3,9 +3,9 @@ wordpress:
   ingress:
     hosts:
       # TODO get default host from taito-config.sh
-      - name: wordpress-template-dev.taitodev.com
-        tlsSecret: wordpress-template-dev-tls-secret
+      - name: wordpress-template-staging.taitodev.com
+        tlsSecret: wordpress-template-staging-tls-secret
         tls: false # TODO true
     annotations:
       # TODO remove ENV from helm release name
-      ingress.kubernetes.io/auth-secret: wordpress-template-dev-basic-auth
+      ingress.kubernetes.io/auth-secret: wordpress-template-staging-basic-auth

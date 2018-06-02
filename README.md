@@ -329,11 +329,10 @@ Collaborators & teams:
 
 Creating a new server environment:
 
-* Run `taito env apply:ENV` to create an environment for `dev` or `prod`.
-* For a production environment: Configure hostname in `scripts/wordpress/helm-prod.yaml` file.
+* For a production environment: Configure app url in `taito-config.sh` and hostname in `scripts/wordpress/helm-prod.yaml` file. (TODO taito-config.sh should suffice)
+* Run `taito env apply:ENV` to create an environment for `dev` or `prod`. Use the same basic auth credentials for all environments. Basic auth credentials don't have to be strong, but still do not reuse the same password on multiple projects. Update the basic auth username/password to the `package.json` file and to the beginning of this README, if they are not up-to-date.
 * Deploy wordpress to the environment either by pushing some changes to the environment branch or by triggering the deployment manually: `taito deployment trigger:ENV`.
 * Immediately generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`), and save the new password using a shared password manager. Also the dev environment admin password should be strong as eventually some of the dev environment data and installed plugins will be migrated to production. The initial admin password is: `initial-password-change-it-on-wp-admin-immediately`.
-* For a non-production environment: Protect the environment from web crawlers by installing and activating the [HTTP Auth](https://wordpress.org/plugins/http-auth/) plugin for the `Complete Site`. Write the basic auth username/password to the `package.json` file and to the beginning of this README. You should use the same basic auth credentials for all environments. Basic auth credentials don't have to be strong.
 
 > All operations on production and staging environments require admin rights. Please contact devops personnel.
 
