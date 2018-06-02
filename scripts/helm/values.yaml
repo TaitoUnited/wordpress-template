@@ -1,0 +1,34 @@
+
+# values for chart https://hub.kubeapps.com/charts/stable/wordpress
+wordpress:
+  allowEmptyPassword: no
+  wordpressUsername: admin
+  wordpressPassword: initial-password-change-it-on-wp-admin-immediately
+
+  ingress:
+    enabled: true
+    annotations:
+      ingress.kubernetes.io/proxy-body-size: 1m
+      ingress.kubernetes.io/ssl-redirect: 'true'
+      ingress.kubernetes.io/force-ssl-redirect: 'true'
+
+  persistence:
+    enabled: false # TODO enable
+
+  mariadb:
+    enabled: true # TODO disable
+
+  # TODO cloud sql proxy
+  # externalDatabase:
+  #   host: '127.0.0.1'
+  #   port: '3306'
+
+# values for chart https://hub.kubeapps.com/charts/stable/gcloud-sqlproxy
+gcloud-sqlproxy:
+  enabled: false
+  cloudsql:
+    instances:
+      - instance: common-postgres
+        project: gcloud-temp1
+        region: europe-west1
+        port: 3306

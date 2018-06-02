@@ -13,10 +13,6 @@ export taito_plugins=" \
   semantic npm git links-global \
 "
 
-# Helm plugin
-export helm_charts="stable/wordpress stable/gcloud-sqlproxy"
-export helm_deploy_options="--recreate-pods" # Force restart
-
 # Basic project settings for all plugins
 export taito_organization="${template_default_organization:?}"
 export taito_zone="${template_default_zone:?}"
@@ -61,6 +57,10 @@ export gcloud_cdn_enabled=false
 
 # Kubernetes plugin
 export kubectl_name="kube1" # TODO rename to common-kubernetes
+
+# Helm plugin
+# export helm_charts="stable/wordpress stable/gcloud-sqlproxy"
+# export helm_deploy_options="--recreate-pods" # Force restart
 
 # Template plugin
 export template_name="orig-template"

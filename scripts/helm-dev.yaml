@@ -1,0 +1,16 @@
+# TODO get these from taito-config.sh
+
+# values for chart https://hub.kubeapps.com/charts/stable/wordpress
+wordpress:
+  ingress:
+    hosts:
+      - name: wordpress-template-dev.taitodev.com
+        tlsSecret: wordpress-template-dev-tls-secret
+
+  # externalDatabase:
+  #   database: wordpress_template_dev
+  #   user: wordpress_template_dev_app
+  #   password: TODO
+
+# values for chart https://hub.kubeapps.com/charts/stable/gcloud-sqlproxy
+gcloud-sqlproxy:
