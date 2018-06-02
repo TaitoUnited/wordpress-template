@@ -6,8 +6,8 @@ wordpress:
       - name: wordpress-template-dev.taitodev.com
         tlsSecret: wordpress-template-dev-tls-secret
         tls: false # TODO true
-    annotations:
-      ingress.kubernetes.io/auth-type: "basic"
-      ingress.kubernetes.io/auth-realm: wordpress-template
-      # TODO remove ENV from helm release name
-      ingress.kubernetes.io/auth-secret: wordpress-template-dev-basic-auth
+        annotations:
+          ingress.kubernetes.io/auth-type: "basic"
+          ingress.kubernetes.io/auth-realm: wordpress-template
+          # TODO remove ENV from helm release name
+          ingress.kubernetes.io/auth-secret: wordpress-template-dev-basic-auth

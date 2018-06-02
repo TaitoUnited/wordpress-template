@@ -1,11 +1,5 @@
 # values for chart https://hub.kubeapps.com/charts/stable/wordpress
 wordpress:
-  ingress:
-    annotations:
-      ingress.kubernetes.io/auth-type: "basic"
-      ingress.kubernetes.io/auth-realm: wordpress-template
-      # TODO remove ENV from helm release name
-      ingress.kubernetes.io/auth-secret: wordpress-template-dev-basic-auth
 
 # values for chart https://hub.kubeapps.com/charts/stable/gcloud-sqlproxy
 gcloud-sqlproxy:
