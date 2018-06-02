@@ -15,8 +15,15 @@ wordpress:
   persistence:
     enabled: false # TODO enable
 
+  externalDatabase:
+    host: localhost
+    user: bn_wordpress
+    password: ""
+    database: bitnami_wordpress
+    port: 3306
+
   mariadb:
-    enabled: true # TODO disable
+    enabled: false
     persistence:
       enabled: false
 
@@ -24,13 +31,3 @@ wordpress:
   # externalDatabase:
   #   host: '127.0.0.1'
   #   port: '3306'
-
-# values for chart https://hub.kubeapps.com/charts/stable/gcloud-sqlproxy
-gcloud-sqlproxy:
-  enabled: false
-  cloudsql:
-    instances:
-      - instance: common-postgres
-        project: gcloud-temp1
-        region: europe-west1
-        port: 3306

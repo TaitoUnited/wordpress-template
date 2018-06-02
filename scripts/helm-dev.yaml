@@ -11,3 +11,8 @@ wordpress:
           ingress.kubernetes.io/auth-realm: wordpress-template
           # TODO remove ENV from helm release name
           ingress.kubernetes.io/auth-secret: wordpress-template-dev-wp-basic-auth
+  externalDatabase:
+    # wordpress creates tables so we use the mgr user account
+    user: presstemplatedev
+    password: todotemptest # TODO remove
+    database: wordpress_template_dev

@@ -1,9 +1,0 @@
-dependencies:
-- name: wordpress
-  repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 1.0.9
-- name: gcloud-sqlproxy
-  repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 0.3.4
-digest: sha256:80b7231af9a1b84651e078240d008331c1e8d44749b6dd9097528e1dd3a4e6b9
-generated: 2018-06-02T15:05:12.7962133Z

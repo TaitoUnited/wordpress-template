@@ -7,11 +7,12 @@ export taito_plugins=" \
   mysql-db \
   docker \
   docker-compose:local \
-  terraform:-local secrets:-local kube-secrets:-local \
+  secrets:-local kube-secrets:-local \
   kubectl:-local helm:-local \
   gcloud:-local gcloud-builder:-local \
   semantic npm git links-global \
 "
+# TODO terraform:-local
 
 # Basic project settings for all plugins
 export taito_organization="${template_default_organization:?}"
@@ -39,7 +40,7 @@ export taito_storages="${taito_project}-${taito_env}"
 export db_database_instance="common-mysql"
 export db_database_type="mysql"
 export db_database_name="${taito_project//-/_}_${taito_env}"
-export db_database_host="localhost"
+export db_database_host="127.0.0.1" # TODO was localhost
 export db_database_proxy_port="5001"
 export db_database_port="${db_database_proxy_port}"
 
@@ -148,13 +149,22 @@ export link_urls="\
 "
 
 # Secrets
-# NOTE: Secret naming: type.target_of_type.purpose[/namespace]:generation_method
 export taito_secrets="
   git.github.build:read/devops
-  gcloud.cloudsql.proxy:copy/devops
   db.${db_database_name}.build/devops:random
   db.${db_database_name}.app:random
-  storage.${taito_project}.gateway:random
-  gcloud.${taito_project}-${taito_env}.multi:file
-  ${taito_project}-${taito_env}-wp-basic-auth:htpasswd
 "
+# TODO rename build --> mgr
+
+# LATER:
+# storage.${taito_project}.gateway:random
+# gcloud.${taito_project}-${taito_env}.multi:file
+
+# LATER:
+# ${taito_project}-${taito_env}-wp-basic-auth:htpasswd
+# ${taito_project}-wp-basic-auth:htpasswd
+
+# NOTE: not required:
+# gcloud.cloudsql.proxy:copy/devops
+# db.${db_database_name}.app:manual
+# db.${db_database_name}.build/devops:manual

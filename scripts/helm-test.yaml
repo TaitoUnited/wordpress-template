@@ -11,3 +11,6 @@ wordpress:
           ingress.kubernetes.io/auth-realm: wordpress-template
           # TODO remove ENV from helm release name
           ingress.kubernetes.io/auth-secret: wordpress-template-test-wp-basic-auth
+  externalDatabase:
+    user: resstemplatetest
+    database: wordpress_template_test

@@ -1,6 +1,5 @@
 # values for chart https://hub.kubeapps.com/charts/stable/wordpress
 wordpress:
-
-# values for chart https://hub.kubeapps.com/charts/stable/gcloud-sqlproxy
-gcloud-sqlproxy:
-  enabled: false # TODO determine from taito-configs provider name
+  externalDatabase:
+    host: mysql-sqlproxy-gcloud-sqlproxy.sqlproxy
+    port: 3306
