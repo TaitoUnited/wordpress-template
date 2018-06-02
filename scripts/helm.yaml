@@ -1,5 +1,6 @@
 # values for chart https://hub.kubeapps.com/charts/stable/wordpress
 wordpress:
+  healthcheckHttps: false
 
 # values for chart https://hub.kubeapps.com/charts/stable/gcloud-sqlproxy
 gcloud-sqlproxy:

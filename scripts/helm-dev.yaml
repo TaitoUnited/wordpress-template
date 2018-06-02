@@ -5,7 +5,8 @@ wordpress:
   ingress:
     hosts:
       - name: wordpress-template-dev.taitodev.com
-        tlsSecret: wordpress-template-dev-tls-secret
+        tls: false
+        # tlsSecret: wordpress-template-dev-tls-secret
 
   # externalDatabase:
   #   database: wordpress_template_dev
