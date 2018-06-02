@@ -10,4 +10,4 @@ wordpress:
           ingress.kubernetes.io/auth-type: "basic"
           ingress.kubernetes.io/auth-realm: wordpress-template
           # TODO remove ENV from helm release name
-          ingress.kubernetes.io/auth-secret: wordpress-template-dev-basic-auth
+          ingress.kubernetes.io/auth-secret: wordpress-template-dev-wp-basic-auth

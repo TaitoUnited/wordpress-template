@@ -156,5 +156,5 @@ export taito_secrets="
   db.${db_database_name}.app:random
   storage.${taito_project}.gateway:random
   gcloud.${taito_project}-${taito_env}.multi:file
-  user.${taito_project}-user.basicauth:manual
+  ${taito_project}-${taito_env}-wp-basic-auth:htpasswd
 "
