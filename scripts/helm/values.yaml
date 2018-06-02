@@ -17,6 +17,8 @@ wordpress:
 
   mariadb:
     enabled: true # TODO disable
+    persistence:
+      enabled: false
 
   # TODO cloud sql proxy
   # externalDatabase:
