@@ -90,8 +90,23 @@ printf \
   cat temp > cloudbuild.yaml
 
 # Replace some strings
+
+echo "Give a short version of the project name '${taito_project}'."
+echo "It should be unique but also descriptive as it will be used"
+echo "as a database name and as a database user name."
+echo
+while \
+  [[ -z "${taito_project_short}" ]] || \
+  [[ "${#taito_project_short}" -gt 10 ]]
+do
+  echo "Short project name (max 10 chars)?"
+  read -r taito_project_short
+done
+
 echo "Replacing project and company names in files. Please wait..."
 if [ "$(uname)" = "Darwin" ]; then
+  find . -type f -exec sed -i '' \
+    -e "s/wptemplate/${taito_project_short}/g" 2> /dev/null {} \;
   find . -type f -exec sed -i '' \
     -e "s/wordpress_template/${taito_repo_name_alt}/g" 2> /dev/null {} \;
   find . -type f -exec sed -i '' \
@@ -101,6 +116,8 @@ if [ "$(uname)" = "Darwin" ]; then
   find . -type f -exec sed -i '' \
     -e "s/orig-template/wordpress-template/g" 2> /dev/null {} \;
 else
+  find . -type f -exec sed -i \
+    -e "s/wptemplate/${taito_project_short}/g" 2> /dev/null {} \;
   find . -type f -exec sed -i \
     -e "s/wordpress_template/${taito_repo_name_alt}/g" 2> /dev/null {} \;
   find . -type f -exec sed -i \
@@ -157,6 +174,3 @@ sed ${sedi} -- '/_TEMPLATE_DEFAULT_/d' cloudbuild.yaml
 sed ${sedi} -- '/template_default_taito_image/d' cloudbuild.yaml
 
 rm -f temp
-
-echo "TODO REMEMBER taito_project_short"
-read -r

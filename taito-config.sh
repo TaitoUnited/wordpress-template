@@ -31,7 +31,7 @@ export taito_registry="${template_default_registry:?}/${taito_zone}/${taito_repo
 export taito_app_url="https://${taito_namespace}.${template_default_domain:?}"
 
 # Structure definitions for all plugins
-export taito_environments="dev prod"
+export taito_environments="dev stag prod"
 export taito_targets="wordpress database"
 export taito_databases="database"
 export taito_storages="${taito_project}-${taito_env}"

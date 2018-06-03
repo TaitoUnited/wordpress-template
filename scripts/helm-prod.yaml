@@ -1,12 +1,12 @@
 # values for chart https://hub.kubeapps.com/charts/stable/wordpress
 # TODO get environment specific settings from taito-config.sh
+# --> no need for a separate file for each environment
 wordpress:
   replicas: 2
   persistence:
     size: 8Gi
   ingress:
     hosts:
-      # TODO get default host from taito-config.sh
       - name: wordpress-template-prod.taitodev.com
         tlsSecret: wordpress-template-prod-tls-secret
         tls: true
@@ -25,7 +25,7 @@ wordpress:
     port: 3306
     database: wptemplateprod
     # wordpress creates tables in dev so we have to use the mgr user account
-    # TODO tables are migrated -> use the app account here?
+    # TODO tables are migrated from previous env -> use the app account here?
     user: wptemplateprod
     passwordSecretName: db.wptemplateprod.build
     passwordSecretKey: SECRET
