@@ -36,8 +36,6 @@ Table of contents:
 * [Logs (prod)](https://console.cloud.google.com/logs/viewer?project=gcloud-temp1&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2Fkube1%2Fnamespace_id%2Fwordpress-template-prod)
 * [Logs (stag)](https://console.cloud.google.com/logs/viewer?project=gcloud-temp1&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2Fkube1%2Fnamespace_id%2Fwordpress-template-stag)
 * [Project documentation](https://github.com/taitounited/wordpress-template/wiki)
-* [Storage bucket (prod)](https://console.cloud.google.com/storage/browser/wordpress-template-prod?project=taitounited-companyname-prod)
-* [Storage bucket (stag)](https://console.cloud.google.com/storage/browser/wordpress-template-stag?project=taitounited-companyname-dev)
 * [Uptime monitoring (Stackdriver)](https://app.google.stackdriver.com/uptime?project=gcloud-temp1)  
 
 [//]: # (GENERATED LINKS END)
@@ -271,7 +269,7 @@ Creating a new server environment:
 
 * For a production environment: Configure correct IP on DNS record.
 * For a production environment: Configure app url in `taito-config.sh` and hostname in `scripts/wordpress/helm-prod.yaml` file. (TODO taito-config.sh should suffice)
-* Run `taito env apply:ENV` to create an environment. Use the same basic auth credentials for all environments (basic auth is disabled in production). Basic auth credentials don't have to be strong, but still do not reuse the same password on multiple projects. Update the basic auth username/password to the `package.json` file and to the beginning of this README, if they are not up-to-date.
+* Run `taito env apply:ENV` to create an environment. Use the same basic auth credentials for all environments. Basic auth credentials don't have to be strong, but still do not reuse the same password for multiple projects. Update the basic auth username/password to the `package.json` file and to the beginning of this README, if they are not up-to-date.
 * Deploy wordpress to the environment either by pushing some changes to the environment branch or by triggering the deployment manually: `taito deployment trigger:ENV`.
 * Immediately generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`). The initial admin password is: `initial-password-change-it-on-wp-admin-immediately`. If the admin account is shared, save the new password to a shared password manager. And never use the same admin password for every environment, as dev database is committed to git.
 * TODO Connect persistent volume disk to a separate vm dedicated for file access. In development, rsync files also to a storage bucket for easier access?
