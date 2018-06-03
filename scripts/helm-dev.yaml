@@ -6,11 +6,13 @@ wordpress:
       - name: wordpress-template-dev.taitodev.com
         tlsSecret: wordpress-template-dev-tls-secret
         tls: true
-        tlsBackend: false
+        tlsBackend: false # TODO true?
         annotations:
+          kubernetes.io/ingress.class: nginx
           ingress.kubernetes.io/proxy-body-size: 1m
-          ingress.kubernetes.io/ssl-redirect: 'true'
-          ingress.kubernetes.io/force-ssl-redirect: 'true'
+          kubernetes.io/tls-acme: "true"
+          ingress.kubernetes.io/ssl-redirect: "true"
+          ingress.kubernetes.io/force-ssl-redirect: "true"
           ingress.kubernetes.io/auth-type: "basic"
           ingress.kubernetes.io/auth-realm: wordpress-template
           # TODO remove ENV from helm release name
@@ -22,3 +24,6 @@ wordpress:
     # password: todotemptest # TODO remove
     passwordSecretName: db.wptemplatedev.build
     passwordSecretKey: SECRET
+
+  # smtpSecretName: smtp.wordpress-template-dev.email
+  # smtpSecretKey: SECRET
