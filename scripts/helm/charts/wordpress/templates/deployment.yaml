@@ -8,7 +8,7 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicas | default 1 }}
   template:
     metadata:
       labels:
@@ -61,6 +61,9 @@ spec:
             {{- if .Values.mariadb.enabled }}
               name: {{ template "mariadb.fullname" . }}
               key: mariadb-password
+            {{- else if .Values.externalDatabase.passwordSecretName }}
+              name: {{ .Values.externalDatabase.passwordSecretName | quote }}
+              key: {{ .Values.externalDatabase.passwordSecretKey | quote }}
             {{- else }}
               name: {{ printf "%s-%s" .Release.Name "externaldb" }}
               key: db-password
@@ -91,8 +94,13 @@ spec:
         - name: SMTP_PASSWORD
           valueFrom:
             secretKeyRef:
+            {{- if .Values.smtpSecretName }}
+              name: {{ .Values.smtpSecretName | quote }}
+              key: {{ .Values.smtpSecretKey | quote }}
+            {{- else }}
               name: {{ template "fullname" . }}
               key: smtp-password
+            {{- end }}
         - name: SMTP_USERNAME
           value: {{ .Values.smtpUsername | quote }}
         - name: SMTP_PROTOCOL

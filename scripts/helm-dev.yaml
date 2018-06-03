@@ -6,11 +6,11 @@ wordpress:
       - name: wordpress-template-dev.taitodev.com
         tlsSecret: wordpress-template-dev-tls-secret
         tls: true
+        tlsBackend: false
         annotations:
           ingress.kubernetes.io/proxy-body-size: 1m
           ingress.kubernetes.io/ssl-redirect: 'true'
           ingress.kubernetes.io/force-ssl-redirect: 'true'
-          ingress.kubernetes.io/secure-backends: 'false'
           ingress.kubernetes.io/auth-type: "basic"
           ingress.kubernetes.io/auth-realm: wordpress-template
           # TODO remove ENV from helm release name
@@ -19,4 +19,6 @@ wordpress:
     # wordpress creates tables so we have to use the mgr user account
     database: wptemplatedev
     user: wptemplatedev
-    password: todotemptest # TODO remove
+    # password: todotemptest # TODO remove
+    passwordSecretName: db.wptemplatedev.build
+    passwordSecretKey: SECRET

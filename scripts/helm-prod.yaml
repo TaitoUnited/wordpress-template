@@ -1,5 +1,6 @@
 # values for chart https://hub.kubeapps.com/charts/stable/wordpress
 wordpress:
+  replicas: 2
   ingress:
     hosts:
       # TODO get default host from taito-config.sh
