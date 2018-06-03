@@ -20,7 +20,7 @@ Table of contents:
 
 ## Links
 
-> Basic auth credentials: TODO username / TODO password. If the admin account is shared among people, you can find the admin credentials from a shared password manager.
+> Non-production basic auth credentials: TODO user / painipaini. If the admin account is shared among people, you can find the admin credentials from a shared password manager.
 
 [//]: # (GENERATED LINKS START)
 
@@ -123,7 +123,7 @@ Cleaning:
     taito clean:npm                         # Delete node_modules directories
     taito clean                             # Clean everything
 
-The commands mentioned above work also for server environments (`feat`, `dev`, `test`, `stag`, `prod`). Some examples for dev environment:
+The commands mentioned above work also for server environments (`feat`, `dev`, `test`, `stag`, `prod`). Some examples for staging environment:
 
     taito open app:stag                     # Open application in browser
     taito open admin:stag                   # Open admin GUI in browser
