@@ -1,5 +1,6 @@
 # values for chart https://hub.kubeapps.com/charts/stable/wordpress
 wordpress:
-  externalDatabase:
-    host: mysql-sqlproxy-gcloud-sqlproxy.sqlproxy
-    port: 3306
+  image:
+    registry: docker.io
+    repository: bitnami/wordpress
+    tag: 4.9.6

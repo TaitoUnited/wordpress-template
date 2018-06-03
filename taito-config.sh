@@ -12,7 +12,6 @@ export taito_plugins=" \
   gcloud:-local gcloud-builder:-local \
   semantic npm git links-global \
 "
-# TODO terraform:-local
 
 # Basic project settings for all plugins
 export taito_organization="${template_default_organization:?}"
@@ -117,6 +116,7 @@ case "${taito_env}" in
     export db_database_host="${taito_project}-database"
     export db_database_port="3306"
     export db_database_password="secret"
+    export db_database_username="${taito_project_short}${taito_env}"
 esac
 
 # --- Derived values ---
@@ -155,17 +155,6 @@ export taito_secrets="
   db.${db_database_name}.build:random
   db.${db_database_name}.app:random
 "
-# TODO rename build --> mgr
-
-# LATER:
-# storage.${taito_project}.gateway:random
-# gcloud.${taito_project}-${taito_env}.multi:file
-
-# LATER:
-# ${taito_project}-${taito_env}-wp-basic-auth:htpasswd
-# ${taito_project}-wp-basic-auth:htpasswd
-
-# NOTE: not required:
-# gcloud.cloudsql.proxy:copy/devops
-# db.${db_database_name}.app:manual
-# db.${db_database_name}.build/devops:manual
+# TODO: rename secrets
+# TODO: basic auth as secret
+# TODO: use app user in production instead of mgr? (tables come from staging)

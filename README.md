@@ -4,9 +4,19 @@
 
 Wordpress-template is a project template for WordPress sites. Create a new project from this template by running `taito template create: wordpress-template`.
 
-TIP: Using a static site generator combined with a CMS system and some additional services provides a more secure and care-free alternative for WordPress sites. However, such implementation doesn't offer as much plug-and-play functionality as WordPress does. See the [gatsby example](https://github.com/TaitoUnited/server-template-alt/tree/master/client-gatsby) that can be used with the [server-template](https://github.com/TaitoUnited/server-template).
+TIP: A static site generator combined with a CMS system, git repository and some additional services provides a more secure and care-free alternative for WordPress sites. It also provides a sensible way to do version control, makes a clear distinction between production and development data, and offers a hassle-free way to do automatic migrations between environments. However, such implementation doesn't offer as much plug-and-play functionality as WordPress does. See the [gatsby example](https://github.com/TaitoUnited/server-template-alt/tree/master/client-gatsby) that can be used with the [server-template](https://github.com/TaitoUnited/server-template) if you need also some custom backend functionality.
 
 [//]: # (TEMPLATE NOTE END)
+
+Table of contents:
+
+* [Links](#links)
+* [Prerequisites](#prerequisites)
+* [Important](#important)
+* [Quick start](#quick-start)
+* [Deployment](#deployment)
+* [Version control](#version-control)
+* [Configuration](#configuration)
 
 ## Links
 
@@ -26,8 +36,6 @@ TIP: Using a static site generator combined with a CMS system and some additiona
 * [Logs (dev)](https://console.cloud.google.com/logs/viewer?project=gcloud-temp1&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2Fkube1%2Fnamespace_id%2Fwordpress-template-dev)
 * [Logs (prod)](https://console.cloud.google.com/logs/viewer?project=gcloud-temp1&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2Fkube1%2Fnamespace_id%2Fwordpress-template-prod)
 * [Project documentation](https://github.com/taitounited/wordpress-template/wiki)
-* [Storage bucket (dev)](https://console.cloud.google.com/storage/browser/wordpress-template-dev?project=taitounited-companyname-dev)
-* [Storage bucket (prod)](https://console.cloud.google.com/storage/browser/wordpress-template-prod?project=taitounited-companyname-prod)
 * [Uptime monitoring (Stackdriver)](https://app.google.stackdriver.com/uptime?project=gcloud-temp1)
 
 [//]: # (GENERATED LINKS END)
@@ -36,98 +44,34 @@ TIP: Using a static site generator combined with a CMS system and some additiona
 
 ## Prerequisites
 
-* Optional: [taito-cli](https://github.com/TaitoUnited/taito-cli#readme)
-* Optional: [docker-compose](https://docs.docker.com/compose/install/)
+* [docker-compose](https://docs.docker.com/compose/install/)
+* [taito-cli](https://github.com/TaitoUnited/taito-cli#readme)
 
-## Editing the site
+## Important
 
-It is recommended to do most modifications in dev environment first and use the production environment only for making frequent modifications like creating new blog posts and managing users.
+It is recommended to do most modifications in local dev environment first. Use the production environment only for making frequent live modifications like creating new blog posts and managing users.
 
-Edit the site with the WordPress Admin GUI (see the links at the beginning of this README). You can also modify WordPress data files located in the storage bucket by using your browser. Ask someone to commit your changes to git and to migrate them to production, if you cannot do it yourself.
+If the production database contains some confidential data like personally identifiable information of customers, you should never take a full database dump of production data for development purposes. However, if most modifications are made in local development environment and committed to git, there should be no need for production data at all. You can use the staging environment to make sure that the modifications made in local development environment work also with the current production data.
 
 ## Upgrading WordPress
 
-CI/CD trigger deploys the latest WordPress version by default:
-
-* Upgrade WordPress in dev: `taito deployment trigger:dev`
-* Check that everything seems ok.
-* Upgrade WordPress in prod: `taito deployment trigger:prod`
-
-TODO automatic upgrade process: check for new versions, upgrade all non-production wordpresses, send notifications about the upgrade, wait for a few days, upgrade all production wordpresses.
-
-## Remote development
-
-If multiple developers are working on the same site simultaneously using a local development environment, migrating all changes together may be an error-prone process. To mitigate this problem, developers can use a remote development environment that is shared among all developers.
-
-Install git hooks and some libraries on host (add `--clean` for clean reinstall):
-
-    taito install
-
-Open the WordPress site, the admin GUI and the storage bucket:
-
-    taito info:dev
-    taito open app:dev
-    taito open admin:dev
-    taito open storage:dev
-
-> It's common that idle applications are run down to save resources on non-production environments. If your application seems to be down, you can start it by running `taito start:ENV`, or by pushing some changes to git.
-
-> If you run into authorization errors, authenticate with the `taito --auth:ENV` command.
-
-Mount remote storage bucket to your local disk so that you can make changes to remote files directly (FOR LINUX ONLY):
-
-* Run `taito storage mount:dev`
-* Modify files located in `./mnt/wordpress-template-dev`
-
-Sync data/files from local disk to the remote storage bucket:
-
-* Warn other developers that you are going to sync the data from git
-* Sync data/files to the remote bucket `taito sync to:dev`. The command retrieves latest changes from git before sync and it does not sync user accounts or other confidential data.
-
-Sync data/files located in remote storage bucket to local disk and git:
-
-* Warn other developers that you are going to sync the data to git
-* Sync data and files from the remote dev environment to your local disk: `taito sync from:dev`. The command retrieves latest changes from git before sync. The command does not sync user accounts or other confidential data.
-* Add such directories/files to `.gitignore` that should not be committed to git.
-* Commit and push changes to git
-
-Migrate changes from dev to production:
-
-* Deploy taito-cli and Kubernetes configuration changes: `taito vc env merge`
-* Migrate storage bucket files and database changes either manually or by using a WordPress migration plugin (TODO support for automation coming later). NOTE: You should not migrate/copy the whole database and all the files, if they contain development data or development user accounts.
-
-Migrate changes from production to dev:
-
-* Migrate storage bucket files and database changes either manually or by using a WordPress migration plugin (TODO support for automation coming later). NOTE: You should not migrate/copy the whole database and all the files, if they contain confidential data like personal user accounts, personal photos, contact details, payments or private messaging.
-
-Some additional commands for operating remote environments:
-
-    taito status:dev                        # Show status of dev environment
-    taito shell:wordpress:dev               # Start a shell on wordpress container
-    taito logs:wordpress:dev                # Tail logs of wordpress container
-    taito open logs:dev                     # Open logs on browser
-    taito db connect:dev                    # Connect to database from command-line
-    taito db proxy:dev                      # Start a proxy for connecting database with a GUI tool
-    taito db import:dev ./database/file.sql # Import a file to database
-    taito db dump:dev                       # Dump database to a file
-    taito db diff:dev prod                  # Show diff between dev and prod db schemas
-    taito db copy to:dev prod               # Copy prod database to dev
-
-Run `taito -h` to get detailed instructions for all commands. Run `taito COMMAND -h` to show command help (e.g `taito vc -h`, `taito db -h`, `taito db import -h`). For troubleshooting run `taito --trouble`. See PROJECT.md for project specific conventions and documentation.
+Upgrade WordPress version both in `docker-compose.yaml` and in `scripts/heml.yaml`. Push the change to different environment branches. Use the staging environment to check that the upgrade doesn't break anything, before pushing the change to production.
 
 ## Local development
+
+> Try to synchronize your work with other developers to avoid conflicts. You can easily overwrite changes of another developer when you save your local data to git.
+
+> NOTE: Support for remote development environment might be coming later (see README_remote.md)
 
 Install some libraries on host (add `--clean` for clean reinstall):
 
     taito install
 
-Start containers (add `--clean` for clean rebuild):
+    # TODO gitignored 'wordpress/data' should also be deleted on --clean
+
+Start containers (add `--clean` for clean rebuild and db init using `database/init/*`):
 
     taito start
-
-Initialize local database (add `--clean` for clean init):
-
-    taito init
 
 Open app in browser:
 
@@ -147,9 +91,20 @@ Access database:
     taito db proxy                          # access using a database GUI tool
     taito db import: ./database/file.sql    # import a sql script to database
 
+Access data:
+
+    # WordPress data is located in `wordpress/data`. Add such files/folders to
+    # `wordpress/data/.gitignore` that should not be committed to git.
+
+Save database dump to `database/init/init.sql` before committing changes to git:
+
+    # WARN: Never commit confidential production data to git.
+    taito db dump
+
 Start a shell on a container:
 
     taito shell:wordpress
+    taito shell:database
 
 Stop containers:
 
@@ -162,32 +117,46 @@ List all project related links and open one of them in browser:
 
 Cleaning:
 
-    taito clean:wordpress                   # Remove wordpress container image
+    taito clean:wordpress                   # TODO
+    taito clean:database                    # TODO
+    taito clean:data                        # TODO Clean gitignored wp data
     taito clean:npm                         # Delete node_modules directories
     taito clean                             # Clean everything
 
-The commands mentioned above work also for server environments (`feature`, `dev`, `test`, `staging`, `prod`). Some examples for dev environment:
+The commands mentioned above work also for server environments (`feat`, `dev`, `test`, `stag`, `prod`). Some examples for dev environment:
 
-    taito open app:dev                      # Open application in browser
-    taito open admin:dev                    # Open admin GUI in browser
-    taito info:dev                          # Show info
-    taito status:dev                        # Show status of dev environment
-    taito shell:wordpress:dev               # Start a shell on wordpress container
-    taito logs:wordpress:dev                # Tail logs of wordpress container
-    taito open logs:dev                     # Open logs on browser
-    taito open storage:dev                  # Open storage bucket on browser
-    taito db connect:dev                    # Access database on command line
-    taito db proxy:dev                      # Start a proxy for database access
-    taito db import:dev ./database/file.sql # Import a file to database
-    taito db dump:dev                       # Dump database to a file
-    taito db diff:dev test                  # Show diff between dev and test schemas
-    taito db copy to:dev prod               # Copy prod database to dev
+    taito open app:stag                     # Open application in browser
+    taito open admin:stag                   # Open admin GUI in browser
+    taito info:stag                         # Show info
+    taito status:stag                       # Show status of dev environment
+    taito shell:wordpress:stag              # Start a shell on wordpress container
+    taito logs:wordpress:stag               # Tail logs of wordpress container
+    taito open logs:stag                    # Open logs on browser
+    taito open storage:stag                 # Open storage bucket on browser
+    taito db connect:stag                   # Access database on command line
+    taito db proxy:stag                     # Start a proxy for database access
+    taito db import:stag ./database/fil.sql # Import a file to database
+    taito db dump:stag                      # Dump database to a file
+    taito db diff:stag test                 # Show diff between dev and test schemas
+    taito db copy to:stag prod              # Copy prod database to stag
 
 Run `taito -h` to get detailed instructions for all commands. Run `taito COMMAND -h` to show command help (e.g `taito vc -h`, `taito db -h`, `taito db import -h`). For troubleshooting run `taito --trouble`. See PROJECT.md for project specific conventions and documentation.
 
 > If you run into authorization errors, authenticate with the `taito --auth:ENV` command.
 
 > It's common that idle applications are run down to save resources on non-production environments. If your application seems to be down, you can start it by running `taito start:ENV`, or by pushing some changes to git.
+
+## Deployment
+
+Deploying to different environments:
+
+* staging: Merge changes from dev branch to staging branch using fast-forward.
+* prod: Merge changes from staging branch to master branch using fast-forward. Version number and release notes are generated automatically by the CI/CD tool.
+
+> NOTE: You can use taito-cli to [manage environment branches](#version-control).
+
+> TODO: Automation for data/db migrations.
+> TODO: Command for copying data from production to staging.
 
 ## Version control
 
@@ -208,15 +177,7 @@ You can manage environment and feature branches using taito-cli. Some examples:
 
 ### Development branches
 
-Development is executed in dev and feature branches. Using feature branches is optional, but they are recommended to be used at least in the following situations:
-
-* **Making changes to existing production functionality**: Use feature branches and pull-requests for code reviews. This will decrease the likelyhood that the change will brake something in production. It is also easier to keep the release log clean by using separate feature branches.
-* **A new project team member**: Use pull-requests for code reviews. This way you can help the new developer in getting familiar with the coding conventions and application logic of the project.
-* **Teaching a new technology**: Pull-requests can be very useful in teaching best practices for an another developer.
-
-Code reviews are very important at the beginning of a new software project, because this is the time when the basic foundation is built for the future development. At the beginning, however, it is usually more sensible to do occasional code reviews across the entire codebase instead of feature specific code reviews based on pull-requests.
-
-Note that most feature branches should be short-lived and located only on your local git repository, unless you are going to make a pull-request.
+Development is executed mainly in dev branch. You can also use feature branches if you synchronize your work with other developers so that there wont be any nasty conflicts with `database/init/init.sql` and `wordpress/data/*`.
 
 ### Commit messages
 
@@ -270,29 +231,6 @@ You can use any of the following types in your commit message. Use at least type
 
 > Optionally you can use `npm run commit` to write your commit messages by using commitizen, though often it is quicker to write commit messages by hand.
 
-## Deployment
-
-Deploying to different environments:
-
-* feature: Push to feature branch.
-* dev: Push to dev branch.
-* test: Merge changes to test branch using fast-forward.
-* staging: Merge changes to staging branch using fast-forward.
-* prod: Merge changes to master branch using fast-forward. Version number and release notes are generated automatically by the CI/CD tool.
-
-> NOTE: Feature, test and staging branches are optional.
-
-> NOTE: You can use taito-cli to [manage environment branches](#version-control).
-
-> Automatic deployment might be turned off for critical environments (`ci_exec_deploy` setting in `taito-config.sh`). In such case the deployment must be run manually with the `taito -a deployment deploy:prod VERSION` command using an admin account after the CI/CD process has ended successfully.
-
-Advanced features:
-
-* **Copy production data to staging**: Often it's a good idea to copy production database to staging before merging changes to the staging branch: `taito db copy to:staging prod`. If you are sure nobody is using the production database, you can alternatively use the quick copy (`taito db copyquick to:staging prod`), but it disconnects all other users connected to the production database until copying is finished and also requires that both databases are located in the same database cluster.
-* **Feature branch**: You can create also an environment for a feature branch: Destroy the old environment first if it exists (`taito env destroy:feature`) and create a new environment for your feature branch (`taito env apply:feature BRANCH`). Currently only one feature environment can exist at a time and therefore the old one needs to be destroyed before the new one is created.
-
-NOTE: Some of the advanced operations might require admin credentials (e.g. staging/production operations). If you don't have an admin account, ask devops personnel to execute the operation for you.
-
 ## Configuration
 
 Done:
@@ -329,12 +267,14 @@ Collaborators & teams:
 
 Creating a new server environment:
 
+* For a production environment: Configure correct IP on DNS record.
 * For a production environment: Configure app url in `taito-config.sh` and hostname in `scripts/wordpress/helm-prod.yaml` file. (TODO taito-config.sh should suffice)
-* Run `taito env apply:ENV` to create an environment for `dev` or `prod`. Use the same basic auth credentials for all environments. Basic auth credentials don't have to be strong, but still do not reuse the same password on multiple projects. Update the basic auth username/password to the `package.json` file and to the beginning of this README, if they are not up-to-date.
+* Run `taito env apply:ENV` to create an environment. Use the same basic auth credentials for all environments (basic auth is disabled in production). Basic auth credentials don't have to be strong, but still do not reuse the same password on multiple projects. Update the basic auth username/password to the `package.json` file and to the beginning of this README, if they are not up-to-date.
 * Deploy wordpress to the environment either by pushing some changes to the environment branch or by triggering the deployment manually: `taito deployment trigger:ENV`.
-* Immediately generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`), and save the new password using a shared password manager. Also the dev environment admin password should be strong as eventually some of the dev environment data and installed plugins will be migrated to production. The initial admin password is: `initial-password-change-it-on-wp-admin-immediately`.
+* Immediately generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`). The initial admin password is: `initial-password-change-it-on-wp-admin-immediately`. If the admin account is shared, save the new password to a shared password manager. And never use the same admin password for every environment, as dev database is committed to git.
+* TODO Connect persistent volume disk to a separate vm dedicated for file access. In development, rsync files also to a storage bucket for easier access?
 
-> All operations on production and staging environments require admin rights. Please contact devops personnel.
+> Operations on production and staging environments require admin rights, if they contain confidential data. Please contact devops personnel.
 
 #### Kubernetes
 

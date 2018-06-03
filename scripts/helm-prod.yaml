@@ -1,6 +1,9 @@
 # values for chart https://hub.kubeapps.com/charts/stable/wordpress
+# TODO get environment specific settings from taito-config.sh
 wordpress:
   replicas: 2
+  persistence:
+    size: 8Gi
   ingress:
     hosts:
       # TODO get default host from taito-config.sh
@@ -18,8 +21,11 @@ wordpress:
           ingress.kubernetes.io/auth-realm: wordpress-template
           ingress.kubernetes.io/auth-secret: wordpress-template-prod-wp-basic-auth
   externalDatabase:
-    # wordpress creates tables so we have to use the mgr user account
+    host: mysql-sqlproxy-gcloud-sqlproxy.sqlproxy
+    port: 3306
     database: wptemplateprod
+    # wordpress creates tables in dev so we have to use the mgr user account
+    # TODO tables are migrated -> use the app account here?
     user: wptemplateprod
     passwordSecretName: db.wptemplateprod.build
     passwordSecretKey: SECRET

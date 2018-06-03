@@ -1,4 +1,5 @@
 # values for chart https://hub.kubeapps.com/charts/stable/wordpress
+# TODO get environment specific settings from taito-config.sh
 wordpress:
   replicas: 1
   ingress:
@@ -18,8 +19,11 @@ wordpress:
           ingress.kubernetes.io/auth-realm: wordpress-template
           ingress.kubernetes.io/auth-secret: wordpress-template-stag-wp-basic-auth
   externalDatabase:
-    # wordpress creates tables so we have to use the mgr user account
+    host: mysql-sqlproxy-gcloud-sqlproxy.sqlproxy
+    port: 3306
     database: wptemplatestag
+    # wordpress creates tables in dev so we have to use the mgr user account
+    # TODO tables are migrated -> use the app account here?
     user: wptemplatestag
     passwordSecretName: db.wptemplatestag.build
     passwordSecretKey: SECRET

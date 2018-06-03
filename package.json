@@ -3,9 +3,8 @@
   "scripts": {
     "install-ci": "echo '# No additional dependencies need to be installed in ci mode'",
     "install-dev": "echo '# No additional dependencies need to be installed'",
-    "taito-init:local": "npm run import-db-data",
-    "taito-init:local:clean": "echo TODO clean database && npm run import-db-data",
-    "import-db-data": "taito db-import:${taito_env} ./database/data/${taito_env}.sql",
+    "taito-init:local": "echo Nothing to initialize. All 'database/init/*.sql' scripts will be run on 'taito start --clean'.",
+    "taito-db-dump:local": "taito db-dump:local ./database/init/init.sql",
     "show-basic-auth": "echo * Basic auth credentials: TODO username / TODO password",
     "info:local": "echo '* Admin user: admin / pass'",
     "info:dev": "npm run show-basic-auth && echo Shared user accounts are located in a shared password manager",

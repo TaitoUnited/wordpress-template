@@ -9,7 +9,8 @@ wordpress:
     enabled: true
 
   persistence:
-    enabled: false # TODO enable
+    enabled: true
+    size: 4Gi
 
   mariadb:
     enabled: false

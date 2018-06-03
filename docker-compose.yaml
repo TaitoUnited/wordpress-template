@@ -13,8 +13,8 @@ wordpress-template-wordpress:
     WORDPRESS_PASSWORD: pass
     MARIADB_HOST: wordpress-template-database
     MARIADB_PORT_NUMBER: 3306
-    WORDPRESS_DATABASE_NAME: wordpress_template_local
-    WORDPRESS_DATABASE_USER: wordpress_template_local_app
+    WORDPRESS_DATABASE_NAME: wptemplatelocal
+    WORDPRESS_DATABASE_USER: wptemplatelocal
     WORDPRESS_DATABASE_PASSWORD: secret
 
 wordpress-template-database:
@@ -23,8 +23,10 @@ wordpress-template-database:
   restart: on-failure
   ports:
     - "7587:3306"
+  volumes:
+    - "./database/init:/docker-entrypoint-initdb.d"
   environment:
     MYSQL_ROOT_PASSWORD: secret
-    MYSQL_DATABASE: wordpress_template_local
-    MYSQL_USER: wordpress_template_local_app
+    MYSQL_DATABASE: wptemplatelocal
+    MYSQL_USER: wptemplatelocal
     MYSQL_PASSWORD: secret
