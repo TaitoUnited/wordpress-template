@@ -152,7 +152,7 @@ export link_urls="\
 # Secrets
 export taito_secrets="
   git.github.build:read/devops
-  db.${db_database_name}.build/devops:random
+  db.${db_database_name}.build/devops:manual
   db.${db_database_name}.app:random
 "
 # TODO rename build --> mgr

@@ -7,20 +7,9 @@ wordpress:
 
   ingress:
     enabled: true
-    annotations:
-      ingress.kubernetes.io/proxy-body-size: 1m
-      ingress.kubernetes.io/ssl-redirect: 'true'
-      ingress.kubernetes.io/force-ssl-redirect: 'true'
 
   persistence:
     enabled: false # TODO enable
-
-  externalDatabase:
-    host: localhost
-    user: bn_wordpress
-    password: dj48g3hvngk3s45fe92bf
-    database: bitnami_wordpress
-    port: 3306
 
   mariadb:
     enabled: false

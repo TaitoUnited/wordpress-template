@@ -5,14 +5,17 @@ wordpress:
       # TODO get default host from taito-config.sh
       - name: wordpress-template-dev.taitodev.com
         tlsSecret: wordpress-template-dev-tls-secret
-        tls: false # TODO true
+        tls: true
         annotations:
+          ingress.kubernetes.io/proxy-body-size: 1m
+          ingress.kubernetes.io/ssl-redirect: 'true'
+          ingress.kubernetes.io/force-ssl-redirect: 'true'
           ingress.kubernetes.io/auth-type: "basic"
           ingress.kubernetes.io/auth-realm: wordpress-template
           # TODO remove ENV from helm release name
           ingress.kubernetes.io/auth-secret: wordpress-template-dev-wp-basic-auth
   externalDatabase:
-    # wordpress creates tables so we use the mgr user account
+    # wordpress creates tables so we have to use the mgr user account
+    database: wptemplatedev
     user: wptemplatedev
     password: todotemptest # TODO remove
-    database: wptemplatedev
