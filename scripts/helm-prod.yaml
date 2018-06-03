@@ -7,15 +7,27 @@ wordpress:
       - name: wordpress-template-prod.taitodev.com
         tlsSecret: wordpress-template-prod-tls-secret
         tls: true
+        secureBackendDisabled: true
         annotations:
+          kubernetes.io/ingress.class: nginx
           ingress.kubernetes.io/proxy-body-size: 1m
-          ingress.kubernetes.io/ssl-redirect: 'true'
-          ingress.kubernetes.io/force-ssl-redirect: 'true'
+          kubernetes.io/tls-acme: "true"
+          ingress.kubernetes.io/ssl-redirect: "true"
+          ingress.kubernetes.io/force-ssl-redirect: "true"
           ingress.kubernetes.io/auth-type: "basic"
           ingress.kubernetes.io/auth-realm: wordpress-template
-          # TODO remove ENV from helm release name
           ingress.kubernetes.io/auth-secret: wordpress-template-prod-wp-basic-auth
   externalDatabase:
     # wordpress creates tables so we have to use the mgr user account
     database: wptemplateprod
     user: wptemplateprod
+    passwordSecretName: db.wptemplateprod.build
+    passwordSecretKey: SECRET
+
+  # smtpHost:
+  # smtpProtocol:
+  # smtpPort:
+  # smtpUser:
+  # smtpSecretName: smtp.wordpress-template-dev.email
+  # smtpSecretKey: SECRET
+  # smtpUsername:

@@ -1,20 +1,33 @@
 # values for chart https://hub.kubeapps.com/charts/stable/wordpress
 wordpress:
+  replicas: 1
   ingress:
     hosts:
       # TODO get default host from taito-config.sh
-      - name: wordpress-template-feature.taitodev.com
-        tlsSecret: wordpress-template-feature-tls-secret
+      - name: wordpress-template-feat.taitodev.com
+        tlsSecret: wordpress-template-feat-tls-secret
         tls: true
+        secureBackendDisabled: true
         annotations:
+          kubernetes.io/ingress.class: nginx
           ingress.kubernetes.io/proxy-body-size: 1m
-          ingress.kubernetes.io/ssl-redirect: 'true'
-          ingress.kubernetes.io/force-ssl-redirect: 'true'
+          kubernetes.io/tls-acme: "true"
+          ingress.kubernetes.io/ssl-redirect: "true"
+          ingress.kubernetes.io/force-ssl-redirect: "true"
           ingress.kubernetes.io/auth-type: "basic"
           ingress.kubernetes.io/auth-realm: wordpress-template
-          # TODO remove ENV from helm release name
-          ingress.kubernetes.io/auth-secret: wordpress-template-feature-wp-basic-auth
+          ingress.kubernetes.io/auth-secret: wordpress-template-feat-wp-basic-auth
   externalDatabase:
     # wordpress creates tables so we have to use the mgr user account
     database: wptemplatefeat
     user: wptemplatefeat
+    passwordSecretName: db.wptemplatefeat.build
+    passwordSecretKey: SECRET
+
+  # smtpHost:
+  # smtpProtocol:
+  # smtpPort:
+  # smtpUser:
+  # smtpSecretName: smtp.wordpress-template-dev.email
+  # smtpSecretKey: SECRET
+  # smtpUsername:
