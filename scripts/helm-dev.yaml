@@ -10,7 +10,7 @@ wordpress:
           ingress.kubernetes.io/proxy-body-size: 1m
           ingress.kubernetes.io/ssl-redirect: 'true'
           ingress.kubernetes.io/force-ssl-redirect: 'true'
-          nginx.ingress.kubernetes.io/secure-backends: 'false'
+          ingress.kubernetes.io/secure-backends: 'false'
           ingress.kubernetes.io/auth-type: "basic"
           ingress.kubernetes.io/auth-realm: wordpress-template
           # TODO remove ENV from helm release name
