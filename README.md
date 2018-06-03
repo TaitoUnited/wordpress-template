@@ -24,19 +24,21 @@ Table of contents:
 
 [//]: # (GENERATED LINKS START)
 
-* [Admin user interface (dev)](https://wordpress-template-dev.taitodev.com/admin/)
 * [Admin user interface (prod)](https://wordpress-template-prod.taitodev.com/admin/)
-* [Application (dev)](https://wordpress-template-dev.taitodev.com)
+* [Admin user interface (stag)](https://wordpress-template-stag.taitodev.com/admin/)
 * [Application (prod)](https://wordpress-template-prod.taitodev.com)
+* [Application (stag)](https://wordpress-template-stag.taitodev.com)
 * [Build logs](https://console.cloud.google.com/gcr/builds?project=gcloud-temp1&query=source.repo_source.repo_name%3D%22github-taitounited-wordpress-template%22)
 * [GitHub repository](https://github.com/taitounited/wordpress-template)
-* [Google project (dev)](https://console.cloud.google.com/home/dashboard?project=taitounited-companyname-dev)
 * [Google project (prod)](https://console.cloud.google.com/home/dashboard?project=taitounited-companyname-prod)
+* [Google project (stag)](https://console.cloud.google.com/home/dashboard?project=taitounited-companyname-dev)
 * [Kanban boards](https://github.com/taitounited/wordpress-template/projects)
-* [Logs (dev)](https://console.cloud.google.com/logs/viewer?project=gcloud-temp1&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2Fkube1%2Fnamespace_id%2Fwordpress-template-dev)
 * [Logs (prod)](https://console.cloud.google.com/logs/viewer?project=gcloud-temp1&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2Fkube1%2Fnamespace_id%2Fwordpress-template-prod)
+* [Logs (stag)](https://console.cloud.google.com/logs/viewer?project=gcloud-temp1&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2Fkube1%2Fnamespace_id%2Fwordpress-template-stag)
 * [Project documentation](https://github.com/taitounited/wordpress-template/wiki)
-* [Uptime monitoring (Stackdriver)](https://app.google.stackdriver.com/uptime?project=gcloud-temp1)
+* [Storage bucket (prod)](https://console.cloud.google.com/storage/browser/wordpress-template-prod?project=taitounited-companyname-prod)
+* [Storage bucket (stag)](https://console.cloud.google.com/storage/browser/wordpress-template-stag?project=taitounited-companyname-dev)
+* [Uptime monitoring (Stackdriver)](https://app.google.stackdriver.com/uptime?project=gcloud-temp1)  
 
 [//]: # (GENERATED LINKS END)
 
