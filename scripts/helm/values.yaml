@@ -18,16 +18,12 @@ wordpress:
   externalDatabase:
     host: localhost
     user: bn_wordpress
-    password: ""
+    password: dj48g3hvngk3s45fe92bf
     database: bitnami_wordpress
     port: 3306
 
   mariadb:
     enabled: false
-    persistence:
-      enabled: false
 
-  # TODO cloud sql proxy
-  # externalDatabase:
-  #   host: '127.0.0.1'
-  #   port: '3306'
+mariadb:
+  enabled: false

@@ -157,3 +157,6 @@ sed ${sedi} -- '/_TEMPLATE_DEFAULT_/d' cloudbuild.yaml
 sed ${sedi} -- '/template_default_taito_image/d' cloudbuild.yaml
 
 rm -f temp
+
+echo "TODO REMEMBER taito_project_short"
+read -r
