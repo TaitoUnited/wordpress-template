@@ -12,5 +12,5 @@ wordpress:
           # TODO remove ENV from helm release name
           ingress.kubernetes.io/auth-secret: wordpress-template-feature-wp-basic-auth
   externalDatabase:
-    user: TODO
-    database: wordpress_template_feature
+    user: wptemplatefeat
+    database: wptemplatefeat

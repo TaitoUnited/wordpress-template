@@ -13,6 +13,6 @@ wordpress:
           ingress.kubernetes.io/auth-secret: wordpress-template-dev-wp-basic-auth
   externalDatabase:
     # wordpress creates tables so we use the mgr user account
-    user: presstemplatedev
+    user: wptemplatedev
     password: todotemptest # TODO remove
-    database: wordpress_template_dev
+    database: wptemplatedev

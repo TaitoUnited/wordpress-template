@@ -21,6 +21,7 @@ export taito_provider="${template_default_provider:?}"
 export taito_repo_location="github-${taito_organization}"
 export taito_repo_name="wordpress-template"
 export taito_project="wordpress-template"
+export taito_project_short="wptemplate" # Max 10 characters
 export taito_company="companyname"
 export taito_family=""
 export taito_application="template"
@@ -39,7 +40,7 @@ export taito_storages="${taito_project}-${taito_env}"
 # Database definitions for database plugins
 export db_database_instance="common-mysql"
 export db_database_type="mysql"
-export db_database_name="${taito_project//-/_}_${taito_env}"
+export db_database_name="${taito_project_short}${taito_env}"
 export db_database_host="127.0.0.1" # TODO was localhost
 export db_database_proxy_port="5001"
 export db_database_port="${db_database_proxy_port}"
