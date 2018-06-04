@@ -13,14 +13,15 @@ Table of contents:
 * [Links](#links)
 * [Prerequisites](#prerequisites)
 * [Important](#important)
-* [Quick start](#quick-start)
+* [Upgrading WordPress](#upgrading-wordpress)
+* [Local development](#local-development)
 * [Deployment](#deployment)
 * [Version control](#version-control)
 * [Configuration](#configuration)
 
 ## Links
 
-> Non-production basic auth credentials: TODO user / painipaini. If the admin account is shared among people, you can find the admin credentials from a shared password manager.
+Non-production basic auth credentials: TODO: change `user` / `painipaini`. If the admin account is shared among people, you can find the admin credentials from a shared password manager.
 
 [//]: # (GENERATED LINKS START)
 
@@ -36,7 +37,7 @@ Table of contents:
 * [Logs (prod)](https://console.cloud.google.com/logs/viewer?project=gcloud-temp1&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2Fkube1%2Fnamespace_id%2Fwordpress-template-prod)
 * [Logs (stag)](https://console.cloud.google.com/logs/viewer?project=gcloud-temp1&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2Fkube1%2Fnamespace_id%2Fwordpress-template-stag)
 * [Project documentation](https://github.com/taitounited/wordpress-template/wiki)
-* [Uptime monitoring (Stackdriver)](https://app.google.stackdriver.com/uptime?project=gcloud-temp1)  
+* [Uptime monitoring (Stackdriver)](https://app.google.stackdriver.com/uptime?project=gcloud-temp1)
 
 [//]: # (GENERATED LINKS END)
 
@@ -45,13 +46,14 @@ Table of contents:
 ## Prerequisites
 
 * [docker-compose](https://docs.docker.com/compose/install/)
+* [node.js](https://nodejs.org/)
 * [taito-cli](https://github.com/TaitoUnited/taito-cli#readme)
 
 ## Important
 
 It is recommended to do most modifications in local dev environment first. Use the production environment only for making frequent live modifications like creating new blog posts and managing users.
 
-If the production database contains some confidential data like personally identifiable information of customers, you should never take a full database dump of production data for development purposes. However, if most modifications are made in local development environment and committed to git, there should be no need for production data at all. You can use the staging environment to make sure that the modifications made in local development environment work also with the current production data.
+If the production database contains some confidential data like personally identifiable information of customers, you should never take a full database dump of production data for development purposes. Or if you do, data should anonymized carefully. However, if most modifications are made in local development environment and committed to git, there should be no need for production data at all. You can use the staging environment to make sure that the modifications made in local development environment work also with the current production data.
 
 ## Upgrading WordPress
 
@@ -59,19 +61,23 @@ Upgrade WordPress version both in `docker-compose.yaml` and in `scripts/heml.yam
 
 ## Local development
 
-> Try to synchronize your work with other developers to avoid conflicts. You can easily overwrite changes of another developer when you save your local data to git.
+> Try to synchronize your work with other developers to avoid conflicts. You can easily overwrite changes of another developer when you push your local database changes to git.
 
-> NOTE: Support for remote development environment might be coming later (see README_remote.md)
+> Support for remote development environment might be coming later (see README_remote.md)
 
 Install some libraries on host (add `--clean` for clean reinstall):
 
     taito install
 
-    # TODO gitignored 'wordpress/data' should also be deleted on --clean
+    # TODO: gitignored 'wordpress/data' should also be deleted on --clean
 
 Start containers (add `--clean` for clean rebuild and db init using `database/init/*`):
 
     taito start
+
+Show user accounts and other information that you can use to log in:
+
+    taito info
 
 Open app in browser:
 
@@ -80,10 +86,6 @@ Open app in browser:
 Open admin GUI in browser:
 
     taito open admin
-
-Show user accounts and other information that you can use to log in:
-
-    taito info
 
 Access database:
 
@@ -119,7 +121,7 @@ Cleaning:
 
     taito clean:wordpress                   # TODO
     taito clean:database                    # TODO
-    taito clean:data                        # TODO Clean gitignored wp data
+    taito clean:data                        # TODO: Clean gitignored wp data
     taito clean:npm                         # Delete node_modules directories
     taito clean                             # Clean everything
 
@@ -153,10 +155,10 @@ Deploying to different environments:
 * staging: Merge changes from dev branch to staging branch using fast-forward.
 * prod: Merge changes from staging branch to master branch using fast-forward. Version number and release notes are generated automatically by the CI/CD tool.
 
-> NOTE: You can use taito-cli to [manage environment branches](#version-control).
+> You can use taito-cli to [manage environment branches](#version-control).
 
-> TODO: Automation for data/db migrations.
-> TODO: Command for copying data from production to staging.
+TODO: Automation for data/db migrations.
+TODO: Command for copying data from production to staging.
 
 ## Version control
 
@@ -236,7 +238,7 @@ You can use any of the following types in your commit message. Use at least type
 Done:
 * [ ] GitHub settings
 * [ ] Basic project settings
-* [ ] Server environments: dev
+* [ ] Server environments: stag
 * [ ] Server environments: prod
 
 ### GitHub settings
@@ -249,7 +251,7 @@ Options:
 
 Branches:
 * Default branch: dev
-* Protected branch: master (TODO more protection settings)
+* Protected branch: master (TODO: more protection settings)
 
 Collaborators & teams:
 * Teams: Select admin permission for the Admins team
@@ -268,11 +270,11 @@ Collaborators & teams:
 Creating a new server environment:
 
 * For a production environment: Configure correct IP on DNS record.
-* For a production environment: Configure app url in `taito-config.sh` and hostname in `scripts/wordpress/helm-prod.yaml` file. (TODO taito-config.sh should suffice)
+* For a production environment: Configure app url in `taito-config.sh` and hostname in `scripts/wordpress/helm-prod.yaml` file. (TODO: taito-config.sh should suffice)
 * Run `taito env apply:ENV` to create an environment. Use the same basic auth credentials for all environments. Basic auth credentials don't have to be strong, but still do not reuse the same password for multiple projects. Update the basic auth username/password to the `package.json` file and to the beginning of this README, if they are not up-to-date.
 * Deploy wordpress to the environment either by pushing some changes to the environment branch or by triggering the deployment manually: `taito deployment trigger:ENV`.
 * Immediately generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`). The initial admin password is: `initial-password-change-it-on-wp-admin-immediately`. If the admin account is shared, save the new password to a shared password manager. And never use the same admin password for every environment, as dev database is committed to git.
-* TODO Connect persistent volume disk to a separate vm dedicated for file access. In development, rsync files also to a storage bucket for easier access?
+* TODO: Connect persistent volume disk to a separate vm dedicated for file access. In development, rsync files also to a storage bucket for easier access?
 
 > Operations on production and staging environments require admin rights, if they contain confidential data. Please contact devops personnel.
 

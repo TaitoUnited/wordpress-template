@@ -40,7 +40,7 @@ export taito_storages="${taito_project}-${taito_env}"
 export db_database_instance="common-mysql"
 export db_database_type="mysql"
 export db_database_name="${taito_project_short}${taito_env}"
-export db_database_host="127.0.0.1" # TODO was localhost
+export db_database_host="127.0.0.1"
 export db_database_proxy_port="5001"
 export db_database_port="${db_database_proxy_port}"
 
@@ -51,7 +51,6 @@ export dockerfile=Dockerfile
 export gcloud_org_id="${template_default_provider_org_id:?}"
 export gcloud_region="${template_default_provider_region:?}"
 export gcloud_zone="${template_default_provider_zone:?}"
-export gcloud_billing_account="${template_default_provider_billing_account:-}"
 export gcloud_sql_proxy_port="${db_database_proxy_port}"
 export gcloud_cdn_enabled=false
 
