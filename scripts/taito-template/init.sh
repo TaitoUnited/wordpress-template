@@ -26,6 +26,7 @@
 
 # Remove .gitignore to allow committing data to git
 rm wordpress/data/.gitignore
+mv wordpress/data/.gitkeep wordpress/data/.gitignore
 
 # Remove MIT license
 # TODO leave a reference to the original?
@@ -75,7 +76,7 @@ printf \
 
 echo "Give a short version of the project name '${taito_project}'."
 echo "It should be unique but also descriptive as it will be used"
-echo "as a database name and as a database user name."
+echo "as a database name and as a database username."
 echo
 export taito_project_short=""
 while [[ "${#taito_project_short}" -lt 5 ]] || \

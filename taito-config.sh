@@ -58,7 +58,6 @@ export gcloud_cdn_enabled=false
 export kubectl_name="kube1" # TODO rename to common-kubernetes
 
 # Helm plugin
-# export helm_charts="stable/wordpress stable/gcloud-sqlproxy"
 # export helm_deploy_options="--recreate-pods" # Force restart
 
 # Template plugin
