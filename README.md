@@ -4,7 +4,7 @@
 
 Wordpress-template is a project template for WordPress sites. Create a new project from this template by running `taito template create: wordpress-template`.
 
-TIP: A static site generator combined with a CMS system, git repository and some additional services provides a more secure and care-free alternative for WordPress sites. It also provides a sensible way to do version control, makes a clear distinction between production and development data, and offers a hassle-free way to do automatic migrations between environments. However, such implementation doesn't offer as much plug-and-play functionality as WordPress does. See the [gatsby example](https://github.com/TaitoUnited/server-template-alt/tree/master/client-gatsby) that can be used with the [server-template](https://github.com/TaitoUnited/server-template) if you need also some custom backend functionality.
+TIP: A static site generator combined with a CMS system, git repository and some additional services provides a more secure and care-free alternative for WordPress sites. It also provides a sensible way to do version control and automatic migrations between environments. However, such implementation doesn't offer as much plug-and-play functionality as WordPress does. See [gatsby-template](https://github.com/TaitoUnited/gatsby-template) or [hugo-template](https://github.com/TaitoUnited/hugo-template) as an example.
 
 [//]: # (TEMPLATE NOTE END)
 
@@ -12,7 +12,7 @@ Table of contents:
 
 * [Links](#links)
 * [Prerequisites](#prerequisites)
-* [Important](#important)
+* [Workflow](#workflow)
 * [Upgrading WordPress](#upgrading-wordpress)
 * [Local development](#local-development)
 * [Deployment](#deployment)
@@ -49,29 +49,23 @@ Non-production basic auth credentials: TODO: change `user` / `painipaini`. If th
 * [node.js](https://nodejs.org/)
 * [taito-cli](https://github.com/TaitoUnited/taito-cli#readme)
 
-## Important
+## Workflow
 
-It is recommended to do most modifications in local dev environment first. Use the production environment only for making frequent live modifications like creating new blog posts and managing users.
-
-If the production database contains some confidential data like personally identifiable information of customers, you should never take a full database dump of production data for development purposes. Or if you do, data should anonymized carefully. However, if most modifications are made in local development environment and committed to git, there should be no need for production data at all. You can use the staging environment to make sure that the modifications made in local development environment work also with the current production data.
+It is recommended to do most modifications in local or staging environment first. Use the production environment only for making frequent live modifications like creating new blog posts and managing users.
 
 ## Upgrading WordPress
 
-Upgrade WordPress version both in `docker-compose.yaml` and in `scripts/heml.yaml`. Push the change to different environment branches. Use the staging environment to check that the upgrade doesn't break anything, before pushing the change to production.
+Upgrade WordPress version both in `docker-compose.yaml` and in `scripts/heml.yaml`. Push the change to different environment branches. Check that the upgrade doesn't break anything before pushing it to master branch.
 
 ## Local development
 
-> Try to synchronize your work with other developers to avoid conflicts. You can easily overwrite changes of another developer when you push your local database changes to git.
-
-> Support for remote development environment might be coming later (see README_remote.md)
+> It is recommended to use the staging database for development if it does not contain any confidential data. You can do this by configuring `docker-compose.yaml` and running `taito db` commmands using `stag` as target.
 
 Install some libraries on host (add `--clean` for clean reinstall):
 
     taito install
 
-    # TODO: gitignored 'wordpress/data' should also be deleted on --clean
-
-Start containers (add `--clean` for clean rebuild and db init using `database/init/*`):
+Start containers (add `--clean` for clean rebuild and database init):
 
     taito start
 
@@ -98,15 +92,17 @@ Access data:
     # WordPress data is located in `wordpress/data`. Add such files/folders to
     # `wordpress/data/.gitignore` that should not be committed to git.
 
-Save database dump to `database/init/init.sql` before committing changes to git:
+In case you are using local database for development, you need to save database dump to `database/init/init.sql` before committing changes to git:
 
-    # WARN: Never commit confidential production data to git.
     taito db dump
+
+    > Try to synchronize your work with other developers to avoid conflicts. You can easily overwrite changes of another developer when you push your local database changes to git.
+
+    > WARN: If the production/staging database contains some confidential data like personally identifiable information of customers, you should never take a full database dump of production/staging data for development purposes. Or if you do, data should be anonymized carefully.
 
 Start a shell on a container:
 
     taito shell:wordpress
-    taito shell:database
 
 Stop containers:
 
@@ -158,7 +154,7 @@ Deploying to different environments:
 > You can use taito-cli to [manage environment branches](#version-control).
 
 TODO: Automation for data/db migrations.
-TODO: Command for copying data from production to staging.
+TODO: Commands for copying data from production to staging.
 
 ## Version control
 
@@ -247,6 +243,7 @@ Recommended settings for most projects.
 
 Options:
 * Data services: Allow GitHub to perform read-only analysis: on
+* Data services: Dependency graph: on
 * Data services: Vulnerability alerts: on
 
 Branches:
@@ -274,7 +271,9 @@ Creating a new server environment:
 * Run `taito env apply:ENV` to create an environment. Use the same basic auth credentials for all environments. Basic auth credentials don't have to be strong, but still do not reuse the same password for multiple projects. Update the basic auth username/password to the `package.json` file and to the beginning of this README, if they are not up-to-date.
 * Deploy wordpress to the environment either by pushing some changes to the environment branch or by triggering the deployment manually: `taito deployment trigger:ENV`.
 * Immediately generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`). The initial admin password is: `initial-password-change-it-on-wp-admin-immediately`. If the admin account is shared, save the new password to a shared password manager. And never use the same admin password for every environment, as dev database is committed to git.
-* TODO: Connect persistent volume disk to a separate vm dedicated for file access. In development, rsync files also to a storage bucket for easier access?
+* Store media files to a storage bucket to keep database and media files in sync at all times. You can do this by installing one of the following plugins. Note that bucket and service account was already created by Terraform so you should configure plugin settings manually.
+  * [wp-stateless](https://wordpress.org/plugins/wp-stateless/) for Google Cloud. Use the stateless mode.
+  * [https://github.com/humanmade/S3-Uploads](S3-Uploads) for AWS.
 
 > Operations on production and staging environments require admin rights, if they contain confidential data. Please contact devops personnel.
 
