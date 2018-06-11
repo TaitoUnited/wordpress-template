@@ -21,7 +21,7 @@ Table of contents:
 
 ## Links
 
-Non-production basic auth credentials: TODO: change `user` / `painipaini`. If the admin account is shared among people, you can find the admin credentials from a shared password manager.
+Non-production basic auth credentials: TODO: change `user` / `painipaini`. If the admin account is shared among people, you can find the admin credentials from shared password manager.
 
 [//]: # (GENERATED LINKS START)
 
