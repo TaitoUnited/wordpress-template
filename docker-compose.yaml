@@ -16,7 +16,7 @@ wordpress-template-wordpress:
     # NOTE: For staging database (staging should not contain confidential data)
     WORDPRESS_DATABASE_NAME: wptemplatestag
     WORDPRESS_DATABASE_USER: wptemplatestag
-    WORDPRESS_DATABASE_PASSWORD: e6171lQuIQ0VDncaR8AFJSkrQ8W61A
+    WORDPRESS_DATABASE_PASSWORD: crpIbWWeiYtRUi2ipI7GnZ6EKz7w8w
     # NOTE: For local database
     # WORDPRESS_DATABASE_NAME: wptemplatelocal
     # WORDPRESS_DATABASE_USER: wptemplatelocal

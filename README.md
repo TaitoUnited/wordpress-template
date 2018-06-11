@@ -32,11 +32,13 @@ Non-production basic auth credentials: TODO: change `user` / `painipaini`. If th
 * [Build logs](https://console.cloud.google.com/gcr/builds?project=gcloud-temp1&query=source.repo_source.repo_name%3D%22github-taitounited-wordpress-template%22)
 * [GitHub repository](https://github.com/taitounited/wordpress-template)
 * [Google project (prod)](https://console.cloud.google.com/home/dashboard?project=taitounited-companyname-prod)
-* [Google project (stag)](https://console.cloud.google.com/home/dashboard?project=taitounited-companyname-dev)
+* [Google project (stag)](https://console.cloud.google.com/home/dashboard?project=taitounited-companyname-prod)
 * [Kanban boards](https://github.com/taitounited/wordpress-template/projects)
 * [Logs (prod)](https://console.cloud.google.com/logs/viewer?project=gcloud-temp1&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2Fkube1%2Fnamespace_id%2Fwordpress-template-prod)
 * [Logs (stag)](https://console.cloud.google.com/logs/viewer?project=gcloud-temp1&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2Fkube1%2Fnamespace_id%2Fwordpress-template-stag)
 * [Project documentation](https://github.com/taitounited/wordpress-template/wiki)
+* [Storage bucket (prod)](https://console.cloud.google.com/storage/browser/wordpress-template-prod?project=taitounited-companyname-prod)
+* [Storage bucket (stag)](https://console.cloud.google.com/storage/browser/wordpress-template-stag?project=taitounited-companyname-prod)
 * [Uptime monitoring (Stackdriver)](https://app.google.stackdriver.com/uptime?project=gcloud-temp1)
 
 [//]: # (GENERATED LINKS END)
@@ -59,7 +61,7 @@ Upgrade WordPress version both in `docker-compose.yaml` and in `scripts/heml.yam
 
 ## Local development
 
-> It is recommended to use the staging database for development if it does not contain any confidential data. You can do this by configuring `docker-compose.yaml` and running `taito db` commmands using `stag` as target.
+> You can use either the local or staging database for development by modifying `docker-compose.yaml`. It is recommended to use the staging database also for local development, if it does not contain any confidential data.
 
 Install some libraries on host (add `--clean` for clean reinstall):
 
@@ -89,8 +91,9 @@ Access database:
 
 Access data:
 
-    # WordPress data is located in `wordpress/data`. Add such files/folders to
-    # `wordpress/data/.gitignore` that should not be committed to git.
+    # WordPress data is located locally in folder `wordpress/data`.
+    # Add such files/folders to `wordpress/data/.gitignore` that should
+    # not be committed to git.
 
 In case you are using local database for development, you need to save database dump to `database/init/init.sql` before committing changes to git:
 
@@ -98,7 +101,7 @@ In case you are using local database for development, you need to save database 
 
     > Try to synchronize your work with other developers to avoid conflicts. You can easily overwrite changes of another developer when you push your local database changes to git.
 
-    > WARN: If the production/staging database contains some confidential data like personally identifiable information of customers, you should never take a full database dump of production/staging data for development purposes. Or if you do, data should be anonymized carefully.
+    > WARN: If production/staging database contains some confidential data like personally identifiable information of customers, you should never take a full database dump of production/staging data for development purposes. Or if you do, data should be anonymized carefully.
 
 Start a shell on a container:
 
@@ -153,8 +156,35 @@ Deploying to different environments:
 
 > You can use taito-cli to [manage environment branches](#version-control).
 
-TODO: Automation for data/db migrations.
-TODO: Commands for copying data from production to staging.
+NOTE: Currently only Helm configuration is deployed automatically on git push. You have to migrate database data and files yourself using taito commands. Some examples:
+
+```
+    # Access staging
+    taito shell:wordpress:stag
+    taito db connect:stag
+
+    # Copy a theme to staging
+    taito exec:wordpress:stag rm -rf /bitnami/wordpress/wp-content/themes/mytheme
+    taito copy to:wordpress:stag ./wordpress/data/wordpress/wp-content/mytheme /bitnami/wordpress/wp-content/themes
+
+    # Copy a theme to production
+    taito exec:wordpress:prod rm -rf /bitnami/wordpress/wp-content/themes/mytheme
+    taito copy to:wordpress:prod ./wordpress/data/wordpress/wp-content/mytheme /bitnami/wordpress/wp-content/themes
+
+    # Migrate some database data from staging to production
+    taito db dump:stag ./stag-dump.sql
+    taito db dump:prod ./prod-dump.sql
+    ...modify files...
+    taito db import:prod ./imports.sql
+    taito db connect:prod
+
+    # Access storage buckets
+    taito open storage:stag
+    taito open storage:prod
+```
+
+TODO: Automcatic migrations between environments.
+TODO: Command for copying all data from production to staging.
 
 ## Version control
 
@@ -264,18 +294,20 @@ Collaborators & teams:
 
 ### Server environments
 
+> Operations on production and staging environments require admin rights, if they contain confidential data. Please contact devops personnel.
+
 Creating a new server environment:
 
-* For a production environment: Configure correct IP on DNS record.
-* For a production environment: Configure app url in `taito-config.sh` and hostname in `scripts/wordpress/helm-prod.yaml` file. (TODO: taito-config.sh should suffice)
-* Run `taito env apply:ENV` to create an environment. Use the same basic auth credentials for all environments. Basic auth credentials don't have to be strong, but still do not reuse the same password for multiple projects. Update the basic auth username/password to the `package.json` file and to the beginning of this README, if they are not up-to-date.
+* Only for production environment: Configure correct IP on DNS record.
+* Only for production environment: Configure app url in `taito-config.sh` and hostname in `scripts/wordpress/helm-prod.yaml` file. (TODO: taito-config.sh should suffice)
+* Run `taito env apply:ENV` to create an environment. Use the same basic auth credentials for all environments. Basic auth credentials don't have to be strong, but still do not reuse the same password for multiple projects. Update the basic auth username/password to the `package.json` file and to the beginning of this `README.md`, if they are not up-to-date.
 * Deploy wordpress to the environment either by pushing some changes to the environment branch or by triggering the deployment manually: `taito deployment trigger:ENV`.
 * Immediately generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`). The initial admin password is: `initial-password-change-it-on-wp-admin-immediately`. If the admin account is shared, save the new password to a shared password manager. And never use the same admin password for every environment, as dev database is committed to git.
-* Store media files to a storage bucket to keep database and media files in sync at all times. You can do this by installing one of the following plugins. Note that bucket and service account was already created by Terraform so you should configure plugin settings manually.
-  * [wp-stateless](https://wordpress.org/plugins/wp-stateless/) for Google Cloud. Use the stateless mode.
+* Install one of the following plugins. Note that bucket and service account was already created by Terraform so you should configure plugin settings manually. You can open the bucket by running `taito open storage:ENV`.
+  * [wp-stateless](https://wordpress.org/plugins/wp-stateless/) for Google Cloud. Settings: mode=`Stateless`, bucket=`wordpress-template-ENV`, bucket folder=`/media`, create a JSON key for `wordpress-template-ENV` service account from gcloud console (`taito open project:ENV` -> IAM & Admin -> Service accounts).
   * [https://github.com/humanmade/S3-Uploads](S3-Uploads) for AWS.
-
-> Operations on production and staging environments require admin rights, if they contain confidential data. Please contact devops personnel.
+* Delete service account keys from your local disk that were created in the previous step.
+* If the staging database does not contain any condifidential data, add the staging database password to `docker-compose.yaml` for development purposes.
 
 #### Kubernetes
 
