@@ -21,6 +21,19 @@ mv "${template_project_path}/scripts/.htpasswd" \
 mv "${template_project_path}/scripts/terraform" "${template_project_path}/scripts/terraform_old" 2> /dev/null
 cp -r "scripts/terraform" "${template_project_path}/scripts/terraform" 2> /dev/null
 
+# Copy terraform state back
+# TODO do this for all providers
+rm -r "${template_project_path}/scripts/terraform/gcloud/feat" 2> /dev/null
+rm -r "${template_project_path}/scripts/terraform/gcloud/dev" 2> /dev/null
+rm -r "${template_project_path}/scripts/terraform/gcloud/test" 2> /dev/null
+rm -r "${template_project_path}/scripts/terraform/gcloud/stag" 2> /dev/null
+rm -r "${template_project_path}/scripts/terraform/gcloud/prod" 2> /dev/null
+cp -r "${template_project_path}/scripts/terraform_old/gcloud/feat" "${template_project_path}/scripts/terraform/gcloud"
+cp -r "${template_project_path}/scripts/terraform_old/gcloud/dev" "${template_project_path}/scripts/terraform/gcloud"
+cp -r "${template_project_path}/scripts/terraform_old/gcloud/test" "${template_project_path}/scripts/terraform/gcloud"
+cp -r "${template_project_path}/scripts/terraform_old/gcloud/stag" "${template_project_path}/scripts/terraform/gcloud"
+cp -r "${template_project_path}/scripts/terraform_old/gcloud/prod" "${template_project_path}/scripts/terraform/gcloud"
+
 echo
 echo
 echo "--- Manual steps ---"
