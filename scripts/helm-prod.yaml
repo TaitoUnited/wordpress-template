@@ -3,6 +3,11 @@
 # --> no need for a separate file for each environment
 wordpress:
   replicas: 2
+  # TODO default for prod: 512Mi, 300m
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
   persistence:
     size: 8Gi
   ingress:

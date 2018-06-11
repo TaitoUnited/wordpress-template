@@ -4,3 +4,7 @@ wordpress:
     registry: docker.io
     repository: bitnami/wordpress
     tag: 4.9.6
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
