@@ -74,17 +74,19 @@ printf \
 
 # Replace some strings
 
-echo "Give a short version of the project name '${taito_project}'."
-echo "It should be unique but also descriptive as it will be used"
-echo "as a database name and as a database username."
-echo
-export taito_project_short=""
-while [[ "${#taito_project_short}" -lt 5 ]] || \
-  [[ "${#taito_project_short}" -gt 10 ]]
-do
-  echo "Short project name (5-10 characters)?"
-  read -r taito_project_short
-done
+if [[ ${mode} != "upgrade" ]] || [[ -z "${taito_project_short}" ]]; then
+  echo "Give a short version of the project name '${taito_project}'."
+  echo "It should be unique but also descriptive as it will be used"
+  echo "as a database name and as a database username."
+  echo
+  export taito_project_short=""
+  while [[ "${#taito_project_short}" -lt 5 ]] || \
+    [[ "${#taito_project_short}" -gt 10 ]]
+  do
+    echo "Short project name (5-10 characters)?"
+    read -r taito_project_short
+  done
+fi
 
 echo "Replacing project and company names in files. Please wait..."
 
