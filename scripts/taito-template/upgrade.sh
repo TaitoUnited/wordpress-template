@@ -23,16 +23,31 @@ cp -r "scripts/terraform" "${template_project_path}/scripts/terraform" 2> /dev/n
 
 # Copy terraform state back
 # TODO do this for all providers
-rm -r "${template_project_path}/scripts/terraform/gcloud/feat" 2> /dev/null
-rm -r "${template_project_path}/scripts/terraform/gcloud/dev" 2> /dev/null
-rm -r "${template_project_path}/scripts/terraform/gcloud/test" 2> /dev/null
-rm -r "${template_project_path}/scripts/terraform/gcloud/stag" 2> /dev/null
-rm -r "${template_project_path}/scripts/terraform/gcloud/prod" 2> /dev/null
-cp -r "${template_project_path}/scripts/terraform_old/gcloud/feat" "${template_project_path}/scripts/terraform/gcloud"
-cp -r "${template_project_path}/scripts/terraform_old/gcloud/dev" "${template_project_path}/scripts/terraform/gcloud"
-cp -r "${template_project_path}/scripts/terraform_old/gcloud/test" "${template_project_path}/scripts/terraform/gcloud"
-cp -r "${template_project_path}/scripts/terraform_old/gcloud/stag" "${template_project_path}/scripts/terraform/gcloud"
-cp -r "${template_project_path}/scripts/terraform_old/gcloud/prod" "${template_project_path}/scripts/terraform/gcloud"
+
+if [[ -d "${template_project_path}/scripts/terraform_old/gcloud/feat" ]]; then
+  rm -r "${template_project_path}/scripts/terraform/gcloud/feat" 2> /dev/null
+  cp -r "${template_project_path}/scripts/terraform_old/gcloud/feat" "${template_project_path}/scripts/terraform/gcloud"
+fi
+
+if [[ -d "${template_project_path}/scripts/terraform_old/gcloud/dev" ]]; then
+  rm -r "${template_project_path}/scripts/terraform/gcloud/dev" 2> /dev/null
+  cp -r "${template_project_path}/scripts/terraform_old/gcloud/dev" "${template_project_path}/scripts/terraform/gcloud"
+fi
+
+if [[ -d "${template_project_path}/scripts/terraform_old/gcloud/test" ]]; then
+  rm -r "${template_project_path}/scripts/terraform/gcloud/test" 2> /dev/null
+  cp -r "${template_project_path}/scripts/terraform_old/gcloud/test" "${template_project_path}/scripts/terraform/gcloud"
+fi
+
+if [[ -d "${template_project_path}/scripts/terraform_old/gcloud/stag" ]]; then
+  rm -r "${template_project_path}/scripts/terraform/gcloud/stag" 2> /dev/null
+  cp -r "${template_project_path}/scripts/terraform_old/gcloud/stag" "${template_project_path}/scripts/terraform/gcloud"
+fi
+
+if [[ -d "${template_project_path}/scripts/terraform_old/gcloud/prod" ]]; then
+  rm -r "${template_project_path}/scripts/terraform/gcloud/prod" 2> /dev/null
+  cp -r "${template_project_path}/scripts/terraform_old/gcloud/prod" "${template_project_path}/scripts/terraform/gcloud"
+fi
 
 echo
 echo
