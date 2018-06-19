@@ -47,8 +47,11 @@ Non-production basic auth credentials: TODO: change `user` / `painipaini`. If th
 
 ## Prerequisites
 
-* [docker-compose](https://docs.docker.com/compose/install/)
 * [node.js](https://nodejs.org/)
+* [docker-compose](https://docs.docker.com/compose/install/)
+
+Optional but highly recommended:
+
 * [taito-cli](https://github.com/TaitoUnited/taito-cli#readme)
 
 ## Workflow
@@ -73,7 +76,7 @@ Start containers (add `--clean` for clean rebuild and database init):
 
 Show user accounts and other information that you can use to log in:
 
-    taito info
+    taito info:stag
 
 Open app in browser:
 
@@ -83,11 +86,11 @@ Open admin GUI in browser:
 
     taito open admin
 
-Access database:
+Access staging database:
 
-    taito db connect                        # access using a command-line tool
-    taito db proxy                          # access using a database GUI tool
-    taito db import: ./database/file.sql    # import a sql script to database
+    taito db connect:stag                     # access using a command-line tool
+    taito db proxy:stag                       # access using a database GUI tool
+    taito db import:stag ./database/file.sql  # import a sql script to database
 
 Access data:
 
@@ -146,6 +149,16 @@ Run `taito -h` to get detailed instructions for all commands. Run `taito COMMAND
 > If you run into authorization errors, authenticate with the `taito --auth:ENV` command.
 
 > It's common that idle applications are run down to save resources on non-production environments. If your application seems to be down, you can start it by running `taito start:ENV`, or by pushing some changes to git.
+
+### Without taito-cli
+
+You can run this project without taito-cli, but it is not recommended as you'll lose many of the additional features that taito-cli provides.
+
+Local development:
+
+    npm install          # Install some libraries
+    docker-compose up    # Start wordpress and database
+    npm run              # Show all scripts that you can run with npm
 
 ## Deployment
 

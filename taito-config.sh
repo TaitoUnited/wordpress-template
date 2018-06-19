@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Taito-cli settings
+# Taito-cli
 export taito_image="taitounited/taito-cli:latest"
 export taito_extensions=""
 export taito_plugins=" \
@@ -13,25 +13,29 @@ export taito_plugins=" \
   semantic npm git links-global \
 "
 
-# Basic project settings for all plugins
+# Project
 export taito_organization="${template_default_organization:?}"
-export taito_zone="${template_default_zone:?}"
-export taito_provider="${template_default_provider:?}"
-export taito_repo_location="github-${taito_organization}"
-export taito_repo_name="wordpress-template"
 export taito_project="wordpress-template"
 export taito_project_short="wptemplate" # Max 10 characters
 export taito_company="companyname"
 export taito_family=""
 export taito_application="template"
 export taito_suffix=""
+
+# Repositories
+# TODO change taito_repo and taito_registry naming, add also repo url?
+export taito_repo_location="github-${taito_organization}"
+export taito_repo_name="${taito_project}"
+export taito_registry="${template_default_registry:?}/${taito_zone}/${taito_repo_location}-${taito_repo_name}"
+
+# Provider and namespaces
+export taito_zone="${template_default_zone:?}"
+export taito_provider="${template_default_provider:?}"
 export taito_namespace="${taito_project}-${taito_env:?}"
 export taito_resource_namespace="${taito_company}-prod"
-export taito_registry="${template_default_registry:?}/${taito_zone}/${taito_repo_location}-${taito_repo_name}"
-export taito_app_url="https://${taito_namespace}.${template_default_domain:?}"
-
-# Structure definitions for all plugins
 export taito_environments="stag prod"
+
+# Stack
 export taito_targets="wordpress database"
 export taito_databases="database"
 export taito_storages="${taito_project}-${taito_env}"
@@ -44,10 +48,13 @@ export db_database_host="127.0.0.1"
 export db_database_proxy_port="5001"
 export db_database_port="${db_database_proxy_port}"
 
-# docker plugin
+# URLs
+export taito_app_url="https://${taito_namespace}.${template_default_domain:?}"
+
+# Docker plugin
 export dockerfile=Dockerfile
 
-# gcloud plugin
+# Google Cloud plugin
 export gcloud_org_id="${template_default_provider_org_id:?}"
 export gcloud_region="${template_default_provider_region:?}"
 export gcloud_zone="${template_default_provider_zone:?}"
@@ -64,7 +71,7 @@ export kubectl_name="kube1" # TODO rename to common-kubernetes
 export template_name="orig-template"
 export template_source_git="git@github.com:TaitoUnited"
 
-# Settings for builds
+# CI/CD settings
 # NOTE: Most of these should be enabled for dev and feature envs only
 export ci_exec_build=false        # build a container if does not exist already
 export ci_exec_deploy=true        # deploy automatically
@@ -73,20 +80,11 @@ export ci_exec_test_wait=1        # how many seconds to wait for deployment/rest
 export ci_exec_test_init=false    # run 'init --clean' before each test suite
 export ci_exec_revert=false       # revert deploy automatically on fail
 
-# Override settings for different environments:
-# local, feature, dev, test, staging, prod
+# --- Override settings for different environments ---
+
 case "${taito_env}" in
-  prod)
+  prod|stag)
     # prod overrides
-    export taito_app_url="https://${taito_namespace}.${template_default_domain:?}"
-    export taito_zone="${template_default_zone_prod:?}"
-    export gcloud_org_id="${template_default_provider_org_id_prod:?}"
-    export gcloud_region="${template_default_provider_region_prod:?}"
-    export gcloud_zone="${template_default_provider_zone_prod:?}"
-    export taito_resource_namespace="${taito_company}-prod"
-    ;;
-  staging)
-    # staging overrides
     export taito_app_url="https://${taito_namespace}.${template_default_domain:?}"
     export taito_zone="${template_default_zone_prod:?}"
     export gcloud_org_id="${template_default_provider_org_id_prod:?}"
@@ -97,7 +95,7 @@ case "${taito_env}" in
   test)
     # test overrides
     ;;
-  dev|feature)
+  dev|feat)
     # dev and feature overrides
     export ci_exec_build=true        # allow build of a new container
     export ci_exec_deploy=true       # deploy automatically
@@ -119,11 +117,13 @@ esac
 
 # --- Derived values ---
 
-# Basic project settings for all plugins
-export taito_admin_url="${taito_app_url}/admin/"
+# Namespaces
 export taito_resource_namespace_id="${taito_organization}-${taito_resource_namespace}"
 
-# gcloud plugin
+# URLs
+export taito_admin_url="${taito_app_url}/admin/"
+
+# Google Cloud plugin
 export gcloud_project="${taito_zone}"
 export gcloud_storage_locations="EU"
 export gcloud_storage_classes="MULTI_REGIONAL"
@@ -147,6 +147,7 @@ export link_urls="\
 "
 
 # Secrets
+# TODO change secret naming convention
 export taito_secrets="
   git.github.build:read/devops
   db.${db_database_name}.build:random
@@ -154,4 +155,4 @@ export taito_secrets="
 "
 # TODO: rename secrets
 # TODO: basic auth as secret
-# TODO: use app user in production instead of mgr? (tables come from staging)
+# TODO: use app user in production instead of mgr? (tables migrated from staging)
