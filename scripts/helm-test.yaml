@@ -19,6 +19,8 @@ wordpress:
           ingress.kubernetes.io/auth-realm: wordpress-template
           ingress.kubernetes.io/auth-secret: wordpress-template-test-wp-basic-auth
   externalDatabase:
+    # NOTE: Once wp-config.php file exists, all settings are read from there
+    # and these settings no longer matter.
     host: mysql-sqlproxy-gcloud-sqlproxy.sqlproxy
     port: 3306
     database: wptemplatetest

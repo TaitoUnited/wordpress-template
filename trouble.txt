@@ -1,3 +1,8 @@
 ------------------------------------------
 ### wordpress-template TROUBLESHOOTING ###
 ------------------------------------------
+
+  Cannot connect to database
+    You should check the database settings defined in wp-config.php. Wordpress
+    uses environment variables only during initialization. Once wp-config.php
+    file has been created, all settings will be read from there.

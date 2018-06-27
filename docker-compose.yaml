@@ -9,6 +9,8 @@ wordpress-template-wordpress:
   links:
     - "wordpress-template-database:wordpress-template-database"
   environment:
+    # NOTE: Once wp-config.php file exists, all settings are read from there
+    # and these settings no longer matter.
     WORDPRESS_USERNAME: admin
     WORDPRESS_PASSWORD: pass
     MARIADB_HOST: wordpress-template-database
