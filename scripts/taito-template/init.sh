@@ -20,6 +20,7 @@
 : "${template_default_registry:?}"
 : "${template_default_source_git:?}"
 : "${template_default_dest_git:?}"
+: "${template_default_mysql:?}"
 
 : "${template_project_path:?}"
 : "${mode:?}"
@@ -155,6 +156,8 @@ sed -i -- \
   "s/\${template_default_source_git:?}/${template_default_source_git}/g" taito-config.sh
 sed -i -- \
   "s/\${template_default_dest_git:?}/${template_default_dest_git}/g" taito-config.sh
+sed -i -- \
+  "s/\${template_default_mysql:?}/${template_default_mysql}/g" taito-config.sh
 
 echo "Removing template settings from cloudbuild.yaml..."
 

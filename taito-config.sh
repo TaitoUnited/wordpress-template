@@ -41,7 +41,7 @@ export taito_databases="database"
 export taito_storages="${taito_project}-${taito_env}"
 
 # Database definitions for database plugins
-export db_database_instance="common-mysql"
+export db_database_instance="${template_default_mysql:?}"
 export db_database_type="mysql"
 export db_database_name="${taito_project_short}${taito_env}"
 export db_database_host="127.0.0.1"
