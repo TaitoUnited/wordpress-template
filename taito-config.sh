@@ -31,6 +31,8 @@ export taito_registry="${template_default_registry:?}/${taito_zone}/${taito_repo
 # Provider and namespaces
 export taito_zone="${template_default_zone:?}"
 export taito_provider="${template_default_provider:?}"
+export taito_provider_region="${template_default_provider_region:?}"
+export taito_provider_zone="${template_default_provider_zone:?}"
 export taito_namespace="${taito_project}-${taito_env:?}"
 export taito_resource_namespace="${taito_company}-prod"
 export taito_environments="stag prod"
@@ -56,8 +58,6 @@ export dockerfile=Dockerfile
 
 # Google Cloud plugin
 export gcloud_org_id="${template_default_provider_org_id:?}"
-export gcloud_region="${template_default_provider_region:?}"
-export gcloud_zone="${template_default_provider_zone:?}"
 export gcloud_sql_proxy_port="${db_database_proxy_port}"
 export gcloud_cdn_enabled=false
 
@@ -87,10 +87,10 @@ case "${taito_env}" in
     # prod overrides
     export taito_app_url="https://${taito_namespace}.${template_default_domain:?}"
     export taito_zone="${template_default_zone_prod:?}"
-    export gcloud_org_id="${template_default_provider_org_id_prod:?}"
-    export gcloud_region="${template_default_provider_region_prod:?}"
-    export gcloud_zone="${template_default_provider_zone_prod:?}"
+    export taito_provider_region="${template_default_provider_region_prod:?}"
+    export taito_provider_zone="${template_default_provider_zone_prod:?}"
     export taito_resource_namespace="${taito_company}-prod"
+    export gcloud_org_id="${template_default_provider_org_id_prod:?}"
     ;;
   test)
     # test overrides
@@ -124,6 +124,8 @@ export taito_resource_namespace_id="${taito_organization}-${taito_resource_names
 export taito_admin_url="${taito_app_url}/admin/"
 
 # Google Cloud plugin
+export gcloud_region="${taito_provider_region}"
+export gcloud_zone="${taito_provider_zone}"
 export gcloud_project="${taito_zone}"
 export gcloud_storage_locations="EU"
 export gcloud_storage_classes="MULTI_REGIONAL"
