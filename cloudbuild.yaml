@@ -17,6 +17,7 @@ substitutions:
   _TEMPLATE_DEFAULT_PROVIDER_ZONE:
   _TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD:
   _TEMPLATE_DEFAULT_REGISTRY:
+  _TEMPLATE_DEFAULT_MYSQL:
 
 steps:
 
@@ -48,6 +49,7 @@ steps:
     export template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
     export template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
     export template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
+    export template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
     export taito_env
     taito_env="$${branch_name}"
     if [[ "$${taito_env}" == "master" ]]; then
@@ -101,6 +103,7 @@ steps:
     - template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
     - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
     - template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
+    - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
 
 # NOTE: We wait for ci-prepare step since it's the first step that
 # pulls the taito-cli image that is used in all subsequent steps
@@ -123,6 +126,7 @@ steps:
     - template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
     - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
     - template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
+    - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
 
 - id: ci-release-pre
   waitFor: ['install']
@@ -143,6 +147,7 @@ steps:
     - template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
     - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
     - template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
+    - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
 
 # Deploy to target environment
 
@@ -164,6 +169,7 @@ steps:
     - template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
     - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
     - template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
+    - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
 
 # Publish and release
 
@@ -185,3 +191,4 @@ steps:
     - template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
     - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
     - template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
+    - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
