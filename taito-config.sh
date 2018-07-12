@@ -51,7 +51,7 @@ export db_database_proxy_port="5001"
 export db_database_port="${db_database_proxy_port}"
 
 # URLs
-export taito_domain="${taito_namespace}.${template_default_domain:?}"
+export taito_domain="${taito_project}-${taito_env:?}.${template_default_domain:?}"
 export taito_app_url="https://${taito_domain}"
 
 # Docker plugin
@@ -64,6 +64,7 @@ export gcloud_cdn_enabled=false
 
 # Kubernetes plugin
 export kubectl_name="${template_default_kubernetes:?}"
+export kubectl_replicas="1"
 
 # Helm plugin
 # export helm_deploy_options="--recreate-pods" # Force restart
@@ -93,7 +94,7 @@ case "${taito_env}" in
     export gcloud_org_id="${template_default_provider_org_id_prod:?}"
 
     # NOTE: Set production domain here
-    export taito_domain="${taito_namespace}.${template_default_domain_prod:?}"
+    export taito_domain="${taito_project}-${taito_env:?}.${template_default_domain_prod:?}"
     export taito_app_url="https://${taito_domain}"
     export kubectl_replicas="1"
     ;;
@@ -105,7 +106,7 @@ case "${taito_env}" in
     export taito_resource_namespace="${taito_company}-prod"
     export gcloud_org_id="${template_default_provider_org_id_prod:?}"
 
-    export taito_domain="${taito_namespace}.${template_default_domain_prod:?}"
+    export taito_domain="${taito_project}-${taito_env:?}.${template_default_domain_prod:?}"
     export taito_app_url="https://${taito_domain}"
     ;;
   test)

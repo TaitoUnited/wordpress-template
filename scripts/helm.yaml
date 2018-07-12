@@ -1,5 +1,6 @@
 # values for chart https://hub.kubeapps.com/charts/stable/wordpress
 wordpress:
+  replicas: ${kubectl_replicas}
   image:
     registry: docker.io
     repository: bitnami/wordpress
@@ -8,3 +9,38 @@ wordpress:
     requests:
       memory: 256Mi
       cpu: 100m
+  persistence:
+    size: 4Gi
+  ingress:
+    hosts:
+      - name: ${taito_domain}
+        tlsSecret: ${taito_project}-${taito_env}-tls-secret
+        tls: true
+        secureBackendDisabled: true
+        annotations:
+          kubernetes.io/ingress.class: nginx
+          ingress.kubernetes.io/proxy-body-size: 1m
+          kubernetes.io/tls-acme: "true"
+          ingress.kubernetes.io/ssl-redirect: "true"
+          ingress.kubernetes.io/force-ssl-redirect: "true"
+          ingress.kubernetes.io/auth-type: "basic"
+          ingress.kubernetes.io/auth-realm: wordpress-template
+          ingress.kubernetes.io/auth-secret: ${taito_project}-${taito_env}-wp-basic-auth
+  externalDatabase:
+    # NOTE: Once wp-config.php file exists, all settings are read from there
+    # and these settings no longer matter.
+    host: mysql-sqlproxy-gcloud-sqlproxy.sqlproxy
+    port: 3306
+    database: ${db_database_name}
+    # wordpress creates tables in dev so we have to use the mgr user account
+    user: ${db_database_name}
+    passwordSecretName: db.${db_database_name}.build
+    passwordSecretKey: SECRET
+
+  # smtpHost:
+  # smtpProtocol:
+  # smtpPort:
+  # smtpUser:
+  # smtpSecretName: smtp.wordpress-template-dev.email
+  # smtpSecretKey: SECRET
+  # smtpUsername:
