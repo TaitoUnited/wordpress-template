@@ -47,7 +47,7 @@ echo "Adding do not modify notes..."
 sed '/TEMPLATE NOTE START/q' README.md
 echo
 echo "This file has been copied from \
-[orig-template](https://github.com/TaitoUnited/orig-template/). Keep \
+[WORDPRESS-TEMPLATE](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/). Keep \
 modifications minimal and improve the original instead. Project \
 specific documentation is located in PROJECT.md."
 echo
@@ -59,7 +59,7 @@ cat temp > README.md
 # Add 'do not modify' note to readme of helm chart
 echo \
 "> NOTE: This helm chart has been copied from \
-[orig-template](https://github.com/TaitoUnited/orig-template/). It is \
+[WORDPRESS-TEMPLATE](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/). It is \
 located here only to avoid accidental build breaks. Do not modify it. \
 Improve the original instead." | \
   cat - scripts/helm/README.md > temp && \
@@ -68,7 +68,7 @@ Improve the original instead." | \
 
 # Add 'do not modify' note to cloudbuild.yaml
 printf \
-"# NOTE: This file has been generated from orig-template by taito-cli.\n\
+"# NOTE: This file has been generated from WORDPRESS-TEMPLATE by taito-cli.\n\
 # It is located here only to avoid accidental build breaks. Keep modifications \n\
 # minimal and improve the original instead.\n\n" | \
   cat - cloudbuild.yaml > temp && \
@@ -102,7 +102,7 @@ find . -type f -exec sed -i \
 find . -type f -exec sed -i \
   -e "s/companyname/${taito_company}/g" 2> /dev/null {} \;
 find . -type f -exec sed -i \
-  -e "s/orig-template/wordpress-template/g" 2> /dev/null {} \;
+  -e "s/WORDPRESS-TEMPLATE/wordpress-template/g" 2> /dev/null {} \;
 
 echo "Generating unique random ports (avoid conflicts with other projects)..."
 
