@@ -41,6 +41,7 @@ export taito_registry="${template_default_registry:?}/${taito_zone}/${taito_repo
 export taito_targets="wordpress database"
 export taito_databases="database"
 export taito_storages="${taito_project}-${taito_env}"
+export taito_networks="default"
 
 # Database definitions for database plugins
 export db_database_instance="${template_default_mysql:?}"

@@ -1,55 +1,64 @@
-wordpress-template-wordpress:
-  container_name: wordpress-template-wordpress
-  image: bitnami/wordpress:4.9.6
-  restart: unless-stopped
-  ports:
-    - "4635:80"
-  volumes:
-    - "./wordpress/data:/bitnami"
-  links:
-    - "wordpress-template-database:wordpress-template-database"
-  environment:
-    # NOTE: Once wp-config.php file exists, all settings are read from there
-    # and these settings no longer matter.
-    WORDPRESS_USERNAME: admin
-    WORDPRESS_PASSWORD: pass
-    MARIADB_HOST: wordpress-template-database
-    MARIADB_PORT_NUMBER: 3306
-    # NOTE: For staging database (staging should not contain confidential data)
-    WORDPRESS_DATABASE_NAME: wptemplatestag
-    WORDPRESS_DATABASE_USER: wptemplatestag
-    WORDPRESS_DATABASE_PASSWORD: crpIbWWeiYtRUi2ipI7GnZ6EKz7w8w
-    # NOTE: For local database
-    # WORDPRESS_DATABASE_NAME: wptemplatelocal
-    # WORDPRESS_DATABASE_USER: wptemplatelocal
-    # WORDPRESS_DATABASE_PASSWORD: secret
+version: '3'
+services:
+  wordpress-template-wordpress:
+    container_name: wordpress-template-wordpress
+    image: bitnami/wordpress:4.9.6
+    restart: unless-stopped
+    networks:
+      - default
+    ports:
+      - "4635:80"
+    volumes:
+      - "./wordpress/data:/bitnami"
+    environment:
+      # NOTE: Once wp-config.php file exists, all settings are read from there
+      # and these settings no longer matter.
+      WORDPRESS_USERNAME: admin
+      WORDPRESS_PASSWORD: pass
+      MARIADB_HOST: wordpress-template-database
+      MARIADB_PORT_NUMBER: 3306
+      # NOTE: For staging database (staging should not contain confidential data)
+      WORDPRESS_DATABASE_NAME: wptemplatestag
+      WORDPRESS_DATABASE_USER: wptemplatestag
+      WORDPRESS_DATABASE_PASSWORD: crpIbWWeiYtRUi2ipI7GnZ6EKz7w8w
+      # NOTE: For local database
+      # WORDPRESS_DATABASE_NAME: wptemplatelocal
+      # WORDPRESS_DATABASE_USER: wptemplatelocal
+      # WORDPRESS_DATABASE_PASSWORD: secret
 
-# NOTE: For staging database
-wordpress-template-database:
-  container_name: wordpress-template-database
-  image: taitounited/taito-cli:latest
-  restart: unless-stopped
-  entrypoint: /bin/sh -c "cd /project && taito db-proxy:stag 3306"
-  ports:
-    - "7587:3306"
-  volumes:
-    - ".:/project"
-    - "${HOME}/.taito:/root/.taito"
-    - "${HOME}/.ssh:/root/.ssh"
-  environment:
-    taito_docker: 'true'
+  # NOTE: For staging database
+  wordpress-template-database:
+    container_name: wordpress-template-database
+    image: taitounited/taito-cli:latest
+    restart: unless-stopped
+    entrypoint: /bin/sh -c "cd /project && taito db-proxy:stag 3306"
+    networks:
+      - default
+    ports:
+      - "7587:3306"
+    volumes:
+      - ".:/project"
+      - "${HOME}/.taito:/root/.taito"
+      - "${HOME}/.ssh:/root/.ssh"
+    environment:
+      taito_docker: 'true'
 
-# NOTE: For local database
-# wordpress-template-database:
-#   container_name: wordpress-template-database
-#   image: mysql:5.7
-#   restart: unless-stopped
-#   ports:
-#     - "7587:3306"
-#   volumes:
-#     - "./database/init:/docker-entrypoint-initdb.d"
-#   environment:
-#     MYSQL_ROOT_PASSWORD: secret
-#     MYSQL_DATABASE: wptemplatelocal
-#     MYSQL_USER: wptemplatelocal
-#     MYSQL_PASSWORD: secret
+  # NOTE: For local database
+  # wordpress-template-database:
+  #   container_name: wordpress-template-database
+  #   image: mysql:5.7
+  #   restart: unless-stopped
+  #   networks:
+  #     - default
+  #   ports:
+  #     - "7587:3306"
+  #   volumes:
+  #     - "./database/init:/docker-entrypoint-initdb.d"
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: secret
+  #     MYSQL_DATABASE: wptemplatelocal
+  #     MYSQL_USER: wptemplatelocal
+  #     MYSQL_PASSWORD: secret
+
+networks:
+  default:
