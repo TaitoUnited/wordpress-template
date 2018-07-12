@@ -8,6 +8,7 @@
 : "${template_default_taito_image:?}"
 : "${template_default_organization:?}"
 : "${template_default_domain:?}"
+: "${template_default_domain_prod:?}"
 : "${template_default_zone:?}"
 : "${template_default_zone_prod:?}"
 : "${template_default_provider:?}"
@@ -20,6 +21,7 @@
 : "${template_default_registry:?}"
 : "${template_default_source_git:?}"
 : "${template_default_dest_git:?}"
+: "${template_default_kubernetes:?}"
 : "${template_default_mysql:?}"
 
 : "${template_project_path:?}"
@@ -133,6 +135,8 @@ sed -i -- \
 sed -i -- \
   "s/\${template_default_domain:?}/${template_default_domain}/g" taito-config.sh
 sed -i -- \
+  "s/\${template_default_domain_prod:?}/${template_default_domain_prod}/g" taito-config.sh
+sed -i -- \
   "s/\${template_default_zone:?}/${template_default_zone}/g" taito-config.sh
 sed -i -- \
   "s/\${template_default_zone_prod:?}/${template_default_zone_prod}/g" taito-config.sh
@@ -156,6 +160,8 @@ sed -i -- \
   "s/\${template_default_source_git:?}/${template_default_source_git}/g" taito-config.sh
 sed -i -- \
   "s/\${template_default_dest_git:?}/${template_default_dest_git}/g" taito-config.sh
+sed -i -- \
+  "s/\${template_default_kubernetes:?}/${template_default_kubernetes}/g" taito-config.sh
 sed -i -- \
   "s/\${template_default_mysql:?}/${template_default_mysql}/g" taito-config.sh
 

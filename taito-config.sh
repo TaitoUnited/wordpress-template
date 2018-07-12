@@ -22,12 +22,6 @@ export taito_family=""
 export taito_application="template"
 export taito_suffix=""
 
-# Repositories
-# TODO change taito_repo and taito_registry naming, add also repo url?
-export taito_repo_location="github-${taito_organization}"
-export taito_repo_name="${taito_project}"
-export taito_registry="${template_default_registry:?}/${taito_zone}/${taito_repo_location}-${taito_repo_name}"
-
 # Provider and namespaces
 export taito_zone="${template_default_zone:?}"
 export taito_provider="${template_default_provider:?}"
@@ -36,6 +30,12 @@ export taito_provider_zone="${template_default_provider_zone:?}"
 export taito_namespace="${taito_project}-${taito_env:?}"
 export taito_resource_namespace="${taito_company}-prod"
 export taito_environments="stag prod"
+
+# Repositories
+# TODO change taito_repo and taito_registry naming, add also repo url?
+export taito_repo_location="github-${taito_organization}"
+export taito_repo_name="${taito_project}"
+export taito_registry="${template_default_registry:?}/${taito_zone}/${taito_repo_location}-${taito_repo_name}"
 
 # Stack
 export taito_targets="wordpress database"
@@ -51,7 +51,8 @@ export db_database_proxy_port="5001"
 export db_database_port="${db_database_proxy_port}"
 
 # URLs
-export taito_app_url="https://${taito_namespace}.${template_default_domain:?}"
+export taito_domain="${taito_namespace}.${template_default_domain:?}"
+export taito_app_url="https://${taito_domain}"
 
 # Docker plugin
 export dockerfile=Dockerfile
@@ -62,7 +63,7 @@ export gcloud_sql_proxy_port="${db_database_proxy_port}"
 export gcloud_cdn_enabled=false
 
 # Kubernetes plugin
-export kubectl_name="kube1" # TODO rename to common-kubernetes
+export kubectl_name="${template_default_kubernetes:?}"
 
 # Helm plugin
 # export helm_deploy_options="--recreate-pods" # Force restart
@@ -83,14 +84,29 @@ export ci_exec_revert=false       # revert deploy automatically on fail
 # --- Override settings for different environments ---
 
 case "${taito_env}" in
-  prod|stag)
-    # prod overrides
+  prod)
     export taito_app_url="https://${taito_namespace}.${template_default_domain:?}"
     export taito_zone="${template_default_zone_prod:?}"
     export taito_provider_region="${template_default_provider_region_prod:?}"
     export taito_provider_zone="${template_default_provider_zone_prod:?}"
     export taito_resource_namespace="${taito_company}-prod"
     export gcloud_org_id="${template_default_provider_org_id_prod:?}"
+
+    # NOTE: Set production domain here
+    export taito_domain="${taito_namespace}.${template_default_domain_prod:?}"
+    export taito_app_url="https://${taito_domain}"
+    export kubectl_replicas="1"
+    ;;
+  stag)
+    export taito_app_url="https://${taito_namespace}.${template_default_domain:?}"
+    export taito_zone="${template_default_zone_prod:?}"
+    export taito_provider_region="${template_default_provider_region_prod:?}"
+    export taito_provider_zone="${template_default_provider_zone_prod:?}"
+    export taito_resource_namespace="${taito_company}-prod"
+    export gcloud_org_id="${template_default_provider_org_id_prod:?}"
+
+    export taito_domain="${taito_namespace}.${template_default_domain_prod:?}"
+    export taito_app_url="https://${taito_domain}"
     ;;
   test)
     # test overrides
