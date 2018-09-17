@@ -1,4 +1,4 @@
-# values for chart https://hub.kubeapps.com/charts/stable/wordpress
+# values for wordpress chart: https://hub.kubeapps.com/charts/stable/wordpress
 wordpress:
   resources:
     requests:
@@ -6,6 +6,18 @@ wordpress:
       cpu: 100m
   persistence:
     size: 8Gi
+  ingress:
+    hosts:
+      - name: ${taito_domain}
+        tlsSecret: ${taito_project}-${taito_env}-tls-secret
+        tls: true
+        secureBackendDisabled: true
+        annotations:
+          kubernetes.io/ingress.class: nginx
+          ingress.kubernetes.io/proxy-body-size: 1m
+          kubernetes.io/tls-acme: "true"
+          ingress.kubernetes.io/ssl-redirect: "true"
+          ingress.kubernetes.io/force-ssl-redirect: "true"
 
   # smtpHost:
   # smtpProtocol:

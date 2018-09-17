@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Taito-cli
+export taito_version="1"
 export taito_image="taitounited/taito-cli:latest"
 export taito_extensions=""
 export taito_plugins=" \
@@ -160,6 +161,8 @@ export link_urls="\
   * git=https://github.com/${taito_organization}/${taito_repo_name} GitHub repository \
   * kanban=https://github.com/${taito_organization}/${taito_repo_name}/projects Kanban boards \
   * project[:ENV]=https://console.cloud.google.com/home/dashboard?project=${taito_resource_namespace_id} Google project (:ENV) \
+  * resources[:ENV]=https://console.cloud.google.com/home/dashboard?project=${taito_resource_namespace_id} Google resources (:ENV) \
+  * services[:ENV]=https://console.cloud.google.com/apis/credentials?project=${taito_resource_namespace_id} Google services (:ENV) \
   * builds=https://console.cloud.google.com/gcr/builds?project=${taito_zone}&query=source.repo_source.repo_name%3D%22${taito_repo_location}-${taito_repo_name}%22 Build logs \
   * storage:ENV#storage=https://console.cloud.google.com/storage/browser/${taito_project}-${taito_env}?project=${taito_resource_namespace_id} Storage bucket (:ENV) \
   * logs:ENV#logs=https://console.cloud.google.com/logs/viewer?project=${taito_zone}&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2F${kubectl_name}%2Fnamespace_id%2F${taito_namespace} Logs (:ENV) \
@@ -169,9 +172,10 @@ export link_urls="\
 # Secrets
 # TODO change secret naming convention
 export taito_secrets="
-  git.github.build:read/devops
-  db.${db_database_name}.build:random
-  db.${db_database_name}.app:random
+  github-buildbot.token:read/devops
+  ${db_database_name}-db-mgr.password:random
+  ${db_database_name}-db-app.password:random
+  ${taito_project}-${taito_env}-basic-auth.auth:htpasswd-plain
 "
 # TODO: rename secrets
 # TODO: basic auth as secret

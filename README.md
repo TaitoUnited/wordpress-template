@@ -21,7 +21,7 @@ Table of contents:
 
 ## Links
 
-Non-production basic auth credentials: TODO: change `user` / `painipaini`. If the admin account is shared among people, you can find the admin credentials from shared password manager.
+Non-production basic auth credentials: `user` / `painipaini`. If the admin account is shared among people, you can find the admin credentials from shared password manager.
 
 [//]: # (GENERATED LINKS START)
 
@@ -298,15 +298,15 @@ Collaborators & teams:
 Creating a new server environment:
 
 * Only for production environment: Configure correct IP on DNS record.
-* Only for production environment: Configure app url in `taito-config.sh` and hostname in `scripts/wordpress/helm-prod.yaml` file. (TODO: taito-config.sh should suffice)
-* Run `taito env apply:ENV` to create an environment. Use the same basic auth credentials for all environments. Basic auth credentials don't have to be strong, but still do not reuse the same password for multiple projects. Update the basic auth username/password to the `package.json` file and to the beginning of this `README.md`, if they are not up-to-date.
+* Only for production environment: Configure app url in `taito-config.sh`.
+* Run `taito env apply:ENV` to create an environment. Basic auth credentials are used only for hiding non-production environments. Therefore you can use the same basic auth credentials for all environments and the credentials don't have to be strong. But still do not reuse the same password for multiple projects. Update the basic auth credentials in the beginning of this `README.md`.
 * Deploy wordpress to the environment either by pushing some changes to the environment branch or by triggering the deployment manually: `taito deployment trigger:ENV`.
 * Immediately generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`). The initial admin password is: `initial-password-change-it-on-wp-admin-immediately`. If the admin account is shared, save the new password to a shared password manager. And never use the same admin password for every environment, as dev database is committed to git.
-* Install one of the following plugins. Note that bucket and service account was already created by Terraform so you should configure plugin settings manually. You can open the bucket by running `taito open storage:ENV`.
+* Install and configure one of the following plugins. Note that bucket and service account was already created by Terraform. You can open the bucket with `taito open storage:ENV` and the service account with `taito open services:ENV`.
   * [wp-stateless](https://wordpress.org/plugins/wp-stateless/) for Google Cloud. Settings: mode=`Stateless`, bucket=`wordpress-template-ENV`, bucket folder=`/media`, create a JSON key for `wordpress-template-ENV` service account from gcloud console (`taito open project:ENV` -> APIs & Services -> Credentials -> Create service account key).
   * [https://github.com/humanmade/S3-Uploads](S3-Uploads) for AWS.
-* Delete service account keys from your local disk that were created in the previous step.
-* If the staging database does not contain any condifidential data, add the staging database password to `docker-compose.yaml` for development purposes.
+* Remember to delete the service account keys from your local disk that you created in the previous step.
+* If the staging database does not contain any condifidential data, you can add the staging database password to `docker-compose.yaml` for development purposes.
 
 #### Kubernetes
 
