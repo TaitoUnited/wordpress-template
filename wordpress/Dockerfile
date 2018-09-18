@@ -1,1 +1,1 @@
-FROM bitnami/wordpress:4.9.6
+FROM bitnami/wordpress:4.9.8
