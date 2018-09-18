@@ -130,16 +130,18 @@ spec:
             scheme: HTTPS
           {{- end }}
 {{ toYaml .Values.readinessProbe | indent 10 }}
+        {{- if .Values.persistence.enabled }}
         volumeMounts:
-        - mountPath: /bitnami/apache
+        - mountPath: /bitnami-pvc/apache
           name: wordpress-data
           subPath: apache
-        - mountPath: /bitnami/wordpress
+        - mountPath: /bitnami-pvc/wordpress
           name: wordpress-data
           subPath: wordpress
-        - mountPath: /bitnami/php
+        - mountPath: /bitnami-pvc/php
           name: wordpress-data
           subPath: php
+        {{ end }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
       volumes:
@@ -147,8 +149,6 @@ spec:
       {{- if .Values.persistence.enabled }}
         persistentVolumeClaim:
           claimName: {{ .Values.persistence.existingClaim | default (include "fullname" .) }}
-      {{- else }}
-        emptyDir: {}
       {{ end }}
     {{- if .Values.nodeSelector }}
       nodeSelector:

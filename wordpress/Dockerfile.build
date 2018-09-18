@@ -1,0 +1,5 @@
+FROM bitnami/wordpress:4.9.6 as builder
+
+COPY ./*.sh /
+COPY ./data /bitnami-data
+RUN touch /data-timestamp

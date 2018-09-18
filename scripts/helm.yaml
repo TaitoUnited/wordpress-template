@@ -2,15 +2,19 @@
 wordpress:
   replicas: ${kubectl_replicas}
   image:
-    registry: docker.io
-    repository: bitnami/wordpress
-    tag: 4.9.6
+    registry: ${taito_registry}
+    repository: wordpress
+    tag: ${taito_build_image_tag}
   resources:
     requests:
       memory: 256Mi
       cpu: 100m
   persistence:
-    size: 4Gi
+    enabled: ${wordpress_persistence_enabled}
+    accessMode: ReadWriteOnce
+    size: 8Gi
+  livenessProbe:
+    initialDelaySeconds: 180
   ingress:
     hosts:
       - name: ${taito_domain}
@@ -27,8 +31,6 @@ wordpress:
           ingress.kubernetes.io/auth-realm: wordpress-template
           ingress.kubernetes.io/auth-secret: ${taito_project}-${taito_env}-basic-auth
   externalDatabase:
-    # NOTE: Once wp-config.php file exists, all settings are read from there
-    # and these settings no longer matter.
     host: mysql-sqlproxy-gcloud-sqlproxy.sqlproxy
     port: 3306
     database: ${db_database_name}

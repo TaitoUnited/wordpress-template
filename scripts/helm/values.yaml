@@ -9,7 +9,7 @@ wordpress:
     enabled: true
 
   persistence:
-    enabled: true
+    enabled: false
     size: 4Gi
 
   mariadb:

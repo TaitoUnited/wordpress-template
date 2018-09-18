@@ -1,4 +1,5 @@
 images: [
+  'eu.gcr.io/$PROJECT_ID/$REPO_NAME/wordpress:$COMMIT_SHA'
 ]
 
 timeout: 1200s
@@ -140,6 +141,55 @@ steps:
   waitFor: ['install']
   name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
   args: ['ci-release-pre:$BRANCH_NAME']
+  env:
+    - taito_mode=ci
+    - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
+    - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
+    - template_default_domain=${_TEMPLATE_DEFAULT_DOMAIN}
+    - template_default_domain_prod=${_TEMPLATE_DEFAULT_DOMAIN_PROD}
+    - template_default_zone=${_TEMPLATE_DEFAULT_ZONE}
+    - template_default_zone_prod=${_TEMPLATE_DEFAULT_ZONE_PROD}
+    - template_default_provider=${_TEMPLATE_DEFAULT_PROVIDER}
+    - template_default_provider_org_id=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID}
+    - template_default_provider_org_id_prod=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID_PROD}
+    - template_default_provider_region=${_TEMPLATE_DEFAULT_PROVIDER_REGION}
+    - template_default_provider_region_prod=${_TEMPLATE_DEFAULT_PROVIDER_REGION_PROD}
+    - template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
+    - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
+    - template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
+    - template_default_kubernetes=${_TEMPLATE_DEFAULT_KUBERNETES}
+    - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
+
+# Build and push docker image
+# TODO build/push only if persistence is false
+
+- id: ci-build-wordpress
+  waitFor: ['ci-release-pre']
+  name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
+  args: ['ci-build:wordpress:$BRANCH_NAME', '$COMMIT_SHA', 'eu.gcr.io/$PROJECT_ID/$REPO_NAME']
+  env:
+    - taito_mode=ci
+    - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
+    - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
+    - template_default_domain=${_TEMPLATE_DEFAULT_DOMAIN}
+    - template_default_domain_prod=${_TEMPLATE_DEFAULT_DOMAIN_PROD}
+    - template_default_zone=${_TEMPLATE_DEFAULT_ZONE}
+    - template_default_zone_prod=${_TEMPLATE_DEFAULT_ZONE_PROD}
+    - template_default_provider=${_TEMPLATE_DEFAULT_PROVIDER}
+    - template_default_provider_org_id=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID}
+    - template_default_provider_org_id_prod=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID_PROD}
+    - template_default_provider_region=${_TEMPLATE_DEFAULT_PROVIDER_REGION}
+    - template_default_provider_region_prod=${_TEMPLATE_DEFAULT_PROVIDER_REGION_PROD}
+    - template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
+    - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
+    - template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
+    - template_default_kubernetes=${_TEMPLATE_DEFAULT_KUBERNETES}
+    - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
+
+- id: ci-push-wordpress
+  waitFor: ['ci-build-wordpress']
+  name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
+  args: ['ci-push:wordpress:$BRANCH_NAME', '$COMMIT_SHA', 'eu.gcr.io/$PROJECT_ID/$REPO_NAME']
   env:
     - taito_mode=ci
     - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}

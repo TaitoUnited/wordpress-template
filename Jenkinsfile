@@ -13,6 +13,10 @@ taito install:$BRANCH_NAME
 # Prepare release notes and version tag
 taito ci-release-pre:$BRANCH_NAME
 
+# Build and push
+taito ci-build:wordpress:$BRANCH_NAME $COMMIT_SHA ${taito_registry}
+taito ci-push:wordpress:$BRANCH_NAME $COMMIT_SHA ${taito_registry}
+
 # Deploy changes to server
 # taito db-deploy:$BRANCH_NAME
 taito ci-deploy:$BRANCH_NAME $COMMIT_SHA

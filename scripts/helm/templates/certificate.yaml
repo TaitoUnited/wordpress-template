@@ -5,10 +5,10 @@ kind: Certificate
 metadata:
   name: {{ $host.name }}-cert
   labels:
-    app: {{ template "name" $root }}
-    chart: {{ $root.Chart.Name }}-{{ $root.Chart.Version | replace "+" "_" }}
-    release: {{ $root.Release.Name }}
-    heritage: {{ $root.Release.Service }}
+    app: {{ template "fullname" $root }}
+    chart: "{{ $root.Chart.Name }}-{{ $root.Chart.Version }}"
+    release: "{{ $root.Release.Name }}"
+    heritage: "{{ $root.Release.Service }}"
 spec:
   secretName: {{ $host.tlsSecret }}
   issuerRef:

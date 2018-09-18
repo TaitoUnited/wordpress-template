@@ -56,6 +56,9 @@ export db_database_port="${db_database_proxy_port}"
 export taito_domain="${taito_project}-${taito_env:?}.${template_default_domain:?}"
 export taito_app_url="https://${taito_domain}"
 
+# Wordpress configs
+export wordpress_persistence_enabled="false"
+
 # Docker plugin
 export dockerfile=Dockerfile
 
@@ -177,6 +180,3 @@ export taito_secrets="
   ${db_database_name}-db-app.password:random
   ${taito_project}-${taito_env}-basic-auth.auth:htpasswd-plain
 "
-# TODO: rename secrets
-# TODO: basic auth as secret
-# TODO: use app user in production instead of mgr? (tables migrated from staging)

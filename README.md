@@ -21,7 +21,7 @@ Table of contents:
 
 ## Links
 
-Non-production basic auth credentials: `user` / `painipaini`. If the admin account is shared among people, you can find the admin credentials from shared password manager.
+Non-production basic auth credentials: `TODO` / `TODO`. If the admin account is shared, you probably know where to find the shared credentials.
 
 [//]: # (GENERATED LINKS START)
 
@@ -46,7 +46,7 @@ It is recommended to do most modifications in local or staging environment first
 
 ## Upgrading WordPress
 
-Upgrade WordPress version both in `docker-compose.yaml` and in `scripts/heml.yaml`. Push the change to different environment branches. Check that the upgrade doesn't break anything before pushing it to master branch.
+Upgrade WordPress version in `wordpress/Dockerfile` and `wordpress/Dockerfile.build`. Merge the change to staging and make sure it works ok. Finally merge the change master.
 
 ## Local development
 
@@ -84,9 +84,9 @@ Access data:
     # Add such files/folders to `wordpress/data/.gitignore` that should
     # not be committed to git.
 
-In case you are using local database for development, you need to save database dump to `database/init/init.sql` before committing changes to git:
+In case you are using local database for development instead of staging, you need to save database dump of your local database to `database/init/init.sql` before committing changes to git:
 
-    taito db dump
+    taito db dump ./database/init/init.sql
 
     > Try to synchronize your work with other developers to avoid conflicts. You can easily overwrite changes of another developer when you push your local database changes to git.
 
@@ -153,22 +153,14 @@ Deploying to different environments:
 * staging: Merge changes from dev branch to staging branch using fast-forward.
 * prod: Merge changes from staging branch to master branch using fast-forward. Version number and release notes are generated automatically by the CI/CD tool.
 
-> You can use taito-cli to [manage environment branches](#version-control).
+> You can use taito-cli to manage environment branches (see [version control](#version-control)).
 
-NOTE: Currently only Helm configuration is deployed automatically on git push. You have to migrate database data and files yourself using taito commands. Some examples:
+NOTE: Only Helm configuration from `./scripts` and data from `./wordpress/data` are deployed automatically on servers on git push. You have to migrate database and storage bucket data yourself using taito commands. Some examples:
 
 ```
     # Access staging
     taito shell:wordpress:stag
     taito db connect:stag
-
-    # Copy a theme to staging
-    taito exec:wordpress:stag rm -rf /bitnami/wordpress/wp-content/themes/mytheme
-    taito copy to:wordpress:stag ./wordpress/data/wordpress/wp-content/mytheme /bitnami/wordpress/wp-content/themes
-
-    # Copy a theme to production
-    taito exec:wordpress:prod rm -rf /bitnami/wordpress/wp-content/themes/mytheme
-    taito copy to:wordpress:prod ./wordpress/data/wordpress/wp-content/mytheme /bitnami/wordpress/wp-content/themes
 
     # Migrate some database data from staging to production
     taito db dump:stag ./stag-dump.sql
@@ -182,8 +174,9 @@ NOTE: Currently only Helm configuration is deployed automatically on git push. Y
     taito open storage:prod
 ```
 
-TODO: Automcatic migrations between environments.
-TODO: Command for copying all data from production to staging.
+TODO: Command for copying all data from one environment to another.
+TODO: Command for updating media url paths in database.
+TODO: Data syncing/migrations between environments
 
 ## Version control
 
@@ -200,7 +193,7 @@ You can manage environment and feature branches using taito-cli. Some examples:
     taito vc feat squash             # Merge current feature branch to the dev as a single commit
     taito vc feat pr                 # Create a pull-request for merging current feature branch to the dev branch
 
-> Alternatively you can use git commands directly. Just remember that merge between environment branches should always be executed as fast-forward.
+> Alternatively you can use git commands directly. Just remember that merge between environment branches should always be executed as fast-forward and changes should be merged in the correct order: (`feat-NAME`) -> `dev` -> `test` -> `stag` -> `canary` -> `master`. You should not commit any changes directly to test, stag, canary or master branches.
 
 ### Development branches
 
@@ -299,14 +292,16 @@ Creating a new server environment:
 
 * Only for production environment: Configure correct IP on DNS record.
 * Only for production environment: Configure app url in `taito-config.sh`.
-* Run `taito env apply:ENV` to create an environment. Basic auth credentials are used only for hiding non-production environments. Therefore you can use the same basic auth credentials for all environments and the credentials don't have to be strong. But still do not reuse the same password for multiple projects. Update the basic auth credentials in the beginning of this `README.md`.
-* Deploy wordpress to the environment either by pushing some changes to the environment branch or by triggering the deployment manually: `taito deployment trigger:ENV`.
-* Immediately generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`). The initial admin password is: `initial-password-change-it-on-wp-admin-immediately`. If the admin account is shared, save the new password to a shared password manager. And never use the same admin password for every environment, as dev database is committed to git.
-* Install and configure one of the following plugins. Note that bucket and service account was already created by Terraform. You can open the bucket with `taito open storage:ENV` and the service account with `taito open services:ENV`.
+* Run `taito env apply:ENV` to create an environment.
+* At some point you will be asked to create basic auth credentials. The basic auth credentials are used only for hiding non-production environments. Therefore you can use the same basic auth credentials for all environments and the credentials don't have to be strong. But still do not reuse the same password for multiple projects. Update the basic auth credentials in the beginning of this `README.md` so that also non-developers can have access.
+* Deploy wordpress to the newly created environment by pushing/merging some changes to the environment branch in question.
+* Immediately generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`). The initial admin password is: `initial-password-change-it-on-wp-admin-immediately`. If the admin account is shared, save the new password to a secure shared location. And never use the same admin password for every environment, as dev database is committed to git.
+* Install and configure one of the following plugins. Note that bucket and service account was already created by Terraform. You can open the bucket with `taito open storage:ENV` and the service account details with `taito open services:ENV`.
   * [wp-stateless](https://wordpress.org/plugins/wp-stateless/) for Google Cloud. Settings: mode=`Stateless`, bucket=`wordpress-template-ENV`, bucket folder=`/media`, create a JSON key for `wordpress-template-ENV` service account from gcloud console (`taito open project:ENV` -> APIs & Services -> Credentials -> Create service account key).
   * [https://github.com/humanmade/S3-Uploads](S3-Uploads) for AWS.
-* Remember to delete the service account keys from your local disk that you created in the previous step.
-* If the staging database does not contain any condifidential data, you can add the staging database password to `docker-compose.yaml` for development purposes.
+* Remember to delete the service account keys that you created in the previous step from your local disk.
+* If the staging database does not contain any condifidential data, you can add the staging database password to `docker-compose.yaml` for development purposes. TODO add support for fetching it automatically from secrets.
+* Persistent volume claim (PVC) is disabled by default. This means that all data must be saved either to database or storage bucket. Try to use wordpress plugins that do not save any permanent data to local disk. If this is not possible, you can enable PVC in `taito-config.sh` with the `wordpress_persistence_enabled` setting. With the setting enabled, the data from `wordpress/data` folder will be copied automatically to the permanent volume by `wordpress/template-copy.sh` script.
 
 #### Kubernetes
 

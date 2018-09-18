@@ -5,6 +5,8 @@ wordpress:
       memory: 256Mi
       cpu: 100m
   persistence:
+    enabled: ${wordpress_persistence_enabled}
+    accessMode: ReadWriteMany
     size: 8Gi
   ingress:
     hosts:
@@ -18,6 +20,8 @@ wordpress:
           kubernetes.io/tls-acme: "true"
           ingress.kubernetes.io/ssl-redirect: "true"
           ingress.kubernetes.io/force-ssl-redirect: "true"
+
+  # TODO: use app user in production instead of mgr? (tables migrated from staging)
 
   # smtpHost:
   # smtpProtocol:
