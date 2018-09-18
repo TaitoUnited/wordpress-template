@@ -46,7 +46,11 @@ It is recommended to do most modifications in local or staging environment first
 
 ## Upgrading WordPress
 
-Upgrade WordPress version in `wordpress/Dockerfile` and `wordpress/Dockerfile.build`. Merge the change to staging and make sure it works ok. Finally merge the change master.
+1) **local/dev**: Upgrade WordPress version in `wordpress/Dockerfile` and `wordpress/Dockerfile.build`. Push changes to `dev` branch.
+2) **staging**: Merge changes to staging, check that the version number has actually changed, and make sure that everything works ok.
+3) **prod**: Merge changes to master, check that the version number has actually changed, and make sure that everything works ok.
+
+TODO: How to upgrade plugins? Define all plugins in dockerfile? Autoupgrade in dockerfile?
 
 ## Local development
 
