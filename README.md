@@ -50,6 +50,7 @@ It is recommended to do most modifications in local or staging environment first
 2) **staging**: Merge changes to staging, check that the version number has actually changed, and make sure that everything works ok.
 3) **prod**: Merge changes to master, check that the version number has actually changed, and make sure that everything works ok.
 
+TODO: Autoupgrades are also enabled by default? How to revert back to an older image/version without causing another autoupgrade?
 TODO: How to upgrade plugins? Define all plugins in dockerfile? Autoupgrade in dockerfile?
 
 ## Local development
