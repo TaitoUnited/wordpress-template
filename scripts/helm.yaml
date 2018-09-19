@@ -15,6 +15,7 @@ wordpress:
     size: 8Gi
   livenessProbe:
     initialDelaySeconds: 180
+  serviceType: ClusterIP
   ingress:
     hosts:
       - name: ${taito_domain}
