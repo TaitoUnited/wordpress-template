@@ -21,7 +21,7 @@ Table of contents:
 
 ## Links
 
-Non-production basic auth credentials: `TODO` / `TODO`. If the admin account is shared, you probably know where to find the shared credentials.
+If the credentials are shared, you probably know where to find them.
 
 [//]: # (GENERATED LINKS START)
 
@@ -35,27 +35,28 @@ LINKS WILL BE GENERATED HERE
 
 * [node.js](https://nodejs.org/)
 * [docker-compose](https://docs.docker.com/compose/install/)
-
-Optional but highly recommended:
-
-* [taito-cli](https://github.com/TaitoUnited/taito-cli#readme)
+* Optional but highly recommended: [taito-cli](https://github.com/TaitoUnited/taito-cli#readme)
 
 ## Workflow
 
-It is recommended to do most modifications in local or staging environment first. Use the production environment only for making frequent live modifications like creating new blog posts and managing users.
+It is recommended to do large modifications in local or staging environment. Use the production environment only for making frequent live modifications like creating new blog posts and managing users.
 
 ## Upgrading WordPress
 
-1) **local/dev**: Upgrade WordPress version in `wordpress/Dockerfile` and `wordpress/Dockerfile.build`. Optionally upgrade also plugins in admin UI. Push changes to `dev` branch.
-2) **staging**: Merge changes to staging, check that the version number has actually changed, and make sure that everything works ok. Optionally upgrade also plugins in admin UI.
-3) **prod**: Merge changes to master, check that the version number has actually changed, and make sure that everything works ok. Optionally upgrade also plugins in admin UI.
+TODO:
+* Publish all WordPress and wp-plugin updates to staging automatically and send notifications to site administrator. Administrator may then publish changes to production by merging staging to master using GitHub web UI.
+* WordPress autoupdates are enabled by default? Provide a way to revert back to an older image without causing another autoupdate.
+* How to update plugins automatically? Should plugins be defined in dockerfile?
 
-TODO: WordPress autoupgrades are enabled by default? Provide a way to revert back to an older image without causing another autoupgrade.
-TODO: How to upgrade plugins automatically? Should plugins be defined in dockerfile?
+Manually:
+
+1) **local / dev**: Update WordPress version in `wordpress/Dockerfile` and `wordpress/Dockerfile.build` files. Optionally update also plugins with the admin UI. Once you're done, push changes to `dev` branch.
+2) **staging**: Merge changes to staging, check that the version number has actually changed, and make sure that everything works ok. Optionally update also plugins in admin UI.
+3) **prod**: Merge changes to master, check that the version number has actually changed, and make sure that everything works ok. Optionally update also plugins in admin UI.
 
 ## Local development
 
-> You can use either the local or staging database for development by modifying `docker-compose.yaml`. It is recommended to use the staging database also for local development, if it does not contain any confidential data.
+> You can use either local or staging database for development by modifying `docker-compose.yaml`. If you use staging for development, you must enable one of the media storage plugins (see [server environments](#server-environments) chapter), but using a media storage plugin is highly recommended anyway. See [deployment](#deployment) chapter for instructions on copying data from one environment to another.
 
 Install some libraries on host (add `--clean` for clean reinstall):
 
@@ -160,28 +161,45 @@ Deploying to different environments:
 
 > You can use taito-cli to manage environment branches (see [version control](#version-control)).
 
-NOTE: Only Helm configuration from `./scripts` and data from `./wordpress/data` are deployed automatically on servers on git push. You have to migrate database and storage bucket data yourself using taito commands. Some examples:
+NOTE: Only Helm configuration from `./scripts` and data from `./wordpress/data` are deployed automatically on servers on git push. You have to migrate database and storage bucket data between environments using taito commands. Some examples below.
+
+> Copy commands might not yet have been implemented
+
+Copy all data from production to staging:
 
 ```
-    # Access staging
-    taito shell:wordpress:stag
-    taito db connect:stag
+    # Copy permanent volume data
+    # NOTE: Required only if 'wordpress_persistence_enabled' is true
+    taito data copy between:wordpress:prod:stag /bitnami /bitnami
 
-    # Migrate some database data from staging to production
+    # Copy storage and database data
+    taito storage copy between:prod:stag
+    taito db copy between:prod:stag
+    # TODO example for replacing '-prod' suffix with '-stag' on media urls
+
+    # Merge some changes from dev to staging branch (deploys wordpress/data)
+
+```
+
+Copy all data from staging to production (WARNING: not always suitable):
+
+```
+    taito storage copy between:stag:prod
+    taito db copy between:stag:prod
+    # TODO example for replacing '-prod' suffix with '-stag' on media urls
+    # Merge changes to master branch (deploys wordpress/data)
+```
+
+Migrate some data from staging to production:
+
+```
+    taito storage copy between:stag:prod SOURCE DEST
     taito db dump:stag ./stag-dump.sql
-    taito db dump:prod ./prod-dump.sql
-    ...modify files...
+    ...create imports.sql manually...
+    # TODO example for replacing '-prod' suffix with '-stag' on media urls
     taito db import:prod ./imports.sql
-    taito db connect:prod
-
-    # Access storage buckets
-    taito open storage:stag
-    taito open storage:prod
+    # Merge changes to master branch (deploys wordpress/data)
 ```
-
-TODO: Command for copying all data from one environment to another.
-TODO: Command for updating media url paths in database.
-TODO: Data syncing/migrations between environments
 
 ## Version control
 
@@ -298,15 +316,19 @@ Creating a new server environment:
 * Only for production environment: Configure correct IP on DNS record.
 * Only for production environment: Configure app url in `taito-config.sh`.
 * Run `taito env apply:ENV` to create an environment.
-* At some point you will be asked to create basic auth credentials. The basic auth credentials are used only for hiding non-production environments. Therefore you can use the same basic auth credentials for all environments and the credentials don't have to be strong. But still do not reuse the same password for multiple projects. Update the basic auth credentials in the beginning of this `README.md` so that also non-developers can have access.
+* At some point you will be asked to create basic auth credentials. The basic auth credentials are used only for hiding non-production environments, but since WordPress has security issues, it's best to use a strong autogenerated password for each environment. You can always show the password with `taito info:ENV` and share it with `taito passwd share`.
 * Deploy wordpress to the newly created environment by pushing/merging some changes to the environment branch in question.
-* Immediately generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`). The initial admin password is: `initial-password-change-it-on-wp-admin-immediately`. If the admin account is shared, save the new password to a secure shared location. And never use the same admin password for every environment, as dev database is committed to git.
-* Install and configure one of the following plugins. Note that bucket and service account was already created by Terraform. You can open the bucket with `taito open storage:ENV` and the service account details with `taito open services:ENV`.
+* Generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`). The initial admin password is: `admin-pass-change-it-7983p4nWgRE2p4No2d9`. If the admin account is shared, save the new password to a secure shared location. And never use the same admin password for every environment, as dev database is committed to git.
+
+Configuring file persistence (for media, etc):
+
+* Persistent volume claim (PVC) is disabled by default. This means that all data must be saved either to database or storage bucket. Try to use wordpress plugins that do not save any permanent data to local disk. If this is not possible, you can enable PVC in `taito-config.sh` with the `wordpress_persistence_enabled` setting. With the setting enabled, the data from `wordpress/data` folder will be copied automatically to the permanent volume by the `wordpress/template-copy.sh` script.
+* You can store media files to a storage bucket with one of the following wp-plugins. Note that bucket and service account was already created by Terraform. You can open the bucket with `taito open storage:ENV` and the service account details with `taito open services:ENV`.
   * [wp-stateless](https://wordpress.org/plugins/wp-stateless/) for Google Cloud. Settings: mode=`Stateless`, bucket=`wordpress-template-ENV`, bucket folder=`/media`, create a JSON key for `wordpress-template-ENV` service account from gcloud console (`taito open project:ENV` -> APIs & Services -> Credentials -> Create service account key).
   * [https://github.com/humanmade/S3-Uploads](S3-Uploads) for AWS.
 * Remember to delete the service account keys that you created in the previous step from your local disk.
-* If the staging database does not contain any condifidential data, you can add the staging database password to `docker-compose.yaml` for development purposes. TODO add support for fetching it automatically from secrets.
-* Persistent volume claim (PVC) is disabled by default. This means that all data must be saved either to database or storage bucket. Try to use wordpress plugins that do not save any permanent data to local disk. If this is not possible, you can enable PVC in `taito-config.sh` with the `wordpress_persistence_enabled` setting. With the setting enabled, the data from `wordpress/data` folder will be copied automatically to the permanent volume by `wordpress/template-copy.sh` script.
+
+* TODO backup all persistent volumes to a bucket -> separate process or use a wordpress plugin.
 
 #### Kubernetes
 

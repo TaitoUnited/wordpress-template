@@ -10,5 +10,6 @@ The subchart located in charts/wordpress was forked from https://github.com/bitn
   * Use `/bitnami-pvc` as mount path instead of `/bitnami`.
   * Mount volumes only if `persistence.enabled` is true so that we can determine if PVC is enabled during container bootstrap.
   * Copy data from container to pvc on container start: `wordpress/app-entrypoint.sh` -> `template-env.sh`
+- Added `persistentVolumeReclaimPolicy: Retain` to prevent accidental deletion of persistent volume.
 
 TODO: Either try to merge changes back to original chart or make a simplified custom chart.

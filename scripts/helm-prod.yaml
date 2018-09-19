@@ -6,7 +6,9 @@ wordpress:
       cpu: 100m
   persistence:
     enabled: ${wordpress_persistence_enabled}
-    accessMode: ReadWriteMany
+    # NOTE: Google does not support ReadWriteMany
+    # --> all containers will be placed on the same Kubernetes node
+    accessMode: ReadWriteOnce
     size: 10Gi
   ingress:
     hosts:

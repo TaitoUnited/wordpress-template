@@ -14,52 +14,51 @@ services:
       - "./wordpress/data:/bitnami"
     environment:
       WORDPRESS_USERNAME: admin    # SHOW ON INFO
-      WORDPRESS_PASSWORD: initial-password-change-it-on-wp-admin-immediately # SHOW ON INFO
+      WORDPRESS_PASSWORD: admin-pass-change-it-7983p4nWgRE2p4No2d9 # SHOW ON INFO
       MARIADB_HOST: wordpress-template-database
       MARIADB_PORT_NUMBER: 3306
       # NOTE: For staging database
-      WORDPRESS_DATABASE_NAME: wptemplatestag
-      WORDPRESS_DATABASE_USER: wptemplatestag
-      # TODO: fetch password from kubernetes!
-      WORDPRESS_DATABASE_PASSWORD: ueqosGeIZMprSMglgnjq7xCImJ47qg
+      # WORDPRESS_DATABASE_NAME: wptemplatestag
+      # WORDPRESS_DATABASE_USER: wptemplatestag
+      # WORDPRESS_DATABASE_PASSWORD: TODO add_passwd_here # TODO: fetch automatically from kubernetes
       # NOTE: For local database
-      # WORDPRESS_DATABASE_NAME: wptemplatelocal
-      # WORDPRESS_DATABASE_USER: wptemplatelocal
-      # WORDPRESS_DATABASE_PASSWORD: secret
+      WORDPRESS_DATABASE_NAME: wptemplatelocal
+      WORDPRESS_DATABASE_USER: wptemplatelocal
+      WORDPRESS_DATABASE_PASSWORD: secret
 
   # NOTE: For staging database
-  wordpress-template-database:
-    container_name: wordpress-template-database
-    image: taitounited/taito-cli:latest
-    restart: unless-stopped
-    entrypoint: /bin/sh -c "cd /project && taito db-proxy:stag 3306"
-    networks:
-      - default
-    ports:
-      - "7587:3306"
-    volumes:
-      - ".:/project"
-      - "${HOME}/.taito:/root/.taito"
-      - "${HOME}/.ssh:/root/.ssh"
-    environment:
-      taito_docker: 'true'
-
-  # NOTE: For local database
   # wordpress-template-database:
   #   container_name: wordpress-template-database
-  #   image: mysql:5.7
+  #   image: taitounited/taito-cli:latest
   #   restart: unless-stopped
+  #   entrypoint: /bin/sh -c "cd /project && taito db-proxy:stag 3306"
   #   networks:
   #     - default
   #   ports:
   #     - "7587:3306"
   #   volumes:
-  #     - "./database/init:/docker-entrypoint-initdb.d"
+  #     - ".:/project"
+  #     - "${HOME}/.taito:/root/.taito"
+  #     - "${HOME}/.ssh:/root/.ssh"
   #   environment:
-  #     MYSQL_ROOT_PASSWORD: secret
-  #     MYSQL_DATABASE: wptemplatelocal
-  #     MYSQL_USER: wptemplatelocal
-  #     MYSQL_PASSWORD: secret
+  #     taito_docker: 'true'
+
+  # NOTE: For local database
+  wordpress-template-database:
+    container_name: wordpress-template-database
+    image: mysql:5.7
+    restart: unless-stopped
+    networks:
+      - default
+    ports:
+      - "7587:3306"
+    volumes:
+      - "./database/init:/docker-entrypoint-initdb.d"
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: wptemplatelocal
+      MYSQL_USER: wptemplatelocal
+      MYSQL_PASSWORD: secret
 
 networks:
   default:

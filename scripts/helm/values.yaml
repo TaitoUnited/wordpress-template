@@ -3,7 +3,7 @@
 wordpress:
   allowEmptyPassword: no
   wordpressUsername: admin
-  wordpressPassword: initial-password-change-it-on-wp-admin-immediately
+  wordpressPassword: admin-pass-change-it-7983p4nWgRE2p4No2d9
 
   ingress:
     enabled: true

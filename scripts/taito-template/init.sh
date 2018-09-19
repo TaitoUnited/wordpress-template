@@ -39,6 +39,18 @@ rm LICENSE
 sed -i -- \
   "s|TaitoUnited/wordpress-template.git|${taito_organization}/${taito_repo_name}.git|g" package.json
 
+# Replace default admin password
+admin_password=$(openssl rand -base64 40 | sed -e 's/[^a-zA-Z0-9]//g')
+if [[ ${#admin_password} -gt 30 ]]; then
+  admin_password="${admin_password: -30}"
+fi
+sed -i -- \
+  "s|admin-pass-change-it-7983p4nWgRE2p4No2d9|${admin_password}|g" scripts/helm/values.yaml
+sed -i -- \
+  "s|admin-pass-change-it-7983p4nWgRE2p4No2d9|${admin_password}|g" docker-compose.yaml
+sed -i -- \
+  "s|admin-pass-change-it-7983p4nWgRE2p4No2d9|${admin_password}|g" README.md
+
 # Add some do not modify notes
 echo "Adding do not modify notes..."
 
