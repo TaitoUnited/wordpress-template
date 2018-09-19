@@ -30,7 +30,7 @@ export taito_provider_region="${template_default_provider_region:?}"
 export taito_provider_zone="${template_default_provider_zone:?}"
 export taito_namespace="${taito_project}-${taito_env:?}"
 export taito_resource_namespace="${taito_company}-prod"
-export taito_environments="dev stag prod"
+export taito_environments="stag prod"
 
 # Repositories
 # TODO change taito_repo and taito_registry naming, add also repo url?
@@ -57,6 +57,7 @@ export taito_domain="${taito_project}-${taito_env:?}.${template_default_domain:?
 export taito_app_url="https://${taito_domain}"
 
 # Wordpress configs
+# WARNING: Setting this from true to false deletes the existing persistent disk
 export wordpress_persistence_enabled="false"
 
 # Docker plugin
@@ -113,6 +114,9 @@ case "${taito_env}" in
 
     export taito_domain="${taito_project}-${taito_env:?}.${template_default_domain_prod:?}"
     export taito_app_url="https://${taito_domain}"
+
+    export ci_exec_build=true        # allow build of a new container
+    export ci_exec_deploy=true       # deploy automatically
     ;;
   test)
     # test overrides
@@ -120,7 +124,7 @@ case "${taito_env}" in
   dev|feat)
     # dev and feature overrides
     export ci_exec_build=true        # allow build of a new container
-    export ci_exec_deploy=false      # deploy automatically
+    export ci_exec_deploy=true       # deploy automatically
     ;;
   local)
     # local overrides
