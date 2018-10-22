@@ -30,7 +30,7 @@ export taito_provider_region="${template_default_provider_region:?}"
 export taito_provider_zone="${template_default_provider_zone:?}"
 export taito_namespace="${taito_project}-${taito_env:?}"
 export taito_resource_namespace="${taito_company}-prod"
-export taito_environments="stag prod"
+export taito_environments="dev stag prod"
 
 # Repositories
 # TODO change taito_repo and taito_registry naming, add also repo url?
