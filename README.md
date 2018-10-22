@@ -226,7 +226,7 @@ Options:
 * Data services: Vulnerability alerts: on
 
 Branches:
-* Default branch: stag
+* Default branch: dev
 * Protected branch: master (TODO: more protection settings)
 
 Collaborators & teams:
