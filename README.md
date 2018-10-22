@@ -2,7 +2,7 @@
 
 [//]: # (TEMPLATE NOTE START)
 
-Wordpress-template is a project template for WordPress sites. Create a new project from this template by running `taito template create: wordpress-template`.
+Wordpress-template is a project template for WordPress sites. Create a new project from this template by running `taito project create: wordpress-template`.
 
 TIP: A static site generator combined with a CMS system, git repository and some additional services provides a more secure and care-free alternative for WordPress sites. It also provides a sensible way to do version control and automatic migrations between environments. However, such implementation doesn't offer as much plug-and-play functionality as WordPress does. See [gatsby-template](https://github.com/TaitoUnited/gatsby-template) or [hugo-template](https://github.com/TaitoUnited/hugo-template) as an example.
 
