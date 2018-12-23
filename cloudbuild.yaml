@@ -242,9 +242,6 @@ steps:
     - taito_mode=ci
     - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
     - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
-    - template_default_organization_abbr=${_TEMPLATE_DEFAULT_ORGANIZATION_ABBR}
-    - template_default_github_organization=${_TEMPLATE_DEFAULT_GITHUB_ORGANIZATION}
-    - template_default_sentry_organization=${_TEMPLATE_DEFAULT_SENTRY_ORGANIZATION}
     - template_default_domain=${_TEMPLATE_DEFAULT_DOMAIN}
     - template_default_domain_prod=${_TEMPLATE_DEFAULT_DOMAIN_PROD}
     - template_default_zone=${_TEMPLATE_DEFAULT_ZONE}
@@ -258,7 +255,7 @@ steps:
     - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
     - template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
     - template_default_kubernetes=${_TEMPLATE_DEFAULT_KUBERNETES}
-    - template_default_postgres=${_TEMPLATE_DEFAULT_POSTGRES}
+    - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
 
 # Update wordpress plugins
 
