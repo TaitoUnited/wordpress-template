@@ -41,19 +41,22 @@ LINKS WILL BE GENERATED HERE
 
 It is recommended to do large modifications in local or staging environment. Use the production environment only for making frequent live modifications like creating new blog posts and managing users.
 
-## Upgrading WordPress
+## Updating WordPress
 
-TODO Automatically:
-
-* Publish all WordPress and wp-plugin updates to staging automatically and send notifications to site administrator. Administrator may then publish changes to production by merging staging to master using GitHub web UI.
-* WordPress autoupdates are enabled by default? Provide a way to revert back to an older image without causing another autoupdate.
-* How to update plugins automatically? Should plugins be defined in dockerfile?
+> TODO: Automatically -> There are update scripts in `scripts/update` directory.
+> TODO: Cache plugins should be disabled during an update?
+> TODO: cloudbuild.yaml should take db export and volume snapshot automatically for prod
 
 Manually:
 
-1) **local**: Update WordPress version in `wordpress/Dockerfile` and `wordpress/Dockerfile.build` files. Optionally update also plugins with the admin UI.
-2) **staging**: Push changes to staging branch, check that the version number has actually changed, and make sure that everything works ok. Optionally update also plugins in admin UI.
-3) **prod**: Merge changes to master, check that the version number has actually changed, and make sure that everything works ok. Optionally update also plugins in admin UI.
+1) **local wordpress**: Update WordPress version in `wordpress/Dockerfile` and `wordpress/Dockerfile.build` files. Push changes to dev branch.
+2) **local plugins**: Update plugins either with `taito wp update plugins` command or by using the WordPress Admin GUI. Push changes to dev branch and add string `[ci update plugins]` in the commit message content. It informs CI that plugins should be updated after deployment if persistent volume claim is being used.
+3) **staging wordpress**: Merge changes to staging branch, after deployment open admin GUI with `taito open admin:stag` and check that the version number has actually changed, plugins have been updated, and everything works ok.
+4) **prod wordpress**: Merge changes to prod branch, after deployment open admin GUI with `taito open admin:prod` and check that the version number has actually changed, plugins have been updated, and everything works ok.
+
+Reverting changes:
+
+TODO how to revert: container image, database, volume snapshot, (storage bucket)
 
 ## Local development
 
@@ -257,7 +260,7 @@ Collaborators & teams:
 #### Configuring file persistence (for media, etc)
 
 * Persistent volume claim (PVC) is disabled by default. This means that all data must be saved either to database or storage bucket. Try to use wordpress plugins that do not save any permanent data to local disk. If this is not possible, you can enable PVC in `taito-config.sh` with the `wordpress_persistence_enabled` setting. With the setting enabled, the data from `wordpress/data` folder will be copied automatically to the permanent volume by the `wordpress/template-copy.sh` script.
-* You can store media files to a storage bucket with one of the following wp-plugins. Note that bucket and service account was already created by Terraform. You can open the bucket with `taito open storage:ENV` and the service account details with `taito open services:ENV`.
+* If it seems that media files are only files that need to be stored permanently on disk, it is recommended to use storage bucket instead of persistent volume claim. You can store media files to a storage bucket with one of the following wp-plugins. Note that bucket and service account are created automatically by Terraform if terraform plugin is enabled in `taito-config.sh`. You can open the bucket with `taito open storage:ENV` and the service account details with `taito open services:ENV`.
   * [wp-stateless](https://wordpress.org/plugins/wp-stateless/) for Google Cloud. Settings: mode=`Stateless`, bucket=`wordpress-template-ENV`, bucket folder=`/media`, create a JSON key for `wordpress-template-ENV` service account from gcloud console (`taito open project:ENV` -> APIs & Services -> Credentials -> Create service account key).
   * [https://github.com/humanmade/S3-Uploads](S3-Uploads) for AWS.
 * Remember to delete the service account keys that you created in the previous step from your local disk.

@@ -1,6 +1,17 @@
 #!/bin/bash
 
+# Copies container data to a permanent volume if such is being used.
+# Otherwise just symlinks the container data directory.
+# TODO: Execute copying in CI/CD instead. Also take a snapshot of the permanent
+# volume first.
+# NOTE: Currently copying is disabled altogether. It might cause some problems
+# with plugins?
+
 exit_code=0
+
+if [ $wp_env == "dev" ]; then
+  exit 0
+fi
 
 mv /bitnami /bitnami-old &> /dev/null
 
@@ -9,6 +20,9 @@ if [ ! -d /bitnami-pvc ]; then
   echo "template-copy.sh: Setting up symbolic link: /bitnami -> /bitnami-data"
   ln -s /bitnami-data /bitnami
 else
+  echo "NOTE: Automatic file copy is disabled."
+  exit 0
+
   echo "template-copy.sh: /bitnami-pvc is a permanent volume."
   echo "template-copy.sh: Setting up symbolic link: /bitnami -> /bitnami-pvc"
   ln -s /bitnami-pvc /bitnami

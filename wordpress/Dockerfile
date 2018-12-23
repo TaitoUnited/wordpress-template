@@ -1,1 +1,9 @@
-FROM bitnami/wordpress:4.9.8
+FROM bitnami/wordpress:5.0.2 as builder
+ENV wp_env dev
+
+COPY *.sh *.js /template/
+RUN cp /app-entrypoint.sh /app-entrypoint-orig.sh
+RUN cat /template/init.sh > /template/temp.sh && \
+  cat /app-entrypoint.sh | grep -v '#!/' >> /template/temp.sh && \
+  mv /template/temp.sh /app-entrypoint.sh && \
+  chmod +x /app-entrypoint.sh

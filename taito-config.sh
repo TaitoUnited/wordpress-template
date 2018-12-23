@@ -88,6 +88,13 @@ export ci_exec_test_wait=1        # how many seconds to wait for deployment/rest
 export ci_exec_test_init=false    # run 'init --clean' before each test suite
 export ci_exec_revert=false       # revert deploy automatically on fail
 
+if [[ "${wordpress_persistence_enabled}" == "true" ]]; then
+  # NOTE: These are set because we need to wait for server to start
+  # because of an automatic update, just like when running tests.
+  export ci_exec_test=true
+  export ci_exec_test_wait=120
+fi
+
 # --- Override settings for different environments ---
 
 case "${taito_env}" in
@@ -115,14 +122,8 @@ case "${taito_env}" in
     export taito_domain="${taito_project}-${taito_env:?}.${template_default_domain_prod:?}"
     export taito_app_url="https://${taito_domain}"
 
-    export ci_exec_build=true        # allow build of a new container
-    export ci_exec_deploy=true       # deploy automatically
-    ;;
-  test)
-    # test overrides
-    ;;
-  dev|feat)
-    # dev and feature overrides
+    # NOTE: dev/test not deployed on Kubernetes, therefore containers are
+    # built for staging.
     export ci_exec_build=true        # allow build of a new container
     export ci_exec_deploy=true       # deploy automatically
     ;;

@@ -233,6 +233,64 @@ steps:
     - template_default_kubernetes=${_TEMPLATE_DEFAULT_KUBERNETES}
     - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
 
+# Wait for server to start
+
+- id: ci-wait
+  name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
+  args: ['ci-wait:$BRANCH_NAME']
+  env:
+    - taito_mode=ci
+    - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
+    - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
+    - template_default_organization_abbr=${_TEMPLATE_DEFAULT_ORGANIZATION_ABBR}
+    - template_default_github_organization=${_TEMPLATE_DEFAULT_GITHUB_ORGANIZATION}
+    - template_default_sentry_organization=${_TEMPLATE_DEFAULT_SENTRY_ORGANIZATION}
+    - template_default_domain=${_TEMPLATE_DEFAULT_DOMAIN}
+    - template_default_domain_prod=${_TEMPLATE_DEFAULT_DOMAIN_PROD}
+    - template_default_zone=${_TEMPLATE_DEFAULT_ZONE}
+    - template_default_zone_prod=${_TEMPLATE_DEFAULT_ZONE_PROD}
+    - template_default_provider=${_TEMPLATE_DEFAULT_PROVIDER}
+    - template_default_provider_org_id=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID}
+    - template_default_provider_org_id_prod=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID_PROD}
+    - template_default_provider_region=${_TEMPLATE_DEFAULT_PROVIDER_REGION}
+    - template_default_provider_region_prod=${_TEMPLATE_DEFAULT_PROVIDER_REGION_PROD}
+    - template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
+    - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
+    - template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
+    - template_default_kubernetes=${_TEMPLATE_DEFAULT_KUBERNETES}
+    - template_default_postgres=${_TEMPLATE_DEFAULT_POSTGRES}
+
+# Update wordpress plugins
+
+- id: ci-update-plugins
+  name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
+  env:
+    - taito_mode=ci
+    - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
+    - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
+    - template_default_domain=${_TEMPLATE_DEFAULT_DOMAIN}
+    - template_default_domain_prod=${_TEMPLATE_DEFAULT_DOMAIN_PROD}
+    - template_default_zone=${_TEMPLATE_DEFAULT_ZONE}
+    - template_default_zone_prod=${_TEMPLATE_DEFAULT_ZONE_PROD}
+    - template_default_provider=${_TEMPLATE_DEFAULT_PROVIDER}
+    - template_default_provider_org_id=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID}
+    - template_default_provider_org_id_prod=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID_PROD}
+    - template_default_provider_region=${_TEMPLATE_DEFAULT_PROVIDER_REGION}
+    - template_default_provider_region_prod=${_TEMPLATE_DEFAULT_PROVIDER_REGION_PROD}
+    - template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
+    - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
+    - template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
+    - template_default_kubernetes=${_TEMPLATE_DEFAULT_KUBERNETES}
+    - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    if [[ "$${wordpress_persistence_enabled}" == "true" ]] && \
+       [[ $(git log -1 --pretty=%B | grep "\[ci update plugins\]") ]]; then
+      taito wp-plugin-update:$${BRANCH_NAME}
+    fi
+
 # Publish and release
 
 - id: ci-release-post

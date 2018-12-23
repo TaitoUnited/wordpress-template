@@ -8,6 +8,7 @@
     "info:local": "cat docker-compose.yaml | grep '# SHOW ON INFO'",
     "info": "echo 'If the admin account is shared, you probably know where to find the shared credentials.' && echo \"Basic auth user accounts for hiding the ${taito_env} environment:\" && taito secrets:${taito_env} | grep :\\{PLAIN\\} | sed -e 's|{PLAIN}| |'",
     "info_todo_comment": "TODO autoconfirm on taito secrets:prod",
+    "wp-plugin-update": "echo TODO automatically create db backup and snapshot first && taito exec:wordpress:${taito_env} su -c \\'/opt/bitnami/wp-cli/bin/wp plugin update --all --debug\\' bitnami",
     "sync-to": "echo TODO git pull --rebase && sync data/files to ${taito_env}",
     "sync-from": "echo TODO git pull --rebase && sync data/files from ${taito_env}",
     "sync-to:local": "echo Give environment",
