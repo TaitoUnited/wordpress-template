@@ -215,6 +215,7 @@ steps:
   name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
   env:
     - taito_mode=ci
+    - branch_name=$BRANCH_NAME
     - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
     - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
     - template_default_domain=${_TEMPLATE_DEFAULT_DOMAIN}
@@ -235,7 +236,7 @@ steps:
   args:
   - '-c'
   - |
-    taito wp-plugin-update:$${BRANCH_NAME} || \
+    taito wp-plugin-update:$${branch_name} || \
       echo "WARNING: Failed updating wordpress plugins"
 
 # Deploy to target environment
