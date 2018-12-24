@@ -4,7 +4,7 @@
 
 Wordpress-template is a project template for WordPress sites. Create a new project from this template by running `taito project create: wordpress-template`.
 
-TIP: A static site generator combined with a CMS system, git repository and some additional services provides a more secure and care-free alternative for WordPress sites. It also provides a sensible way to do version control and automatic migrations between environments. However, such implementation doesn't offer as much plug-and-play functionality as WordPress does. See [gatsby-template](https://github.com/TaitoUnited/gatsby-template) or [hugo-template](https://github.com/TaitoUnited/hugo-template) as an example.
+TIP: A static site generator combined with a CMS system, git repository, and some additional services provides a more secure and care-free alternative for WordPress sites. It also provides a sensible way to do version control and automatic migrations between environments. However, such implementation doesn't offer as much plug-and-play functionality as WordPress does. See the [gatsby-template](https://github.com/TaitoUnited/website-template) as an example.
 
 [//]: # (TEMPLATE NOTE END)
 
@@ -43,9 +43,7 @@ It is recommended to do large modifications in local or staging environment. Use
 
 ## Updating WordPress
 
-> TODO: Automatically -> There are update scripts in `scripts/update` directory.
 > TODO: Cache plugins should be disabled during an update?
-> TODO: cloudbuild.yaml should take db export and volume snapshot automatically for prod
 
 Manually:
 
@@ -58,9 +56,12 @@ Reverting changes:
 
 TODO how to revert: container image, database, volume snapshot, (storage bucket)
 
+> TODO: Update automatically (there are already some update scripts in `scripts/update` directory).
+> TODO: cloudbuild.yaml should take db export and volume snapshot automatically for prod
+
 ## Local development
 
-> You can use either local or staging database for development by modifying `docker-compose.yaml`. If you use staging for development, you must enable one of the media storage plugins (see [server environments](#server-environments) chapter), but using a media storage plugin is highly recommended anyway. See [deployment](#deployment) chapter for instructions on copying data from one environment to another.
+> You can use either local or staging database for development by modifying `docker-compose.yaml`. If you use staging database for development, you must enable one of the media storage plugins (see [server environments](#server-environments) chapter). See [deployment](#deployment) chapter for instructions on copying data from one environment to another.
 
 Install some libraries on host (add `--clean` for clean reinstall):
 
@@ -72,6 +73,7 @@ Start containers (add `--clean` for clean rebuild and database init):
 
 Show user accounts and other information that you can use to log in:
 
+    taito info
     taito info:stag
 
 Open app in browser:
@@ -82,21 +84,34 @@ Open admin GUI in browser:
 
     taito open admin
 
-Access staging database:
+Access local or staging database:
 
+    taito db connect                          # access using a command-line tool
     taito db connect:stag                     # access using a command-line tool
+    taito db proxy                            # access using a database GUI tool
     taito db proxy:stag                       # access using a database GUI tool
-    taito db import:stag ./database/file.sql  # import a sql script to database
+    taito db import file.sql                  # import a sql script to database
+    taito db import:stag file.sql             # import a sql script to database
+    taito db dump file.sql                    # dump database to a file
+    taito db dump:stag file.sql               # dump database to a file
 
 Access data:
 
     # WordPress data is located locally in folder `wordpress/data`.
+    # The data is copied inside the wordpress container image to `/bitnami-data`
+    # directory during build. However, the data will only be used on Kubernetes
+    # if wordpress_persistence_enabled is turned off (no permanent volume).
+    # If permanent volume is being used, you can copy data to the volume by
+    # logging in to the container with `taito shell:wordpress:ENV` and copying
+    # data from `/bitnami-data` to `/bitnami`.
+
     # Add such files/folders to `wordpress/data/.gitignore` that should
-    # not be committed to git.
+    # not be committed to git. For example, example files used in development
+    # only.
 
 In case you are using local database for development instead of staging, you need to save database dump of your local database to `database/init/init.sql` before committing changes to git:
 
-    taito db dump ./database/init/init.sql
+    taito db dump init
 
     > Try to synchronize your work with other developers to avoid conflicts. You can easily overwrite changes of another developer when you push your local database changes to git.
 
@@ -164,14 +179,16 @@ All commit messages must be structured according to the [Conventional Commits](h
 
 ## Deployment
 
-Deploying to different environments:
+Deploying to different server environments:
 
-* staging: Push changes staging branch using fast-forward.
-* TODO: Backup prod database before deploying to prod.
-* TODO: Create snapshot of the prod persistent disk before deploying to prod.
-* prod: Merge changes from staging branch to master branch using fast-forward. Version number and release notes are generated automatically by the CI/CD tool.
+* staging: Merge changes from dev to stag branch using fast-forward.
+* production: Merge changes from stag branch to master branch using fast-forward. Version number and release notes are generated automatically by the CI/CD tool.
 
-NOTE: Only Helm configuration from `./scripts` and data from `./wordpress/data` are deployed automatically on servers on git push. You have to migrate database and storage bucket data between environments using taito commands. Some examples below.
+TIPS: Run `taito open builds` to see the build logs. Use `taito vc` commands to manage branches. CI will update wp plugins automatically if wordpress_persistence_enabled is true and the latest commit message contains string `[ci update plugins]`.
+
+> TODO: cloudbuild.yaml should take db export and volume snapshot automatically for prod.
+
+NOTE: Only Helm configuration from `./scripts` and container image are deployed automatically on servers on git push. You have to migrate data between environments using taito commands. Some examples below.
 
 > Copy commands might not yet have been implemented
 
@@ -213,36 +230,19 @@ Migrate some data from staging to production:
 
 ## Configuration
 
-Done:
-* [ ] GitHub settings
-* [ ] Basic project settings
-* [ ] Server environments: stag
-* [ ] Server environments: prod
+### Version control settings
 
-### GitHub settings
-
-Recommended settings for most projects.
-
-Options:
-* Data services: Allow GitHub to perform read-only analysis: on
-* Data services: Dependency graph: on
-* Data services: Vulnerability alerts: on
-
-Branches:
-* Default branch: dev
-* Protected branch: master (TODO: more protection settings)
-
-Collaborators & teams:
-* Teams: Select admin permission for the Admins team
-* Teams: Select write permission for the Developers team
-* Collaborators: Add additional collaborators if required.
-* Collaborators: Remove repository creator (= yourself) from the collaborator list (NOTE: Set all the other GitHub settings before this one!)
+Run `taito open conventions` to see organization specific settings that you should configure for your git repository.
 
 ### Basic project settings
 
-1. Configure `taito-config.sh` if you need to change some settings. The default settings are ok for most projects.
+1. Modify `taito-config.sh` if you need to change some settings. The default settings are ok for most projects.
 2. Run `taito project apply`
 3. Commit and push changes
+
+### Local environment
+
+See the [Local development](#local-development) for instructions. If you are using a local database for development, remember to export it to git once in while with `taito db dump init`.
 
 ### Server environments
 
@@ -250,22 +250,20 @@ Collaborators & teams:
 
 #### Creating a new server environment
 
-* *Only for production: Configure DNS record.*
-* *Only for production: Configure app url in `taito-config.sh`*
-* Run `taito env apply:ENV` to create an environment.
+* *Mandatory only for production: Configure DNS record.*
+* *Mandatory only for production: Configure app url in `taito-config.sh`*
+* Run `taito env apply:ENV` to create an environment. The following server environment are recommended: `stag`, `prod`.
 * At some point you will be asked to create basic auth credentials. The basic auth credentials are used only for hiding non-production environments, but since WordPress has security issues, it's best to use a strong autogenerated password for each environment. You can always show the password with `taito info:ENV` and share it with `taito passwd share`.
 * Deploy wordpress to the newly created environment by pushing/merging some changes to the environment branch in question.
 * Generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`). The initial admin password is: `admin-pass-change-it-7983p4nWgRE2p4No2d9`. If the admin account is shared, save the new password to a secure shared location. And never use the same admin password for every environment, as dev database is committed to git.
 
 #### Configuring file persistence (for media, etc)
 
-* Persistent volume claim (PVC) is disabled by default. This means that all data must be saved either to database or storage bucket. Try to use wordpress plugins that do not save any permanent data to local disk. If this is not possible, you can enable PVC in `taito-config.sh` with the `wordpress_persistence_enabled` setting. With the setting enabled, the data from `wordpress/data` folder will be copied automatically to the permanent volume by the `wordpress/template-copy.sh` script.
+* Persistent volume claim (PVC) is disabled by default. This means that all data must be saved either to database or storage bucket. Try to use wordpress plugins that do not save any permanent data to local disk. If this is not possible, you can enable PVC in `taito-config.sh` with the `wordpress_persistence_enabled` setting.
 * If it seems that media files are only files that need to be stored permanently on disk, it is recommended to use storage bucket instead of persistent volume claim. You can store media files to a storage bucket with one of the following wp-plugins. Note that bucket and service account are created automatically by Terraform if terraform plugin is enabled in `taito-config.sh`. You can open the bucket with `taito open storage:ENV` and the service account details with `taito open services:ENV`.
   * [wp-stateless](https://wordpress.org/plugins/wp-stateless/) for Google Cloud. Settings: mode=`Stateless`, bucket=`wordpress-template-ENV`, bucket folder=`/media`, create a JSON key for `wordpress-template-ENV` service account from gcloud console (`taito open project:ENV` -> APIs & Services -> Credentials -> Create service account key).
   * [https://github.com/humanmade/S3-Uploads](S3-Uploads) for AWS.
 * Remember to delete the service account keys that you created in the previous step from your local disk.
-
-TODO backup persistent volume (e.g. disk snapshots)
 
 #### Kubernetes
 

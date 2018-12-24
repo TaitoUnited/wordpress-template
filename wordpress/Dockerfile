@@ -1,5 +1,4 @@
 FROM bitnami/wordpress:5.0.2 as builder
-ENV wp_env dev
 
 COPY *.sh *.js /template/
 RUN cp /app-entrypoint.sh /app-entrypoint-orig.sh

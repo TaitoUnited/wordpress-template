@@ -233,31 +233,7 @@ steps:
     - template_default_kubernetes=${_TEMPLATE_DEFAULT_KUBERNETES}
     - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
 
-# Wait for server to start
-
-- id: ci-wait
-  name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
-  args: ['ci-wait:$BRANCH_NAME']
-  env:
-    - taito_mode=ci
-    - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
-    - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
-    - template_default_domain=${_TEMPLATE_DEFAULT_DOMAIN}
-    - template_default_domain_prod=${_TEMPLATE_DEFAULT_DOMAIN_PROD}
-    - template_default_zone=${_TEMPLATE_DEFAULT_ZONE}
-    - template_default_zone_prod=${_TEMPLATE_DEFAULT_ZONE_PROD}
-    - template_default_provider=${_TEMPLATE_DEFAULT_PROVIDER}
-    - template_default_provider_org_id=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID}
-    - template_default_provider_org_id_prod=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID_PROD}
-    - template_default_provider_region=${_TEMPLATE_DEFAULT_PROVIDER_REGION}
-    - template_default_provider_region_prod=${_TEMPLATE_DEFAULT_PROVIDER_REGION_PROD}
-    - template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
-    - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
-    - template_default_registry=${_TEMPLATE_DEFAULT_REGISTRY}
-    - template_default_kubernetes=${_TEMPLATE_DEFAULT_KUBERNETES}
-    - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
-
-# Update wordpress plugins
+# Update wordpress plugins if requested
 
 - id: ci-update-plugins
   name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
@@ -285,6 +261,9 @@ steps:
   - |
     if [[ "$${wordpress_persistence_enabled}" == "true" ]] && \
        [[ $(git log -1 --pretty=%B | grep "\[ci update plugins\]") ]]; then
+      export ci_exec_test=true
+      export ci_exec_test_wait=240
+      taito ci-wait:$${BRANCH_NAME}
       taito wp-plugin-update:$${BRANCH_NAME}
     fi
 
