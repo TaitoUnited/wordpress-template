@@ -259,6 +259,9 @@ steps:
   args:
   - '-c'
   - |
+    echo "wordpress_persistence_enabled $${wordpress_persistence_enabled}"
+    echo "latest commit message:"
+    git log -1 --pretty=%B
     if [[ "$${wordpress_persistence_enabled}" == "true" ]] && \
        [[ $(git log -1 --pretty=%B | grep "\[ci update plugins\]") ]]; then
       export ci_exec_test=true
