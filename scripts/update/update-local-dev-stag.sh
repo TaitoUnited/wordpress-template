@@ -14,7 +14,7 @@ docker exec -it wordpress-template-wordpress \
 docker-compose stop
 date >> UPDATELOG
 git add .
-git commit -m 'wp autoupdate [ci update plugins]'
+git commit -m 'wp autoupdate'
 git push
 git checkout stag
 git pull

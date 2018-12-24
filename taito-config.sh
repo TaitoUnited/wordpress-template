@@ -58,7 +58,8 @@ export taito_app_url="https://${taito_domain}"
 
 # Wordpress configs
 # WARNING: Setting this from true to false deletes the existing persistent disk
-export wordpress_persistence_enabled="true"
+export wordpress_persistence_enabled="false"
+export wordpress_plugin_update_flags="--all --minor --debug"
 
 # Docker plugin
 export dockerfile=Dockerfile

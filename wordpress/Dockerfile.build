@@ -10,4 +10,4 @@ RUN cat /template/init.sh > /template/temp.sh && \
   mv /template/temp.sh /app-entrypoint.sh && \
   chmod +x /app-entrypoint.sh
 
-COPY ./data /bitnami-data
+COPY ./data /data-image

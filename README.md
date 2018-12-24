@@ -43,12 +43,10 @@ It is recommended to do large modifications in local or staging environment. Use
 
 ## Updating WordPress
 
-> TODO: Cache plugins should be disabled during an update?
-
 Manually:
 
 1) **local wordpress**: Update WordPress version in `wordpress/Dockerfile` and `wordpress/Dockerfile.build` files. Push changes to dev branch.
-2) **local plugins**: Update plugins either with `taito wp update plugins` command or by using the WordPress Admin GUI. Push changes to dev branch and add string `[ci update plugins]` in the commit message content. It informs CI that plugins should be updated after deployment if persistent volume claim is being used.
+2) **local plugins**: Update plugins either with `taito wp update plugins` command. Push changes to dev branch. NOTE: By default only minor and patch versions are updated. This can be configured with `wordpress_plugin_update_flags` in `taito-config.sh`. Once in a while remove the `--minor` flag to update major version. You should also try `--patch` or major update if plugin update fails using the `--minor` flag.
 3) **staging wordpress**: Merge changes to staging branch, after deployment open admin GUI with `taito open admin:stag` and check that the version number has actually changed, plugins have been updated, and everything works ok.
 4) **prod wordpress**: Merge changes to prod branch, after deployment open admin GUI with `taito open admin:prod` and check that the version number has actually changed, plugins have been updated, and everything works ok.
 
@@ -98,12 +96,12 @@ Access local or staging database:
 Access data:
 
     # WordPress data is located locally in folder `wordpress/data`.
-    # The data is copied inside the wordpress container image to `/bitnami-data`
+    # The data is copied inside the wordpress container image to `/data-image`
     # directory during build. However, the data will only be used on Kubernetes
     # if wordpress_persistence_enabled is turned off (no permanent volume).
     # If permanent volume is being used, you can copy data to the volume by
     # logging in to the container with `taito shell:wordpress:ENV` and copying
-    # data from `/bitnami-data` to `/bitnami`.
+    # data from `/data-image` to `/bitnami`.
 
     # Add such files/folders to `wordpress/data/.gitignore` that should
     # not be committed to git. For example, example files used in development
@@ -184,7 +182,7 @@ Deploying to different server environments:
 * staging: Merge changes from dev to stag branch using fast-forward.
 * production: Merge changes from stag branch to master branch using fast-forward. Version number and release notes are generated automatically by the CI/CD tool.
 
-TIPS: Run `taito open builds` to see the build logs. Use `taito vc` commands to manage branches. CI will update wp plugins automatically if wordpress_persistence_enabled is true and the latest commit message contains string `[ci update plugins]`.
+Run `taito open builds` to see the build logs. Use `taito vc` commands to manage branches. CI will update wp plugins installed on permanent volume automatically if `wordpress_persistence_enabled` is `true`. Otherwise wordpress will use plugins directly from the container image built based on the `wordpress/data` directory.
 
 > TODO: cloudbuild.yaml should take db export and volume snapshot automatically for prod.
 
@@ -264,6 +262,8 @@ See the [Local development](#local-development) for instructions. If you are usi
   * [wp-stateless](https://wordpress.org/plugins/wp-stateless/) for Google Cloud. Settings: mode=`Stateless`, bucket=`wordpress-template-ENV`, bucket folder=`/media`, create a JSON key for `wordpress-template-ENV` service account from gcloud console (`taito open project:ENV` -> APIs & Services -> Credentials -> Create service account key).
   * [https://github.com/humanmade/S3-Uploads](S3-Uploads) for AWS.
 * Remember to delete the service account keys that you created in the previous step from your local disk.
+
+TODO: Could we just mount some subdirectory to permanent volume? This way plugin implementations could be used from the container image even though plugin data is used from a permanent volume.
 
 #### Kubernetes
 
