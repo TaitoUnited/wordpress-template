@@ -10,5 +10,4 @@ RUN cat /template/init.sh > /template/temp.sh && \
   mv /template/temp.sh /app-entrypoint.sh && \
   chmod +x /app-entrypoint.sh
 
-# TODO: original bitnami/wordpress Dockerfile already copies data to /bitnami?
 COPY ./data /bitnami-data
