@@ -1,11 +1,11 @@
 FROM bitnami/wordpress:5.0.2 as builder
 
 COPY *.sh *.js /template/
+RUN /template/setup.sh
+
+# Add init.sh to the beginning of /app-entrypoint.sh
 RUN cp /app-entrypoint.sh /app-entrypoint-orig.sh
 RUN cat /template/init.sh > /template/temp.sh && \
   cat /app-entrypoint.sh | grep -v '#!/' >> /template/temp.sh && \
   mv /template/temp.sh /app-entrypoint.sh && \
   chmod +x /app-entrypoint.sh
-
-COPY ./data /bitnami-data
-RUN ln -s /bitnami-data /bitnami

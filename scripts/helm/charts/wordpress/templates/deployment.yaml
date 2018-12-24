@@ -132,13 +132,13 @@ spec:
 {{ toYaml .Values.readinessProbe | indent 10 }}
         {{- if .Values.persistence.enabled }}
         volumeMounts:
-        - mountPath: /bitnami/apache
+        - mountPath: /bitnami-pvc/apache
           name: wordpress-data
           subPath: apache
-        - mountPath: /bitnami/wordpress
+        - mountPath: /bitnami-pvc/wordpress
           name: wordpress-data
           subPath: wordpress
-        - mountPath: /bitnami/php
+        - mountPath: /bitnami-pvc/php
           name: wordpress-data
           subPath: php
         {{ end }}
