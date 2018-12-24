@@ -6,7 +6,6 @@ The subchart located in charts/wordpress was forked from https://github.com/bitn
 
 - Added support for `externalDatabase.passwordSecretName` and `externalDatabase.passwordSecretKey` variables.
 - Mount volumes only if `persistence.enabled` is true so that we can use also container data.
-- Mount volumes to /data-volume
 - Added `persistentVolumeReclaimPolicy: Retain` to prevent accidental deletion of persistent volume. --> But does it even work? Perhaps snapshots would be a better way?
 - Modified svc.yaml (using simple ClusterIP)
 

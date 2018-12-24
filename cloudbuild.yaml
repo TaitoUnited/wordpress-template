@@ -235,10 +235,8 @@ steps:
   args:
   - '-c'
   - |
-    if [[ "$${wordpress_persistence_enabled}" == "true" ]]; then
-      taito wp-plugin-update:$${BRANCH_NAME} || \
-        echo "WARNING: Failed upting wordpress plugins"
-    fi
+    taito wp-plugin-update:$${BRANCH_NAME} || \
+      echo "WARNING: Failed updating wordpress plugins"
 
 # Deploy to target environment
 
