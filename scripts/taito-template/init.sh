@@ -64,15 +64,9 @@ sed ${sedi} -- \
 # Add some do not modify notes
 echo "Adding do not modify notes..."
 
-# Replace NOTE of README.md with a 'do not modify' note
+# Remove template note from README.md
 {
 sed '/TEMPLATE NOTE START/q' README.md
-echo
-echo "This file has been copied from \
-[WORDPRESS-TEMPLATE](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/). Keep \
-modifications minimal and improve the original instead. Project \
-specific documentation is located in PROJECT.md."
-echo
 sed -n -e '/TEMPLATE NOTE END/,$p' README.md
 } > temp
 truncate --size 0 README.md
