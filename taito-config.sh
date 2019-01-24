@@ -38,7 +38,7 @@ taito_environments="dev stag prod"
 taito_env=${taito_env/canary/prod} # canary -> prod
 
 # URLs
-taito_domain=$taito_project-$taito_target_env.template_default_domain:?}
+taito_domain=$taito_project-$taito_target_env.${template_default_domain:?}
 taito_app_url=https://$taito_domain
 taito_static_url=
 
@@ -129,11 +129,6 @@ case $taito_env in
     taito_app_url=https://$taito_domain
     kubectl_replicas=1
     monitoring_enabled=true
-
-    # Settings for canary
-    if [[ $taito_target_env == "canary" ]]; then
-      taito_domain=$taito_project-$taito_target_env.${template_default_domain_prod:?}
-    fi
     ;;
   stag)
     taito_zone=${template_default_zone_prod:?}
@@ -142,7 +137,7 @@ case $taito_env in
     taito_resource_namespace=$taito_organization_abbr-$taito_company-prod
     gcloud_org_id=${template_default_provider_org_id_prod:?}
 
-    taito_domain=$taito_project-$taito_env.${template_default_domain_prod:?}
+    taito_domain=$taito_project-$taito_target_env.${template_default_domain_prod:?}
     taito_app_url=https://$taito_domain
 
     # NOTE: dev/test not deployed on Kubernetes, therefore containers are
@@ -184,9 +179,9 @@ kubectl_user=$kubectl_cluster
 link_urls="
   * app[:ENV]#app=$taito_app_url Application (:ENV)
   * admin[:ENV]#admin=$taito_admin_url Admin user interface (:ENV)
-  * docs=https://github.com/${template_default_github_organization:?}/$taito_vc_repository/wiki Project documentation
   * git=https://github.com/${template_default_github_organization:?}/$taito_vc_repository GitHub repository
-  * kanban=https://github.com/${template_default_github_organization:?}/$taito_vc_repository/projects Kanban boards
+  * docs=https://github.com/${template_default_github_organization:?}/$taito_vc_repository/wiki Project documentation
+  * project=https://github.com/${template_default_github_organization:?}/$taito_vc_repository/projects Project management
   * services[:ENV]=https://console.cloud.google.com/apis/credentials?project=$taito_resource_namespace_id Google services (:ENV)
   * builds=https://console.cloud.google.com/cloud-build/builds?project=$taito_zone&query=source.repo_source.repo_name%3D%22github-${template_default_github_organization:?}-$taito_vc_repository%22 Build logs
   * storage:ENV=https://console.cloud.google.com/storage/browser/$taito_project-$taito_env?project=$taito_resource_namespace_id Storage bucket (:ENV)

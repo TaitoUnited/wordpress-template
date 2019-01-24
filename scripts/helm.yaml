@@ -2,7 +2,7 @@
 wordpress:
   replicas: ${kubectl_replicas}
   image:
-    registry: ${taito_registry}
+    registry: ${taito_image_registry}
     repository: wordpress
     tag: ${taito_build_image_tag}
   resources:
