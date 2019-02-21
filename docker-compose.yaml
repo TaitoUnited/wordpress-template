@@ -11,7 +11,7 @@ services:
     ports:
       - "4635:80"
     volumes:
-      - "./wordpress/data:/bitnami"
+      - "./wordpress/data:/bitnami:delegated"
     environment:
       WORDPRESS_USERNAME: admin    # SHOW ON INFO
       WORDPRESS_PASSWORD: admin-pass-change-it-7983p4nWgRE2p4No2d9 # SHOW ON INFO
@@ -37,9 +37,9 @@ services:
   #   ports:
   #     - "7587:3306"
   #   volumes:
-  #     - ".:/project"
-  #     - "${HOME}/.taito:/root/.taito"
-  #     - "${HOME}/.ssh:/root/.ssh"
+  #     - ".:/project:delegated"
+  #     - "${HOME}/.taito:/root/.taito:delegated"
+  #     - "${HOME}/.ssh:/root/.ssh:delegated"
   #   environment:
   #     taito_docker: 'true'
 
@@ -53,7 +53,7 @@ services:
     ports:
       - "7587:3306"
     volumes:
-      - "./database/init:/docker-entrypoint-initdb.d"
+      - "./database/init:/docker-entrypoint-initdb.d:delegated"
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: wptemplatelocal
