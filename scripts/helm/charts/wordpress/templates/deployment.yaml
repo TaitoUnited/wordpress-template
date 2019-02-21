@@ -20,6 +20,7 @@ spec:
         - name: {{ . }}
       {{- end}}
       {{- end }}
+      automountServiceAccountToken: false
       containers:
       - name: {{ template "fullname" . }}
         image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
