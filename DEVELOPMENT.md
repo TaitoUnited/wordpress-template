@@ -27,7 +27,7 @@ It is recommended to do most modifications in local or staging environment. Use 
 Manually:
 
 1) **local wordpress**: Update WordPress version in `wordpress/Dockerfile` and `wordpress/Dockerfile.build` files. Push changes to dev branch.
-2) **local plugins**: Update plugins with `taito wp update plugins` command and push changes to dev branch. NOTE: By default only minor and patch versions are updated. This can be configured with `wordpress_plugin_update_flags` in `taito-config.sh`. Once in a while remove the `--minor` flag to update major version. You should also try `--patch` or major update if plugin update fails using the `--minor` flag.
+2) **local plugins**: Update plugins with `taito wp plugin update` command and push changes to dev branch. NOTE: By default only minor and patch versions are updated. This can be configured with `wordpress_plugin_update_flags` in `taito-config.sh`. Once in a while remove the `--minor` flag to update major version. You should also try `--patch` or major update if plugin update fails using the `--minor` flag.
 3) **staging wordpress**: Merge changes to staging branch, after deployment open admin GUI with `taito open admin:stag` and check that the version number has actually changed, plugins have been updated, and everything works ok.
 4) **prod wordpress**: Merge changes to prod branch, after deployment open admin GUI with `taito open admin:prod` and check that the version number has actually changed, plugins have been updated, and everything works ok.
 
