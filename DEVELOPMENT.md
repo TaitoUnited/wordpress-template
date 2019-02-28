@@ -27,9 +27,11 @@ It is recommended to do most modifications in local or staging environment. Use 
 Manually:
 
 1) **local wordpress**: Update WordPress version in `wordpress/Dockerfile` and `wordpress/Dockerfile.build` files. Push changes to dev branch.
-2) **local plugins**: Clean start with `taito start --clean`, `taito init --clean`. Update plugins with `taito wp plugin update` command and push changes to dev branch. NOTE: By default only minor and patch versions are updated. This can be configured with `wordpress_plugin_update_flags` in `taito-config.sh`. Once in a while remove the `--minor` flag to update major version. You should also try `--patch` or major update if plugin update fails using the `--minor` flag.
-3) **staging wordpress**: Merge changes to staging branch, after deployment open admin GUI with `taito open admin:stag` and check that the version number has actually changed, plugins have been updated, and everything works ok.
-4) **prod wordpress**: Merge changes to prod branch, after deployment open admin GUI with `taito open admin:prod` and check that the version number has actually changed, plugins have been updated, and everything works ok.
+2) **local clean start**: Clean start with `taito start --clean`, `taito init --clean`.
+3) **local database**: Open admin GUI with `taito open admin` and update the database by clicking the database update button. Also check that the version number has actually changed, plugins have been updated, and everything works ok. Update local database dump with `taito db dump data`.
+4) **local plugins**: Update plugins with `taito wp plugin update` command and push changes to dev branch. NOTE: By default only minor and patch versions are updated. This can be configured with `wordpress_plugin_update_flags` in `taito-config.sh`. Once in a while remove the `--minor` flag to update major version. You should also try `--patch` or major update if plugin update fails using the `--minor` flag.
+5) **staging wordpress**: Merge changes to staging branch. After deployment open admin GUI with `taito open admin:stag` and update the database with button. Also check that the version number has actually changed, plugins have been updated, and everything works ok.
+6) **prod wordpress**: Merge changes to prod branch. After deployment open admin GUI with `taito open admin:prod` and update the database with button. Also check that the version number has actually changed, plugins have been updated, and everything works ok.
 
 Reverting changes:
 
