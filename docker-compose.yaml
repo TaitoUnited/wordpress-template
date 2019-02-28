@@ -52,8 +52,6 @@ services:
       - default
     ports:
       - "7587:3306"
-    volumes:
-      - "./database/init:/docker-entrypoint-initdb.d:delegated"
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: wptemplatelocal

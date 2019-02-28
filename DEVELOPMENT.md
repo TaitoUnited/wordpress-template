@@ -51,6 +51,10 @@ Start containers (add `--clean` for clean rebuild and database init):
 
     taito start
 
+Initialize database with `database/data/local.sql` data:
+
+    taito init --clean
+
 Show user accounts and other information that you can use to log in:
 
     taito info
@@ -89,9 +93,9 @@ Access data:
     # not be committed to git. For example, example files used in development
     # only.
 
-In case you are using local database for development instead of staging, you need to save database dump of your local database to `database/init/init.sql` before committing changes to git:
+In case you are using local database for development instead of staging, you need to save database dump of your local database to `database/data/local.sql` before committing changes to git:
 
-    taito db dump initdata
+    taito db dump data
 
 > Try to synchronize your work with other developers to avoid database change conflicts. You can easily overwrite changes of another developer when you push your local database changes to git.
 
