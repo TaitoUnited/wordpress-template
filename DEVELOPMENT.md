@@ -1,16 +1,16 @@
 # Development
 
-This file has been copied from [WORDPRESS-TEMPLATE](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/). Keep modifications minimal and improve the [original](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/blob/dev/DEVELOPMENT.md) instead. Project specific conventions are located in [README.md](README.md#conventions). See the [taito-cli tutorial](https://github.com/TaitoUnited/taito-cli/blob/master/docs/tutorial/README.md) for more thorough development instructions. Note that taito-cli is optional (see [without taito-cli](#without-taito-cli)).
+This file has been copied from [WORDPRESS-TEMPLATE](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/). Keep modifications minimal and improve the [original](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/blob/dev/DEVELOPMENT.md) instead. Project specific conventions are located in [README.md](README.md#conventions). See the [taito-cli tutorial](https://github.com/TaitoUnited/taito-cli/blob/master/docs/tutorial/README.md) for more thorough development instructions. Note that taito-cli is optional (see [usage without taito-cli](#usage-without-taito-cli)).
 
 Table of contents:
 
 * [Prerequisites](#prerequisites)
 * [Workflow](#workflow)
-* [Updating WordPress and plugins](#updating-wordpress-and-plugins)
 * [Local development](#local-development)
 * [Version control](#version-control)
 * [Deployment](#deployment)
-* [Configuration](#configuration)
+* [Usage without Taito CLI](#usage-without-taito-cli)
+* [Upgrading](#upgrading)
 
 ## Prerequisites
 
@@ -21,25 +21,6 @@ Table of contents:
 ## Workflow
 
 It is recommended to do most modifications in local or staging environment. Use the production environment only for making frequent live modifications like creating new blog posts and managing users.
-
-## Updating WordPress and plugins
-
-Manually:
-
-1) **local wordpress**: Update WordPress version in `wordpress/Dockerfile` and `wordpress/Dockerfile.build` files. Push changes to dev branch.
-2) **local clean start**: Clean start with `taito start --clean`, `taito init --clean`.
-3) **local database**: Open admin GUI with `taito open admin` and update the database by clicking the database update button. Also check that the version number has actually changed, plugins have been updated, and everything works ok. Update local database dump with `taito db dump data`.
-4) **local plugins**: Update plugins with `taito wp plugin update` command and push changes to dev branch. NOTE: By default only minor and patch versions are updated. This can be configured with `wordpress_plugin_update_flags` in `taito-config.sh`. Once in a while remove the `--minor` flag to update major version. You should also try `--patch` or major update if plugin update fails using the `--minor` flag.
-5) **staging wordpress**: Merge changes to staging branch. After deployment open admin GUI with `taito open admin:stag` and update the database with button. Also check that the version number has actually changed, plugins have been updated, and everything works ok.
-6) **prod wordpress**: Merge changes to prod branch. After deployment open admin GUI with `taito open admin:prod` and update the database with button. Also check that the version number has actually changed, plugins have been updated, and everything works ok.
-
-Reverting changes:
-
-TODO how to revert: container image, database, volume snapshot, (storage bucket)
-
-> TODO: Update automatically (there are already some update scripts in `scripts/update` directory).
-
-> TODO: cloudbuild.yaml should take db export and volume snapshot automatically for prod
 
 ## Local development
 
@@ -147,16 +128,6 @@ Run `taito -h` to get detailed instructions for all commands. Run `taito COMMAND
 
 > It's common that idle applications are run down to save resources on non-production environments. If your application seems to be down, you can start it by running `taito start:ENV`, or by pushing some changes to git.
 
-### Without taito-cli
-
-You can run this project without taito-cli, but it is not recommended as you'll lose many of the additional features that taito-cli provides.
-
-Local development:
-
-    npm install          # Install some libraries
-    docker-compose up    # Start wordpress and database
-    npm run              # Show all scripts that you can run with npm
-
 ## Version control
 
 You can manage environment and feature branches using taito-cli. Run `taito vc -h` for examples.
@@ -216,58 +187,37 @@ Migrate some data from staging to production:
 
 > TODO: cloudbuild.yaml should take db export and volume snapshot automatically for prod.
 
-## Configuration
+## Usage without taito-cli
 
-### Version control settings
+You can run this project without taito-cli, but it is not recommended as you'll lose many of the additional features that taito-cli provides.
 
-Run `taito open vc conventions` in the project directory to see organization specific settings that you should configure for your git repository.
+Local development:
 
-### Basic project settings
+    npm install          # Install some libraries
+    docker-compose up    # Start wordpress and database
+    npm run              # Show all scripts that you can run with npm
 
-1. Modify `taito-config.sh` if you need to change some settings. The default settings are ok for most projects.
-2. Run `taito project apply`
-3. Commit and push changes
+## Upgrading
 
-### Local environment
+### WordPress and plugins
 
-See the [Local development](#local-development) for instructions. If you are using a local database for development, remember to export it to git once in while with `taito db dump initdata`.
+Manually:
 
-### Server environments
+1) **local wordpress**: Update WordPress version in `wordpress/Dockerfile` and `wordpress/Dockerfile.build` files. Push changes to dev branch.
+2) **local clean start**: Clean start with `taito start --clean`, `taito init --clean`.
+3) **local database**: Open admin GUI with `taito open admin` and update the database by clicking the database update button. Also check that the version number has actually changed, plugins have been updated, and everything works ok. Update local database dump with `taito db dump data`.
+4) **local plugins**: Update plugins with `taito wp plugin update` command and push changes to dev branch. NOTE: By default only minor and patch versions are updated. This can be configured with `wordpress_plugin_update_flags` in `taito-config.sh`. Once in a while remove the `--minor` flag to update major version. You should also try `--patch` or major update if plugin update fails using the `--minor` flag.
+5) **staging wordpress**: Merge changes to staging branch. After deployment open admin GUI with `taito open admin:stag` and update the database with button. Also check that the version number has actually changed, plugins have been updated, and everything works ok.
+6) **prod wordpress**: Merge changes to prod branch. After deployment open admin GUI with `taito open admin:prod` and update the database with button. Also check that the version number has actually changed, plugins have been updated, and everything works ok.
 
-> Operations on production and staging environments require admin rights, if they contain confidential data. Please contact devops personnel.
+Reverting changes:
 
-#### Creating a new server environment
+TODO how to revert: container image, database, volume snapshot, (storage bucket)
 
-* *Mandatory only for production: Configure DNS record.*
-* *Mandatory only for production: Configure app url in `taito-config.sh`*
-* *Mandatory only for production: Configure uptime monitoring and alerts*
-* Run `taito env apply:ENV` to create an environment. The following server environment are recommended: `stag`, `prod`. TIP: If you use a storage bucket or other external resources in your WordPress setup, but you do not need a separate `dev` remote environment, you can create `dev` environment resources by running `taito env apply:dev terraform` and use those resources in local development.
-* At some point you will be asked to create basic auth credentials. The basic auth credentials are used only for hiding non-production environments, but since WordPress has security issues and WordPress might be out on the open until it has been installed properly, it's best to use a strong autogenerated password for each environment. If the git repository is private, you can add the password to the links section of README.md so that all non-developer-collaborators may access it easily. Note that you can show the password on command line at any time with `taito info:ENV` and share it with anyone by running `taito passwd share`.
-* Deploy wordpress to the newly created environment by pushing/merging some changes to the environment branch in question.
-* Generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`). The initial admin password is: `admin-pass-change-it-7983p4nWgRE2p4No2d9`. If the admin account is shared, save the new password to a secure shared location. Never use the same admin password for every environment, as dev database is committed to git.
+> TODO: Update automatically (there are already some update scripts in `scripts/update` directory).
 
-#### Configuring file persistence (for media, etc)
+> TODO: cloudbuild.yaml should take db export and volume snapshot automatically for prod
 
-* Persistent volume claim (PVC) is disabled by default. This means that all data must be saved either to database or storage bucket. Try to use such wordpress plugins that do not save any permanent data to local disk. If this is not possible, you can enable PVC in `taito-config.sh` with the `wordpress_persistence_enabled` setting. `TODO: mount only data directories -> define persistent directories in helm.yaml?`
-* You can store media files to a storage bucket with one of the following wp-plugins. Note that bucket and service account are created automatically by Terraform on `taito env apply:ENV`. You can use dev environment resources also for local development (see [Creating a new server environment](#creating-a-new-server-environment)). You can open the bucket with `taito open storage:ENV` and the service account details with `taito open services:ENV`.
-  * [wp-stateless](https://wordpress.org/plugins/wp-stateless/) for Google Cloud. Settings: mode=`Stateless`, bucket=`wordpress-template-ENV`, bucket folder=`/media`, create a JSON key for `wordpress-template-ENV` service account from gcloud console (`taito open services:ENV` -> Credentials -> Create service account key).
-  * [https://github.com/humanmade/S3-Uploads](S3-Uploads) for AWS.
-* Remember to delete all service account keys and other secrets from your local disk.
-
-#### Kubernetes
-
-If you need to, you can configure Kubernetes settings by modifying `heml*.yaml` files located under the `scripts`-directory. The default settings, however, are ok for most sites.
-
-#### Secrets
-
-If you need to, you can add new secrets like this:
-
-1. Add a secret definition to `taito-config.sh` (taito_secrets)
-2. Map secret to an environment variable in some of the `helm.yaml` files located under the `scripts`-directory.
-3. Run `taito env rotate:ENV [SECRET]` to generate a secret value for an environment. Run the command for each environment separately. Note that the rotate command restarts all pods in the same namespace.
-
-> For local development you can just define secrets as normal environment variables in `docker-compose.yaml` given that they are not confidential.
-
-### Upgrading to the latest version of the project template
+### Project template
 
 Run `taito template upgrade`. The command copies the latest versions of reusable Helm charts, terraform templates and CI/CD scripts to your project folder, and also this README.md file. You should not make project specific modifications to them as they are designed to be reusable and easily configurable for various needs. Improve the originals instead, and then upgrade.
