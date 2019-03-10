@@ -20,7 +20,7 @@ Table of contents:
 
 Run `taito open vc conventions` in the project directory to see organization specific settings that you should configure for your git repository.
 
-[ ] All done
+* [ ] All done
 
 ### Hosting options
 
@@ -30,13 +30,13 @@ By default the template deploys the site to Kubernetes running on Google Cloud. 
 2. Run `taito project apply`
 3. Commit and push changes
 
-[ ] All done
+* [ ] All done
 
 ### Local environment
 
 See the [Local development](#local-development) for instructions. If you are using a local database for development, remember to export it to git once in while with `taito db dump initdata`.
 
-[ ] All done
+* [ ] All done
 
 ### Server environments
 
@@ -52,7 +52,7 @@ See the [Local development](#local-development) for instructions. If you are usi
 * Deploy wordpress to the newly created environment by pushing/merging some changes to the environment branch in question.
 * Generate a new password for the admin user by using the WordPress admin GUI (`taito open admin:ENV`). The initial admin password is: `admin-pass-change-it-7983p4nWgRE2p4No2d9`. If the admin account is shared, save the new password to a secure shared location. Never use the same admin password for every environment, as dev database is committed to git.
 
-[ ] All done
+* [ ] All done
 
 #### Configuring file persistence (for media, etc)
 
@@ -62,13 +62,13 @@ See the [Local development](#local-development) for instructions. If you are usi
   * [https://github.com/humanmade/S3-Uploads](S3-Uploads) for AWS.
 * Remember to delete all service account keys and other secrets from your local disk.
 
-[ ] All done
+* [ ] All done
 
 #### Kubernetes
 
 If you need to, you can configure Kubernetes settings by modifying `heml*.yaml` files located under the `scripts`-directory. The default settings, however, are ok for most sites.
 
-[ ] All done
+* [ ] All done
 
 #### Secrets
 
@@ -80,4 +80,4 @@ If you need to, you can add new secrets like this:
 
 > For local development you can just define secrets as normal environment variables in `docker-compose.yaml` given that they are not confidential.
 
-[ ] All done
+* [ ] All done
