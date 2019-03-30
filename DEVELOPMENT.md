@@ -141,7 +141,7 @@ Deploying to different server environments:
 * staging: Merge changes from dev to stag branch using fast-forward.
 * production: Merge changes from stag branch to master branch using fast-forward. Version number and release notes are generated automatically by the CI/CD tool.
 
-Run `taito open builds` to see the build logs. Use `taito env`, `taito feat`, and `taito hotfix` commands to manage branches.
+You can use the taito commands to manage branches, builds, and deployments. Run `taito env -h`, `taito feat -h`, `taito hotfix -h`, and `taito deployment -h` for instructions. Run `taito open builds` to see the build logs.
 
 NOTE: Only Helm configuration from `./scripts` and the container image are deployed automatically on servers on git push. You have to migrate data manually between environments using taito commands. Some examples below.
 
