@@ -81,3 +81,11 @@ If you need to, you can add new secrets like this:
 > For local development you can just define secrets as normal environment variables in `docker-compose.yaml` given that they are not confidential.
 
 * [ ] All done
+
+## Uptime monitoring for production
+
+Run `taito open uptime` and configure uptime checks and alerts for all critical endpoints of your application. Use the existing policies as an example. Don't forget to test the alerts work ok (for example, enable basic authentication temporarily for production).
+
+TODO: Use terraform for uptime monitoring rules
+
+* [ ] Production done
