@@ -70,13 +70,18 @@ db_database_port=$db_database_proxy_port
 
 # Messaging
 taito_messaging_app=slack
+taito_messaging_webhook=
 taito_messaging_channel=companyname
 taito_messaging_builds_channel=builds
+taito_messaging_critical_channel=critical
 taito_messaging_monitoring_channel=monitoring
-taito_messaging_webhook=
 
 # Monitoring
-taito_monitoring_paths="/"
+taito_monitoring_names=" wordpress "
+taito_monitoring_paths=" / "
+taito_monitoring_timeouts=" 5s "
+# You can list all monitoring channels with `taito env info:prod`
+taito_monitoring_uptime_channels="${template_default_monitoring_uptime_channels_prod:-}"
 
 # CI/CD settings
 # NOTE: Most of these should be enabled for dev and feature envs only
@@ -124,8 +129,8 @@ case $taito_env in
     taito_resource_namespace=$taito_organization_abbr-$taito_company-prod
     gcloud_org_id=${template_default_provider_org_id_prod:?}
 
-    # NOTE: Set production domain here
-    taito_domain=$taito_project-$taito_target_env.${template_default_domain_prod:?}
+    # NOTE: Set production domain here once you have configured DNS
+    taito_domain=
     taito_app_url=https://$taito_domain
     kubectl_replicas=1
     monitoring_enabled=true
