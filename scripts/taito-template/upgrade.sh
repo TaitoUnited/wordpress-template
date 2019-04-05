@@ -13,10 +13,10 @@ yes | cp cloudbuild.yaml "${template_project_path}"
 mkdir -p "${template_project_path}/scripts/helm"
 yes | cp -r "scripts/helm/requirements.yaml" \
   "${template_project_path}/scripts/helm/requirements.yaml" 2> /dev/null
-yes | cp -r "scripts/update/*" \
-  "${template_project_path}/scripts/update" 2> /dev/null
-yes | cp -r "wordpress/Docker*" \
-  "${template_project_path}/wordpress" 2> /dev/null
+yes | cp -r scripts/update/* \
+  "${template_project_path}/scripts/update/" 2> /dev/null
+yes | cp -r wordpress/Docker* \
+  "${template_project_path}/wordpress/" 2> /dev/null
 
 echo
 echo
