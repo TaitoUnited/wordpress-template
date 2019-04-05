@@ -13,8 +13,8 @@ services:
     volumes:
       - "./wordpress/data:/bitnami:delegated"
     environment:
-      WORDPRESS_USERNAME: admin    # SHOW ON INFO
-      WORDPRESS_PASSWORD: admin-pass-change-it-7983p4nWgRE2p4No2d9 # SHOW ON INFO
+      WORDPRESS_USERNAME: changeme    # SHOW ON INFO
+      WORDPRESS_PASSWORD: password-change-it-7983p4nWgRE2p4No2d9 # SHOW ON INFO
       MARIADB_HOST: wordpress-template-database
       MARIADB_PORT_NUMBER: 3306
       # NOTE: For staging database

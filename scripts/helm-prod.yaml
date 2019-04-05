@@ -1,38 +1,11 @@
-# values for wordpress chart: https://hub.kubeapps.com/charts/stable/wordpress
-wordpress:
-  resources:
-    requests:
-      memory: 256Mi
-      cpu: 100m
-  persistence:
-    enabled: ${wordpress_persistence_enabled}
-    # NOTE: Google does not support ReadWriteMany
-    # --> all containers will be placed on the same Kubernetes node
-    accessMode: ReadWriteOnce
-    size: 10Gi
+# NOTE: Here you can override default settings for production environment.
+# For example, you can diable basic authentication here.
+
+full-stack:
   ingress:
-    hosts:
-      - name: ${taito_domain}
-        tlsSecret: ${taito_project}-${taito_env}-tls-secret
-        tls: true
-        secureBackendDisabled: true
-        annotations:
-          kubernetes.io/ingress.class: nginx
-          ingress.kubernetes.io/proxy-body-size: 1m
-          kubernetes.io/tls-acme: "true"
-          ingress.kubernetes.io/ssl-redirect: "true"
-          ingress.kubernetes.io/force-ssl-redirect: "true"
-          # NOTE: remove basic auth once you don't need it anymore
-          ingress.kubernetes.io/auth-type: "basic"
-          ingress.kubernetes.io/auth-realm: wordpress-template
-          ingress.kubernetes.io/auth-secret: ${taito_project}-${taito_env}-basic-auth
+    basicAuth:
+      # enabled: false
 
-  # TODO: use app user in production instead of mgr? (tables migrated from staging)
-
-  # smtpHost:
-  # smtpProtocol:
-  # smtpPort:
-  # smtpUser:
-  # smtpSecretName: smtp.wordpress-template-dev.email
-  # smtpSecretKey: SECRET
-  # smtpUsername:
+  services:
+    wordpress:
+      livenessInitialDelay: 180

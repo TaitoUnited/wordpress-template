@@ -185,7 +185,7 @@ kubectl_user=$kubectl_cluster
 
 # Link plugin
 link_urls="
-  * app[:ENV]#app=$taito_app_url Application (:ENV)
+  * wp[:ENV]#app=$taito_app_url Wordpress (:ENV)
   * admin[:ENV]#admin=$taito_admin_url Admin user interface (:ENV)
   * git=https://github.com/${template_default_github_organization:?}/$taito_vc_repository GitHub repository
   * docs=https://github.com/${template_default_github_organization:?}/$taito_vc_repository/wiki Project documentation
@@ -203,4 +203,6 @@ taito_secrets="
   $db_database_name-db-mgr.password:random
   $db_database_name-db-app.password:random
   $taito_project-$taito_env-basic-auth.auth:htpasswd-plain
+  $taito_project-$taito_env-admin.initialpassword:random
+  $taito_project-$taito_env-smtp.password:random
 "

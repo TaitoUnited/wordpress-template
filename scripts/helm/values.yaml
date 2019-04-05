@@ -1,19 +1,25 @@
-
-# values for chart https://hub.kubeapps.com/charts/stable/wordpress
-wordpress:
-  allowEmptyPassword: no
-  wordpressUsername: admin
-  wordpressPassword: admin-pass-change-it-7983p4nWgRE2p4No2d9
-
-  ingress:
-    enabled: true
-
-  persistence:
-    enabled: false
-    size: 4Gi
-
-  mariadb:
-    enabled: false
-
-mariadb:
-  enabled: false
+# Global settings for all charts
+global:
+  # These are given as command line parameters during build
+  zone:
+    name:
+    provider:
+    providerRegion:
+    providerZone:
+    namespace:
+    resourceNamespace:
+  project:
+    name:
+    company:
+    family:
+    application:
+    suffix:
+  build:
+    version:
+    commit:
+    imageTag:
+  # Common settings
+  logFormat: stackdriver
+  logLevel: info    # trace, debug, info, warn, error, fatal
+  registry: ${taito_image_registry}
+  imagePullPolicy: ''

@@ -1,49 +1,78 @@
-# values for wordpress chart: https://hub.kubeapps.com/charts/stable/wordpress
-wordpress:
-  replicas: ${kubectl_replicas}
-  image:
-    registry: ${taito_image_registry}
-    repository: wordpress
-    tag: ${taito_build_image_tag}
-  resources:
-    requests:
-      memory: 256Mi
-      cpu: 100m
+global:
+  domain: ${taito_domain}
+  url: https://${taito_domain}
+  logFormat: stackdriver
+  logLevel: info    # trace, debug, info, warn, error, fatal
+  registry: ${taito_image_registry}
+  imagePullPolicy: ''
+
+full-stack:
+  # TODO: --enable-pod-security-policy:
+  # https://cloud.google.com/kubernetes-engine/docs/how-to/pod-security-policies
+  podSecurityPolicy:
+    enabled: false
+
   persistence:
     enabled: ${wordpress_persistence_enabled}
+    existingClaim:
+    storageClass:
+    # NOTE: Google does not support ReadWriteMany
+    # --> all containers will be placed on the same Kubernetes node
     accessMode: ReadWriteOnce
     size: 8Gi
-  livenessProbe:
-    initialDelaySeconds: 180
-  serviceType: ClusterIP
-  ingress:
-    hosts:
-      - name: ${taito_domain}
-        tlsSecret: ${taito_project}-${taito_env}-tls-secret
-        tls: true
-        secureBackendDisabled: true
-        annotations:
-          kubernetes.io/ingress.class: nginx
-          ingress.kubernetes.io/proxy-body-size: 1m
-          kubernetes.io/tls-acme: "true"
-          ingress.kubernetes.io/ssl-redirect: "true"
-          ingress.kubernetes.io/force-ssl-redirect: "true"
-          ingress.kubernetes.io/auth-type: "basic"
-          ingress.kubernetes.io/auth-realm: wordpress-template
-          ingress.kubernetes.io/auth-secret: ${taito_project}-${taito_env}-basic-auth
-  externalDatabase:
-    host: mysql-sqlproxy-gcloud-sqlproxy.sqlproxy
-    port: 3306
-    database: ${db_database_name}
-    # wordpress creates tables in dev so we have to use the mgr user account
-    user: ${db_database_name}
-    passwordSecretName: ${db_database_name}-db-mgr
-    passwordSecretKey: password
 
-  # smtpHost:
-  # smtpProtocol:
-  # smtpPort:
-  # smtpUser:
-  # smtpSecretName: smtp.wordpress-template-dev.email
-  # smtpSecretKey: SECRET
-  # smtpUsername:
+  ingress:
+    class: nginx
+    tls: true
+    maxBodySize: 1m
+    basicAuth:
+      enabled: true
+      htpasswdSecret: ${taito_project}-${taito_env}-basic-auth
+    domains:
+      - name: ${taito_domain}
+
+  services:
+    wordpress:
+      path: /
+      port: 80
+      tier: frontend
+      livenessPath: /wp-login.php
+      livenessInitialDelay: 180
+      runAsUser:
+      fsGroup:
+      cpuRequest: 20m
+      cpuLimit: 200m
+      memoryRequest: 256Mi
+      memoryLimit: 512Mi
+      replicas: ${kubectl_replicas}
+      persistentVolumeMounts:
+        - mountPath: /bitnami/apache
+          volumePath: apache
+          readOnly: false
+        - mountPath: /bitnami/php
+          volumePath: php
+          readOnly: false
+        - mountPath: /bitnami/wordpress
+          volumePath: wordpress
+          readOnly: false
+      secrets:
+        WORDPRESS_DATABASE_PASSWORD: ${db_database_name}-db-mgr.password
+        WORDPRESS_PASSWORD: ${taito_project}-${taito_env}-admin.initialpassword
+        SMTP_PASSWORD: ${taito_project}-${taito_env}-smtp.password
+      env:
+        ALLOW_EMPTY_PASSWORD: no
+        MARIADB_HOST: mysql-sqlproxy-gcloud-sqlproxy.sqlproxy
+        MARIADB_PORT_NUMBER: 3306
+        WORDPRESS_DATABASE_NAME: ${db_database_name}
+        WORDPRESS_DATABASE_USER: ${db_database_name}
+        WORDPRESS_USERNAME: changeme
+        WORDPRESS_EMAIL:
+        WORDPRESS_FIRST_NAME:
+        WORDPRESS_LAST_NAME:
+        WORDPRESS_BLOG_NAME:
+        WORDPRESS_TABLE_PREFIX:
+        SMTP_HOST:
+        SMTP_PORT:
+        SMTP_USER:
+        SMTP_USERNAME:
+        SMTP_PROTOCOL:

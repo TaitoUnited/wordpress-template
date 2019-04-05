@@ -43,9 +43,9 @@ Show user accounts and other information that you can use to log in:
     taito info
     taito info:stag
 
-Open app in browser:
+Open wordpress site in browser:
 
-    taito open app
+    taito open wp
 
 Open admin GUI in browser:
 
@@ -107,7 +107,7 @@ Cleaning:
 
 The commands mentioned above work also for server environments (`feat`, `dev`, `test`, `stag`, `prod`). Some examples for staging environment:
 
-    taito open app:stag                     # Open application in browser
+    taito open wp:stag                      # Open wordpress site in browser
     taito open admin:stag                   # Open admin GUI in browser
     taito info:stag                         # Show info
     taito status:stag                       # Show status of dev environment

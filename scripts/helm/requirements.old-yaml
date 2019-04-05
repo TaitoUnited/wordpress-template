@@ -1,6 +1,0 @@
-dependencies:
-- name: wordpress
-  version: ~1.0.9
-  repository: https://kubernetes-charts.storage.googleapis.com/
-  tags:
-    - wordpress
