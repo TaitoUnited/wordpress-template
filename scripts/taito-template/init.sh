@@ -120,10 +120,8 @@ echo "Generating unique random ports (avoid conflicts with other projects)..."
 
 ingress_port=$(shuf -i 8000-9999 -n 1)
 db_port=$(shuf -i 6000-7999 -n 1)
-sed -i "s/7587/${db_port}/g" taito-config.sh &> /dev/null
-sed -i "s/7587/${db_port}/g" docker-compose.yaml &> /dev/null
-sed -i "s/4635/${ingress_port}/g" docker-compose.yaml taito-config.sh \
-  ./admin/package.json ./client/package.json &> /dev/null
+sed -i "s/7587/${db_port}/g"  taito-config.sh docker-compose.yaml &> /dev/null
+sed -i "s/4635/${ingress_port}/g" docker-compose.yaml taito-config.sh &> /dev/null
 
 echo "Replacing template variables with the given settings..."
 
@@ -167,4 +165,6 @@ sed -i "s|\${_TEMPLATE_DEFAULT_TAITO_IMAGE}|${template_default_taito_image}|g" c
 sed -i '/_TEMPLATE_DEFAULT_/d' cloudbuild.yaml
 sed -i '/template_default_taito_image/d' cloudbuild.yaml
 
+pwd
+ls -laF
 rm -f temp
