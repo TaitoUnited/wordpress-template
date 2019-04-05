@@ -15,7 +15,7 @@ taito_plugins="
   docker-compose:local
   terraform:-local secrets:-local kube-secrets:-local
   kubectl:-local helm:-local
-  gcloud:-local gcloud-builder:-local
+  gcloud:-local gcloud-storage:-local gcloud-builder:-local gcloud-monitoring:-local
   semantic npm git links-global
 "
 
