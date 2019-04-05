@@ -1,4 +1,4 @@
-#!/bin/bash -xe
+#!/bin/bash -e
 # TODO: most of this has been pretty much copy pasted from server-template
 : "${taito_organization:?}"
 : "${taito_company:?}"
@@ -30,6 +30,8 @@
 
 : "${template_project_path:?}"
 : "${mode:?}"
+
+${taito_setv:?}
 
 # Remove .gitignore to allow committing data to git
 rm wordpress/data/.gitignore

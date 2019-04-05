@@ -1,8 +1,8 @@
-#!/bin/bash -xe
+#!/bin/bash -e
 
 : "${template_project_path:?}"
 
-echo
+${taito_setv:?}
 ./scripts/taito-template/init.sh
 
 # Copy files from template to project
