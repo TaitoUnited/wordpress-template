@@ -37,7 +37,9 @@ full-stack:
       port: 80
       tier: frontend
       livenessPath: /wp-login.php
-      livenessInitialDelay: 180
+      # TODO: https://github.com/kubernetes/kubernetes/issues/27114
+      livenessInitialDelay: 360
+      readinessFailureThreshold: 36 # livenessInitialDelay / 10
       runAsUser:
       fsGroup:
       cpuRequest: 20m
@@ -60,19 +62,16 @@ full-stack:
         WORDPRESS_PASSWORD: ${taito_project}-${taito_env}-admin.initialpassword
         SMTP_PASSWORD: ${taito_project}-${taito_env}-smtp.password
       env:
-        ALLOW_EMPTY_PASSWORD: no
         MARIADB_HOST: mysql-sqlproxy-gcloud-sqlproxy.sqlproxy
         MARIADB_PORT_NUMBER: 3306
         WORDPRESS_DATABASE_NAME: ${db_database_name}
         WORDPRESS_DATABASE_USER: ${db_database_name}
+        # Wordpress initial SMTP settings
+        # https://github.com/bitnami/bitnami-docker-wordpress/issues/153#issuecomment-450971500
+        # SMTP_USERNAME: ''
+        # SMTP_PROTOCOL: ''
+        # SMTP_HOST: ''
+        # SMTP_PORT: ''
+        # SMTP_USER: ''
+        # Wordpress initial username
         WORDPRESS_USERNAME: changeme
-        WORDPRESS_EMAIL:
-        WORDPRESS_FIRST_NAME:
-        WORDPRESS_LAST_NAME:
-        WORDPRESS_BLOG_NAME:
-        WORDPRESS_TABLE_PREFIX:
-        SMTP_HOST:
-        SMTP_PORT:
-        SMTP_USER:
-        SMTP_USERNAME:
-        SMTP_PROTOCOL:
