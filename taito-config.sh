@@ -204,5 +204,4 @@ taito_secrets="
   $db_database_name-db-app.password:random
   $taito_project-$taito_env-basic-auth.auth:htpasswd-plain
   $taito_project-$taito_env-admin.initialpassword:random
-  $taito_project-$taito_env-smtp.password:random
 "
