@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xe
 # TODO: most of this has been pretty much copy pasted from server-template
 : "${taito_organization:?}"
 : "${taito_company:?}"
