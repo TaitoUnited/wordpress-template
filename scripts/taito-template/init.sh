@@ -165,6 +165,4 @@ sed -i "s|\${_TEMPLATE_DEFAULT_TAITO_IMAGE}|${template_default_taito_image}|g" c
 sed -i '/_TEMPLATE_DEFAULT_/d' cloudbuild.yaml
 sed -i '/template_default_taito_image/d' cloudbuild.yaml
 
-pwd
-ls -laF
-rm -f temp
+rm -f temp || :
