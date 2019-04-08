@@ -57,7 +57,7 @@ full-stack:
         - mountPath: /bitnami/wordpress
           volumePath: wordpress
           readOnly: false
-      secrets:
+      secretEnv:
         WORDPRESS_DATABASE_PASSWORD: ${db_database_name}-db-mgr.password
         WORDPRESS_PASSWORD: ${taito_project}-${taito_env}-admin.initialpassword
       env:

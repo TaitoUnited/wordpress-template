@@ -10,13 +10,13 @@
 # Taito-cli
 taito_version=1
 taito_plugins="
+  terraform:-local generate-secrets dev-secrets
+  docker docker-compose:local kubectl:-local helm:-local
   mysql-db
-  docker
-  docker-compose:local
-  terraform:-local secrets:-local kube-secrets:-local
-  kubectl:-local helm:-local
-  gcloud:-local gcloud-storage:-local gcloud-builder:-local gcloud-monitoring:-local
-  semantic npm git links-global
+  npm git-global links-global
+  semantic-release
+  gcloud:-local gcloud-storage:-local
+  gcloud-builder:-local gcloud-monitoring:-local
 "
 
 # Project labeling

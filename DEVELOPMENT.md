@@ -26,9 +26,9 @@ It is recommended to do most modifications in local or staging environment. Use 
 
 > You can use either local or staging database for development by modifying `docker-compose.yaml`. If you use staging database for development, you must enable one of the media storage plugins (see [server environments](#server-environments) chapter). See [deployment](#deployment) chapter for instructions on copying data from one environment to another.
 
-Install some libraries on host (add `--clean` for clean reinstall):
+Create a local environment by installing some libraries and generating secrets (add --clean to recreate a clean environment):
 
-    taito install
+    taito env apply
 
 Start containers (add `--clean` for clean rebuild and database init):
 
@@ -107,6 +107,11 @@ Cleaning:
 
 The commands mentioned above work also for server environments (`feat`, `dev`, `test`, `stag`, `prod`). Some examples for staging environment:
 
+    taito auth:stag                         # Authenticate to stag
+    taito env apply:stag                    # Create the stag environment
+    taito push                              # Push changes to current branch (dev)
+    taito env merge:dev stag                # Merge changes from dev to stag
+    taito open builds:stag                  # Show build status and build logs
     taito open wp:stag                      # Open wordpress site in browser
     taito open admin:stag                   # Open admin GUI in browser
     taito info:stag                         # Show info
@@ -196,6 +201,8 @@ Local development:
     npm install          # Install some libraries
     docker-compose up    # Start wordpress and database
     npm run              # Show all scripts that you can run with npm
+
+TODO: Instructions not up-to-date
 
 ## Upgrading
 
