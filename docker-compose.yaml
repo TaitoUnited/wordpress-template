@@ -24,7 +24,7 @@ services:
       # NOTE: For local database
       WORDPRESS_DATABASE_NAME: wptemplatelocal
       WORDPRESS_DATABASE_USER: wptemplatelocal
-      WORDPRESS_DATABASE_PASSWORD: secret
+      WORDPRESS_DATABASE_PASSWORD: ${taito_default_password}
 
   # NOTE: For staging database
   # wordpress-template-database:

@@ -77,12 +77,8 @@ taito_messaging_builds_channel=builds
 taito_messaging_critical_channel=critical
 taito_messaging_monitoring_channel=monitoring
 
-# Monitoring
-taito_monitoring_names=" wordpress "
-taito_monitoring_paths=" / "
-taito_monitoring_timeouts=" 5s "
-# You can list all monitoring channels with `taito env info:prod`
-taito_monitoring_uptime_channels="${template_default_monitoring_uptime_channels_prod:-}"
+# Misc
+taito_default_password=secret1234
 
 # CI/CD settings
 # NOTE: Most of these should be enabled for dev and feature envs only
@@ -93,7 +89,7 @@ ci_exec_test_wait=1        # how many seconds to wait for deployment/restart
 ci_exec_test_init=false    # run 'init --clean' before each test suite
 ci_exec_revert=false       # revert deploy automatically on fail
 
-# ------ Plugin specific settings ------
+# ------ Plugin and provider specific settings ------
 
 # Hour reporting and issue management plugins
 toggl_project_id=
@@ -106,6 +102,7 @@ template_source_git=git@github.com:TaitoUnited
 
 # Google Cloud plugin
 gcloud_org_id=${template_default_provider_org_id:?}
+gcloud_service_account_enabled=true
 gcloud_sql_proxy_port=$db_database_proxy_port
 
 # Kubernetes plugin
@@ -135,7 +132,13 @@ case $taito_env in
     taito_default_domain=$taito_project-$taito_target_env.${template_default_domain_prod:?}
     taito_app_url=https://$taito_domain
     kubectl_replicas=1
-    monitoring_enabled=true
+
+    # Monitoring
+    taito_monitoring_names=" wordpress "
+    taito_monitoring_paths=" / "
+    taito_monitoring_timeouts=" 5s "
+    # You can list all monitoring channels with `taito env info:prod`
+    taito_monitoring_uptime_channels="${template_default_monitoring_uptime_channels_prod:-}"
     ;;
   stag)
     taito_zone=${template_default_zone_prod:?}
