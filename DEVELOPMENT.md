@@ -1,6 +1,6 @@
 # Development
 
-This file has been copied from [WORDPRESS-TEMPLATE](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/). Keep modifications minimal and improve the [original](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/blob/dev/DEVELOPMENT.md) instead. Project specific conventions are located in [README.md](README.md#conventions). See the [taito-cli tutorial](https://github.com/TaitoUnited/taito-cli/blob/master/docs/tutorial/README.md) for more thorough development instructions. Note that taito-cli is optional (see [usage without taito-cli](#usage-without-taito-cli)).
+This file has been copied from [WORDPRESS-TEMPLATE](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/). Keep modifications minimal and improve the [original](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/blob/dev/DEVELOPMENT.md) instead. Project specific conventions are located in [README.md](README.md#conventions). See the [taito-cli tutorial](https://github.com/TaitoUnited/taito-cli/blob/master/docs/tutorial/README.md) for more thorough development instructions. Note that Taito CLI is optional (see [TAITOLESS.md](TAITOLESS.md)).
 
 Table of contents:
 
@@ -9,14 +9,13 @@ Table of contents:
 * [Local development](#local-development)
 * [Version control](#version-control)
 * [Deployment](#deployment)
-* [Usage without Taito CLI](#usage-without-taito-cli)
 * [Upgrading](#upgrading)
 
 ## Prerequisites
 
 * [node.js](https://nodejs.org/)
 * [docker-compose](https://docs.docker.com/compose/install/)
-* Optional: [taito-cli](https://github.com/TaitoUnited/taito-cli#readme)
+* [Taito CLI](https://github.com/TaitoUnited/taito-cli#readme) (or see [TAITOLESS.md](TAITOLESS.md))
 
 ## Workflow
 
@@ -191,18 +190,6 @@ Migrate some data from staging to production:
 > TODO: CI will update wp plugins installed on permanent volume automatically if `wordpress_persistence_enabled` is `true`. Otherwise wordpress will use plugins directly from the container image built based on the `wordpress/data` directory. --> OR always use plugins from container and mount only certain data directories?
 
 > TODO: cloudbuild.yaml should take db export and volume snapshot automatically for prod.
-
-## Usage without taito-cli
-
-You can run this project without taito-cli, but it is not recommended as you'll lose many of the additional features that taito-cli provides.
-
-Local development:
-
-    npm install          # Install some libraries
-    docker-compose up    # Start wordpress and database
-    npm run              # Show all scripts that you can run with npm
-
-TODO: Instructions not up-to-date
 
 ## Upgrading
 
