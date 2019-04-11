@@ -25,7 +25,7 @@ It is recommended to do most modifications in local or staging environment. Use 
 
 > You can use either local or staging database for development by modifying `docker-compose.yaml`. If you use staging database for development, you must enable one of the media storage plugins (see [server environments](#server-environments) chapter). See [deployment](#deployment) chapter for instructions on copying data from one environment to another.
 
-Create a local environment by installing some libraries and generating secrets (add --clean to recreate a clean environment):
+Create local environment by installing some libraries and generating secrets (add `--clean` to recreate clean environment):
 
     taito env apply
 
@@ -87,9 +87,11 @@ Start a shell on the wordpress container:
 
     taito shell:wordpress
 
-Stop containers:
+Restart and stop:
 
-    taito stop
+    taito restart:wordpress                 # restart the wordpress container
+    taito restart                           # restart all containers
+    taito stop                              # stop all containers
 
 List all project related links and open one of them in browser:
 

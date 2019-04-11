@@ -14,7 +14,7 @@ Table of contents:
 
 * [node.js](https://nodejs.org/)
 * [docker-compose](https://docs.docker.com/compose/install/)
-* Optional: [taito-cli](https://github.com/TaitoUnited/taito-cli#readme)
+* [Taito CLI](https://github.com/TaitoUnited/taito-cli#readme) (or see [TAITOLESS.md](TAITOLESS.md))
 
 ### Version control settings
 
