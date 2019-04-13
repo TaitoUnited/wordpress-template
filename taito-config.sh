@@ -26,6 +26,7 @@ taito_organization_abbr=${template_default_organization_abbr:?}
 taito_project=wordpress-template
 # taito_project_short max 10 characters
 taito_project_short=wptemplate
+taito_random_name=wordpress-template
 taito_company=companyname
 taito_family=
 taito_application=template
@@ -59,7 +60,7 @@ taito_image_registry=${template_default_registry:?}/$taito_zone/$taito_vc_reposi
 # Stack
 taito_targets="wordpress database"
 taito_databases="database"
-taito_storages="$taito_project-$taito_env"
+taito_storages="$taito_random_name-$taito_env"
 taito_networks="default"
 
 # Database definitions for database plugins
@@ -135,7 +136,7 @@ case $taito_env in
     kubectl_replicas=1
 
     # Monitoring
-    taito_monitoring_names=" wordpress "
+    taito_monitoring_targets=" wordpress "
     taito_monitoring_paths=" / "
     taito_monitoring_timeouts=" 5s "
     # You can list all monitoring channels with `taito env info:prod`
@@ -172,6 +173,7 @@ esac
 
 # URLs
 taito_admin_url=$taito_app_url/wp-admin/
+taito_storage_url="https://console.cloud.google.com/storage/browser/$taito_random_name-$taito_env?project=$taito_resource_namespace_id"
 
 # Provider and namespaces
 taito_resource_namespace_id=$taito_resource_namespace
@@ -196,7 +198,7 @@ link_urls="
   * project=https://github.com/${template_default_github_organization:?}/$taito_vc_repository/projects Project management
   * services[:ENV]=https://console.cloud.google.com/apis/credentials?project=$taito_resource_namespace_id Google services (:ENV)
   * builds=https://console.cloud.google.com/cloud-build/builds?project=$taito_zone&query=source.repo_source.repo_name%3D%22github-${template_default_github_organization:?}-$taito_vc_repository%22 Build logs
-  * storage:ENV=https://console.cloud.google.com/storage/browser/$taito_project-$taito_env?project=$taito_resource_namespace_id Storage bucket (:ENV)
+  * storage:ENV=$taito_storage_url Storage bucket (:ENV)
   * logs:ENV=https://console.cloud.google.com/logs/viewer?project=$taito_zone&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2F$kubectl_name%2Fnamespace_id%2F$taito_namespace Logs (:ENV)
   * uptime=https://app.google.stackdriver.com/uptime?project=$taito_zone Uptime monitoring (Stackdriver)
 "
