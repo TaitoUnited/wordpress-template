@@ -77,7 +77,6 @@ taito_storage_locations="${template_default_storage_location:-}"
 taito_storage_days=${template_default_storage_days:-}
 
 # Storage backup definitions for Terraform
-taito_backup_classes="${template_default_backup_class:-}"
 taito_backup_locations="${template_default_backup_location:-}"
 taito_backup_days="${template_default_backup_days:-}"
 
@@ -151,7 +150,6 @@ case $taito_env in
     taito_storage_days=${template_default_storage_days_prod:-}
 
     # Storage backup definitions for Terraform
-    taito_backup_classes="${template_default_backup_class_prod:-}"
     taito_backup_locations="${template_default_backup_location_prod:-}"
     taito_backup_days="${template_default_backup_days_prod:-}"
 
@@ -211,11 +209,11 @@ kubectl_user=$kubectl_cluster
 link_urls="
   * wp[:ENV]#app=$taito_app_url Wordpress (:ENV)
   * admin[:ENV]#admin=$taito_admin_url Admin user interface (:ENV)
-  * git=https://github.com/${template_default_github_organization:?}/$taito_vc_repository GitHub repository
-  * docs=https://github.com/${template_default_github_organization:?}/$taito_vc_repository/wiki Project documentation
-  * project=https://github.com/${template_default_github_organization:?}/$taito_vc_repository/projects Project management
+  * git=https://${template_default_git_url:?}/$taito_vc_repository GitHub repository
+  * docs=https://${template_default_git_url:?}/$taito_vc_repository/wiki Project documentation
+  * project=https://${template_default_git_url:?}/$taito_vc_repository/projects Project management
   * services[:ENV]=https://console.cloud.google.com/apis/credentials?project=$taito_resource_namespace_id Google services (:ENV)
-  * builds=https://console.cloud.google.com/cloud-build/builds?project=$taito_zone&query=source.repo_source.repo_name%3D%22github-${template_default_github_organization:?}-$taito_vc_repository%22 Build logs
+  * builds=https://console.cloud.google.com/cloud-build/builds?project=$taito_zone&query=source.repo_source.repo_name%3D%22github-${template_default_git_organization:?}-$taito_vc_repository%22 Build logs
   * storage:ENV=$taito_storage_url Storage bucket (:ENV)
   * logs:ENV=https://console.cloud.google.com/logs/viewer?project=$taito_zone&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2F$kubectl_name%2Fnamespace_id%2F$taito_namespace Logs (:ENV)
   * uptime=https://app.google.stackdriver.com/uptime?project=$taito_zone Uptime monitoring (Stackdriver)

@@ -1,14 +1,8 @@
 # Configuration
 
+> TIP: To save some time, start application in a cleaned and initialized local environment by running: `cd server-template` and `taito kaboom`. Once the command starts to install libraries, leave it on the background, and continue with configuration.
+
 This file has been copied from [WORDPRESS-TEMPLATE](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/). Keep modifications minimal and improve the [original](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/blob/dev/CONFIGURATION.md) instead. Note that Taito CLI is optional (see [TAITOLESS.md](TAITOLESS.md)).
-
-Table of contents:
-
-* [Prerequisites](#prerequisites)
-* [Version control settings](#version-control-settings)
-* [Hosting options](#hosting-options)
-* [Local environment](#local-environment)
-* [Server environments](#server-environments)
 
 ## Prerequisites
 
@@ -16,13 +10,13 @@ Table of contents:
 * [docker-compose](https://docs.docker.com/compose/install/)
 * [Taito CLI](https://github.com/TaitoUnited/taito-cli#readme) (or see [TAITOLESS.md](TAITOLESS.md))
 
-### Version control settings
+## Version control settings
 
-Run `taito open vc conventions` in the project directory to see organization specific settings that you should configure for your git repository.
+Run `taito open conventions` in the project directory to see organization specific settings that you should configure for your git repository.
 
 * [ ] All done
 
-### Hosting options
+## Hosting options
 
 By default the template deploys the site to Kubernetes running on Google Cloud. TODO: Support for Docker Compose on virtual machine, AWS, Azure, Digital Ocean, Scaleway.
 
@@ -32,17 +26,17 @@ By default the template deploys the site to Kubernetes running on Google Cloud. 
 
 * [ ] All done
 
-### Local environment
+## Local environment
 
-See the [Local development](#local-development) for instructions. If you are using a local database for development, remember to export it to git once in while with `taito db dump initdata`.
+See the [DEVELOPMENT.md#local-development](DEVELOPMENT.md#local-development) for configuration instructions. If you are using a local database for development, remember to export it to git once in while with `taito db dump initdata`.
 
 * [ ] All done
 
-### Server environments
+## Server environments
 
 > Operations on production and staging environments require admin rights, if they contain confidential data. Please contact devops personnel.
 
-#### Creating a new server environment
+### Creating a new server environment
 
 * *Mandatory only for production: Configure DNS record.*
 * *Mandatory only for production: Configure app url in `taito-config.sh`*
@@ -54,7 +48,7 @@ See the [Local development](#local-development) for instructions. If you are usi
 
 * [ ] All done
 
-#### Configuring file persistence (for media, etc)
+### Configuring file persistence (for media, etc)
 
 Persistent volume claim (PVC) is disabled by default. This means that all data must be saved either to database or storage bucket. Try to use such wordpress plugins that do not save any permanent data to local disk. If this is not possible, you can enable PVC in `taito-config.sh` with the `wordpress_persistence_enabled` setting and set persistent file paths in `scripts/helm.yaml` with the `persistentVolumeMounts` setting.
 
@@ -68,20 +62,26 @@ Remember to delete all service account keys and other secrets from your local di
 
 * [ ] All done
 
-#### Kubernetes
+---
+
+## Remote environments
+
+You create the other environments just like the dev environment (see the previous chapter). However, you don't need to write down the basic auth credentials anymore, since you can reuse the same credentials as in dev environment.
+
+Examples for environment names: `f-orders`, `dev`, `test`, `stag`, `canary`, `prod`. You configure project environments with `taito_environments` setting in `taito-config.sh`.
+
+See [6. Remote environments](https://github.com/TaitoUnited/taito-cli/blob/master/docs/tutorial/05-remote-environments.md) chapter of Taito CLI tutorial for more thorough instructions.
+
+Operations on production and staging environments usually require admin rights. Please contact DevOps personnel if necessary.
+
+## Kubernetes
 
 If you need to, you can configure Kubernetes settings by modifying `heml*.yaml` files located under the `scripts`-directory. The default settings, however, are ok for most sites.
 
-* [ ] All done
+## Secrets
 
-#### Secrets
+You can add a new secret like this:
 
-If you need to, you can add new secrets like this:
-
-1. Add a secret definition to `taito-config.sh` (taito_secrets)
-2. Map secret to an environment variable in some of the `helm.yaml` files located under the `scripts`-directory.
-3. Run `taito env rotate:ENV [SECRET]` to generate a secret value for an environment. Run the command for each environment separately. Note that the rotate command restarts all pods in the same namespace.
-
-> For local development you can just define secrets as normal environment variables in `docker-compose.yaml` given that they are not confidential.
-
-* [ ] All done
+1. Add a secret definition to the `taito_secrets` setting in `taito-config.sh`.
+2. Map the secret definition to a secret in `docker-compose.yaml` for Docker Compose and in `scripts/helm.yaml` for Kubernetes.
+3. Run `taito env rotate:ENV SECRET` to generate a secret value for an environment. Run the command for each environment separately. Note that the rotate command restarts all pods in the same namespace.
