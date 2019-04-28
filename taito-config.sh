@@ -15,7 +15,7 @@ taito_plugins="
   docker docker-compose:local kubectl:-local helm:-local
   mysql-db
   gcloud:-local gcloud-storage:-local
-  gcloud-builder:-local gcloud-monitoring:-local
+  gcloud-ci:-local gcloud-monitoring:-local
   npm git-global links-global
   semantic-release
 "
