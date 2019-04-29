@@ -47,6 +47,7 @@ taito_static_url=
 
 # Provider and namespaces
 taito_provider=${template_default_provider:?}
+taito_provider_org_id=${template_default_provider_org_id:?}
 taito_provider_region=${template_default_provider_region:?}
 taito_provider_zone=${template_default_provider_zone:?}
 taito_zone=${template_default_zone:?}
@@ -111,14 +112,13 @@ jira_project_id=
 template_name=WORDPRESS-TEMPLATE
 template_source_git=git@github.com:TaitoUnited
 
-# Google Cloud plugin
-gcloud_org_id=${template_default_provider_org_id:?}
+# Google Cloud settings
 gcloud_service_account_enabled=true
-gcloud_sql_proxy_port=$db_database_proxy_port
 
 # Kubernetes plugin
-kubectl_name=${template_default_kubernetes:?}
-kubectl_replicas=1
+kubernetes_name=${template_default_kubernetes:?}
+kubernetes_cluster="${template_default_kubernetes_cluster_prefix:?}${kubernetes_name}"
+kubernetes_replicas=1
 
 # Helm plugin
 # helm_deploy_options="--recreate-pods" # Force restart
@@ -133,16 +133,17 @@ wordpress_plugin_update_flags="--all --debug --minor"
 case $taito_env in
   prod)
     taito_zone=${template_default_zone_prod:?}
+    taito_provider_org_id=${template_default_provider_org_id_prod:?}
     taito_provider_region=${template_default_provider_region_prod:?}
     taito_provider_zone=${template_default_provider_zone_prod:?}
     taito_resource_namespace=$taito_organization_abbr-$taito_company-prod
-    gcloud_org_id=${template_default_provider_org_id_prod:?}
 
     # NOTE: Set production domain here once you have configured DNS
     taito_domain=
     taito_default_domain=$taito_project-$taito_target_env.${template_default_domain_prod:?}
     taito_app_url=https://$taito_domain
-    kubectl_replicas=1
+    kubernetes_cluster="${template_default_kubernetes_cluster_prefix_prod:?}${kubernetes_name}"
+    kubernetes_replicas=1
 
     # Storage definitions for Terraform
     taito_storage_classes="${template_default_storage_class_prod:-}"
@@ -162,14 +163,15 @@ case $taito_env in
     ;;
   stag)
     taito_zone=${template_default_zone_prod:?}
+    taito_provider_org_id=${template_default_provider_org_id_prod:?}
     taito_provider_region=${template_default_provider_region_prod:?}
     taito_provider_zone=${template_default_provider_zone_prod:?}
     taito_resource_namespace=$taito_organization_abbr-$taito_company-prod
-    gcloud_org_id=${template_default_provider_org_id_prod:?}
 
     taito_domain=$taito_project-$taito_target_env.${template_default_domain_prod:?}
     taito_default_domain=$taito_project-$taito_target_env.${template_default_domain_prod:?}
     taito_app_url=https://$taito_domain
+    kubernetes_cluster="${template_default_kubernetes_cluster_prefix_prod:?}${kubernetes_name}"
 
     # NOTE: dev/test not deployed on Kubernetes, therefore containers are
     # built for staging.
@@ -196,15 +198,6 @@ taito_storage_url="https://console.cloud.google.com/storage/browser/$taito_rando
 # Provider and namespaces
 taito_resource_namespace_id=$taito_resource_namespace
 
-# Google Cloud plugin
-gcloud_region=$taito_provider_region
-gcloud_zone=$taito_provider_zone
-gcloud_project=$taito_zone
-
-# Kubernetes plugin
-kubectl_cluster=gke_${taito_zone}_${gcloud_zone}_${kubectl_name}
-kubectl_user=$kubectl_cluster
-
 # Link plugin
 link_urls="
   * wp[:ENV]#app=$taito_app_url Wordpress (:ENV)
@@ -215,7 +208,7 @@ link_urls="
   * services[:ENV]=https://console.cloud.google.com/apis/credentials?project=$taito_resource_namespace_id Google services (:ENV)
   * builds=https://console.cloud.google.com/cloud-build/builds?project=$taito_zone&query=source.repo_source.repo_name%3D%22github-${template_default_git_organization:?}-$taito_vc_repository%22 Build logs
   * storage:ENV=$taito_storage_url Storage bucket (:ENV)
-  * logs:ENV=https://console.cloud.google.com/logs/viewer?project=$taito_zone&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2F$kubectl_name%2Fnamespace_id%2F$taito_namespace Logs (:ENV)
+  * logs:ENV=https://console.cloud.google.com/logs/viewer?project=$taito_zone&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2F$kubernetes_name%2Fnamespace_id%2F$taito_namespace Logs (:ENV)
   * uptime=https://app.google.stackdriver.com/uptime?project=$taito_zone Uptime monitoring (Stackdriver)
 "
 

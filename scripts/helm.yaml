@@ -46,7 +46,7 @@ full-stack:
       cpuLimit: 200m
       memoryRequest: 256Mi
       memoryLimit: 512Mi
-      replicas: ${kubectl_replicas}
+      replicas: ${kubernetes_replicas}
       persistentVolumeMounts:
         - mountPath: /bitnami/apache
           volumePath: apache

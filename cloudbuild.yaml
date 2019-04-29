@@ -30,6 +30,8 @@ substitutions:
   _TEMPLATE_DEFAULT_MONITORING_UPTIME_CHANNELS_PROD:
   _TEMPLATE_DEFAULT_CONTAINER_REGISTRY:
   _TEMPLATE_DEFAULT_KUBERNETES:
+  _TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX:
+  _TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX_PROD:
   _TEMPLATE_DEFAULT_MYSQL:
 
 steps:
@@ -69,6 +71,8 @@ steps:
     export template_default_monitoring_uptime_channels_prod=${_TEMPLATE_DEFAULT_MONITORING_UPTIME_CHANNELS_PROD}
     export template_default_container_registry=${_TEMPLATE_DEFAULT_CONTAINER_REGISTRY}
     export template_default_kubernetes=${_TEMPLATE_DEFAULT_KUBERNETES}
+    export template_default_kubernetes_cluster_prefix=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX}
+    export template_default_kubernetes_cluster_prefix_prod=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX_PROD}
     export template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
     export taito_target_env
     taito_target_env="$${branch_name}"
@@ -79,8 +83,8 @@ steps:
     source ./taito-config.sh
 
     echo "- Get cluster credentials"
-    if ! gcloud container clusters get-credentials "$${kubectl_name}" \
-      --zone "$${gcloud_zone}"; then
+    if ! gcloud container clusters get-credentials "$${kubernetes_name}" \
+      --zone "$${taito_provider_zone}"; then
       echo "ERROR: Get cluster credentials failed"
       exit 1
     fi
@@ -125,6 +129,8 @@ steps:
     - template_default_monitoring_uptime_channels_prod=${_TEMPLATE_DEFAULT_MONITORING_UPTIME_CHANNELS_PROD}
     - template_default_container_registry=${_TEMPLATE_DEFAULT_CONTAINER_REGISTRY}
     - template_default_kubernetes=${_TEMPLATE_DEFAULT_KUBERNETES}
+    - template_default_kubernetes_cluster_prefix=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX}
+    - template_default_kubernetes_cluster_prefix_prod=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX_PROD}
     - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
 
 - id: artifact-prepare
@@ -153,6 +159,8 @@ steps:
     - template_default_monitoring_uptime_channels_prod=${_TEMPLATE_DEFAULT_MONITORING_UPTIME_CHANNELS_PROD}
     - template_default_container_registry=${_TEMPLATE_DEFAULT_CONTAINER_REGISTRY}
     - template_default_kubernetes=${_TEMPLATE_DEFAULT_KUBERNETES}
+    - template_default_kubernetes_cluster_prefix=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX}
+    - template_default_kubernetes_cluster_prefix_prod=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX_PROD}
     - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
 
 # Build and push docker image
@@ -184,6 +192,8 @@ steps:
     - template_default_monitoring_uptime_channels_prod=${_TEMPLATE_DEFAULT_MONITORING_UPTIME_CHANNELS_PROD}
     - template_default_container_registry=${_TEMPLATE_DEFAULT_CONTAINER_REGISTRY}
     - template_default_kubernetes=${_TEMPLATE_DEFAULT_KUBERNETES}
+    - template_default_kubernetes_cluster_prefix=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX}
+    - template_default_kubernetes_cluster_prefix_prod=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX_PROD}
     - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
 
 - id: artifact-push-wordpress
@@ -212,6 +222,8 @@ steps:
     - template_default_monitoring_uptime_channels_prod=${_TEMPLATE_DEFAULT_MONITORING_UPTIME_CHANNELS_PROD}
     - template_default_container_registry=${_TEMPLATE_DEFAULT_CONTAINER_REGISTRY}
     - template_default_kubernetes=${_TEMPLATE_DEFAULT_KUBERNETES}
+    - template_default_kubernetes_cluster_prefix=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX}
+    - template_default_kubernetes_cluster_prefix_prod=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX_PROD}
     - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
 
 # Update wordpress plugins
@@ -241,6 +253,8 @@ steps:
     - template_default_monitoring_uptime_channels_prod=${_TEMPLATE_DEFAULT_MONITORING_UPTIME_CHANNELS_PROD}
     - template_default_container_registry=${_TEMPLATE_DEFAULT_CONTAINER_REGISTRY}
     - template_default_kubernetes=${_TEMPLATE_DEFAULT_KUBERNETES}
+    - template_default_kubernetes_cluster_prefix=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX}
+    - template_default_kubernetes_cluster_prefix_prod=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX_PROD}
     - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
   entrypoint: 'bash'
   args:
@@ -276,6 +290,8 @@ steps:
     - template_default_monitoring_uptime_channels_prod=${_TEMPLATE_DEFAULT_MONITORING_UPTIME_CHANNELS_PROD}
     - template_default_container_registry=${_TEMPLATE_DEFAULT_CONTAINER_REGISTRY}
     - template_default_kubernetes=${_TEMPLATE_DEFAULT_KUBERNETES}
+    - template_default_kubernetes_cluster_prefix=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX}
+    - template_default_kubernetes_cluster_prefix_prod=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX_PROD}
     - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
 
 # Publish and release
@@ -305,4 +321,6 @@ steps:
     - template_default_monitoring_uptime_channels_prod=${_TEMPLATE_DEFAULT_MONITORING_UPTIME_CHANNELS_PROD}
     - template_default_container_registry=${_TEMPLATE_DEFAULT_CONTAINER_REGISTRY}
     - template_default_kubernetes=${_TEMPLATE_DEFAULT_KUBERNETES}
+    - template_default_kubernetes_cluster_prefix=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX}
+    - template_default_kubernetes_cluster_prefix_prod=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX_PROD}
     - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
