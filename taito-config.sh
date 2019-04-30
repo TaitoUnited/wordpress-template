@@ -69,8 +69,11 @@ db_database_instance=${template_default_mysql:?}
 db_database_type=mysql
 db_database_name=${taito_project_short}${taito_env}
 db_database_host=127.0.0.1
-db_database_proxy_port=5001
-db_database_port=$db_database_proxy_port
+db_database_port=5001
+db_database_real_host="${template_default_mysql_host:?}"
+db_database_real_port=3306
+db_database_master_username="${template_default_mysql_master_username:?}"
+db_database_master_password_hint="${template_default_mysql_master_password_hint:?}"
 
 # Storage definitions for Terraform
 taito_storage_classes="${template_default_storage_class:-}"
@@ -119,6 +122,7 @@ gcloud_service_account_enabled=true
 kubernetes_name=${template_default_kubernetes:?}
 kubernetes_cluster="${template_default_kubernetes_cluster_prefix:?}${kubernetes_name}"
 kubernetes_replicas=1
+kubernetes_db_proxy_enabled=false
 
 # Helm plugin
 # helm_deploy_options="--recreate-pods" # Force restart
@@ -144,6 +148,7 @@ case $taito_env in
     taito_app_url=https://$taito_domain
     kubernetes_cluster="${template_default_kubernetes_cluster_prefix_prod:?}${kubernetes_name}"
     kubernetes_replicas=1
+    db_database_real_host="${template_default_mysql_host_prod:?}"
 
     # Storage definitions for Terraform
     taito_storage_classes="${template_default_storage_class_prod:-}"
@@ -172,6 +177,7 @@ case $taito_env in
     taito_default_domain=$taito_project-$taito_target_env.${template_default_domain_prod:?}
     taito_app_url=https://$taito_domain
     kubernetes_cluster="${template_default_kubernetes_cluster_prefix_prod:?}${kubernetes_name}"
+    db_database_real_host="${template_default_mysql_host_prod:?}"
 
     # NOTE: dev/test not deployed on Kubernetes, therefore containers are
     # built for staging.

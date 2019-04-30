@@ -179,6 +179,14 @@ sed -i \
 # Database
 sed -i \
   "s/\${template_default_mysql:?}/${template_default_mysql}/g" taito-config.sh
+sed -i \
+  "s/\${template_default_mysql_host:?}/${template_default_mysql_host}/g" taito-config.sh
+sed -i \
+  "s/\${template_default_mysql_host_prod:?}/${template_default_mysql_host_prod}/g" taito-config.sh
+sed -i \
+  "s/\${template_default_mysql_master_username:?}/${template_default_mysql_master_username}/g" taito-config.sh
+sed -i \
+  "s/\${template_default_mysql_master_password_hint:?}/${template_default_mysql_master_password_hint}/g" taito-config.sh
 
 # Storage
 sed -i "s/\${template_default_storage_class:-}/${template_default_storage_class:-}/g" taito-config.sh

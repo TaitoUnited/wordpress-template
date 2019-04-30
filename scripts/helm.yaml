@@ -61,7 +61,7 @@ full-stack:
         WORDPRESS_DATABASE_PASSWORD: ${db_database_name}-db-mgr.password
         WORDPRESS_PASSWORD: ${taito_project}-${taito_env}-admin.initialpassword
       env:
-        MARIADB_HOST: mysql-sqlproxy-gcloud-sqlproxy.sqlproxy
+        MARIADB_HOST: '${db_database_real_host}'
         MARIADB_PORT_NUMBER: 3306
         WORDPRESS_DATABASE_NAME: ${db_database_name}
         WORDPRESS_DATABASE_USER: ${db_database_name}
