@@ -23,6 +23,7 @@ full-stack:
 
   ingress:
     class: nginx
+    oldRewritePolicy: false
     tls: true
     maxBodySize: 1m
     basicAuth:
@@ -62,7 +63,7 @@ full-stack:
         WORDPRESS_PASSWORD: ${taito_project}-${taito_env}-admin.initialpassword
       env:
         MARIADB_HOST: '${db_database_real_host}'
-        MARIADB_PORT_NUMBER: 3306
+        MARIADB_PORT_NUMBER: '${db_database_real_port}'
         WORDPRESS_DATABASE_NAME: ${db_database_name}
         WORDPRESS_DATABASE_USER: ${db_database_name}
         # Wordpress initial username
