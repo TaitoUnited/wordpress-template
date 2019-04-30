@@ -10,7 +10,7 @@ export BRANCH_NAME="NOTE: get git branch name from jenkins environment"
 taito install:$BRANCH_NAME
 
 # Prepare release notes and version tag
-taito artifact-prepare:$BRANCH_NAME $COMMIT_SHA
+taito build-prepare:$BRANCH_NAME $COMMIT_SHA
 
 # Build and push
 taito artifact-build:wordpress:$BRANCH_NAME $COMMIT_SHA ${taito_registry}
@@ -21,5 +21,5 @@ taito artifact-push:wordpress:$BRANCH_NAME $COMMIT_SHA ${taito_registry}
 taito deployment-deploy:$BRANCH_NAME $COMMIT_SHA
 
 # Publish release notes and version tag
-taito artifact-release:$BRANCH_NAME
+taito build-release:$BRANCH_NAME
 */

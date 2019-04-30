@@ -2,7 +2,7 @@ images: [
   'eu.gcr.io/$PROJECT_ID/$_REPO_NAME/wordpress:$COMMIT_SHA'
 ]
 
-timeout: 1200s
+timeout: 1500s
 
 # If you want to grant outsiders access to your build logs, you mey save
 # the logs to a separate bucket and grant the outsiders access to that bucket
@@ -145,10 +145,10 @@ steps:
     - template_default_mysql_master_username=${_TEMPLATE_DEFAULT_MYSQL_MASTER_USERNAME}
     - template_default_mysql_master_password_hint=${_TEMPLATE_DEFAULT_MYSQL_MASTER_PASSWORD_HINT}
 
-- id: artifact-prepare
+- id: build-prepare
   waitFor: ['install']
   name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
-  args: ['artifact-prepare:$BRANCH_NAME', '$COMMIT_SHA']
+  args: ['build-prepare:$BRANCH_NAME', '$COMMIT_SHA']
   env:
     - taito_mode=ci
     - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
@@ -183,7 +183,7 @@ steps:
 # TODO build/push only if persistence is false
 
 - id: artifact-build-wordpress
-  waitFor: ['artifact-prepare']
+  waitFor: ['build-prepare']
   name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
   args: ['artifact-build:wordpress:$BRANCH_NAME', '$COMMIT_SHA']
   env:
@@ -328,9 +328,9 @@ steps:
 
 # Publish and release
 
-- id: artifact-release
+- id: build-release
   name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
-  args: ['artifact-release:$BRANCH_NAME']
+  args: ['build-release:$BRANCH_NAME']
   env:
     - taito_mode=ci
     - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
