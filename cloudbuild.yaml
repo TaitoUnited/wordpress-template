@@ -10,6 +10,7 @@ timeout: 1500s
 
 substitutions:
   _REPO_NAME: wordpress-template
+  # NOTE: These are removed by 'taito project create'
   _TEMPLATE_DEFAULT_TAITO_IMAGE:
   _TEMPLATE_DEFAULT_ORGANIZATION:
   _TEMPLATE_DEFAULT_ORGANIZATION_ABBR:
@@ -55,6 +56,7 @@ steps:
   args:
   - '-c'
   - |
+    # NOTE: These are removed by 'taito project create'
     export template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
     export template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
     export template_default_organization_abbr=${_TEMPLATE_DEFAULT_ORGANIZATION_ABBR}
@@ -82,6 +84,7 @@ steps:
     export template_default_mysql_host_prod=${_TEMPLATE_DEFAULT_MYSQL_HOST_PROD}
     export template_default_mysql_master_username=${_TEMPLATE_DEFAULT_MYSQL_MASTER_USERNAME}
     export template_default_mysql_master_password_hint=${_TEMPLATE_DEFAULT_MYSQL_MASTER_PASSWORD_HINT}
+
     export taito_target_env
     taito_target_env="$${branch_name}"
     if [[ "$${taito_target_env}" == "master" ]]; then
@@ -90,6 +93,7 @@ steps:
     export taito_env="$${taito_target_env}"
     source ./taito-config.sh
 
+    # TODO: should be implemented in taito-cli plugin
     echo "- Get cluster credentials"
     if ! gcloud container clusters get-credentials "$${kubernetes_name}" \
       --zone "$${taito_provider_zone}"; then
@@ -109,48 +113,15 @@ steps:
 
 # ----------------------- Taito-cli ----------------------------------
 
-# Preparing steps
-
-- id: install
-  waitFor: ['-']
-  name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
-  args: ['install:$BRANCH_NAME']
-  env:
-    - taito_mode=ci
-    - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
-    - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
-    - template_default_organization_abbr=${_TEMPLATE_DEFAULT_ORGANIZATION_ABBR}
-    - template_default_git_organization=${_TEMPLATE_DEFAULT_GIT_ORGANIZATION}
-    - template_default_git_url=${_TEMPLATE_DEFAULT_GIT_URL}
-    - template_default_sentry_organization=${_TEMPLATE_DEFAULT_SENTRY_ORGANIZATION}
-    - template_default_domain=${_TEMPLATE_DEFAULT_DOMAIN}
-    - template_default_domain_prod=${_TEMPLATE_DEFAULT_DOMAIN_PROD}
-    - template_default_zone=${_TEMPLATE_DEFAULT_ZONE}
-    - template_default_zone_prod=${_TEMPLATE_DEFAULT_ZONE_PROD}
-    - template_default_provider=${_TEMPLATE_DEFAULT_PROVIDER}
-    - template_default_provider_org_id=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID}
-    - template_default_provider_org_id_prod=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID_PROD}
-    - template_default_provider_region=${_TEMPLATE_DEFAULT_PROVIDER_REGION}
-    - template_default_provider_region_prod=${_TEMPLATE_DEFAULT_PROVIDER_REGION_PROD}
-    - template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
-    - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
-    - template_default_monitoring_uptime_channels_prod=${_TEMPLATE_DEFAULT_MONITORING_UPTIME_CHANNELS_PROD}
-    - template_default_container_registry=${_TEMPLATE_DEFAULT_CONTAINER_REGISTRY}
-    - template_default_kubernetes=${_TEMPLATE_DEFAULT_KUBERNETES}
-    - template_default_kubernetes_cluster_prefix=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX}
-    - template_default_kubernetes_cluster_prefix_prod=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX_PROD}
-    - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
-    - template_default_mysql_host=${_TEMPLATE_DEFAULT_MYSQL_HOST}
-    - template_default_mysql_host_prod=${_TEMPLATE_DEFAULT_MYSQL_HOST_PROD}
-    - template_default_mysql_master_username=${_TEMPLATE_DEFAULT_MYSQL_MASTER_USERNAME}
-    - template_default_mysql_master_password_hint=${_TEMPLATE_DEFAULT_MYSQL_MASTER_PASSWORD_HINT}
+# Prepare build
 
 - id: build-prepare
-  waitFor: ['install']
+  waitFor: ['-']
   name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
   args: ['build-prepare:$BRANCH_NAME', '$COMMIT_SHA']
   env:
     - taito_mode=ci
+    # NOTE: These are removed by 'taito project create'
     - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
     - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
     - template_default_organization_abbr=${_TEMPLATE_DEFAULT_ORGANIZATION_ABBR}
@@ -179,49 +150,16 @@ steps:
     - template_default_mysql_master_username=${_TEMPLATE_DEFAULT_MYSQL_MASTER_USERNAME}
     - template_default_mysql_master_password_hint=${_TEMPLATE_DEFAULT_MYSQL_MASTER_PASSWORD_HINT}
 
-# Build and push docker image
+# Prepare artifacts for deployment
 # TODO build/push only if persistence is false
 
-- id: artifact-build-wordpress
+- id: artifact-prepare-wordpress
   waitFor: ['build-prepare']
   name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
-  args: ['artifact-build:wordpress:$BRANCH_NAME', '$COMMIT_SHA']
+  args: ['artifact-prepare:wordpress:$BRANCH_NAME', '$COMMIT_SHA']
   env:
     - taito_mode=ci
-    - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
-    - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
-    - template_default_organization_abbr=${_TEMPLATE_DEFAULT_ORGANIZATION_ABBR}
-    - template_default_git_organization=${_TEMPLATE_DEFAULT_GIT_ORGANIZATION}
-    - template_default_git_url=${_TEMPLATE_DEFAULT_GIT_URL}
-    - template_default_sentry_organization=${_TEMPLATE_DEFAULT_SENTRY_ORGANIZATION}
-    - template_default_domain=${_TEMPLATE_DEFAULT_DOMAIN}
-    - template_default_domain_prod=${_TEMPLATE_DEFAULT_DOMAIN_PROD}
-    - template_default_zone=${_TEMPLATE_DEFAULT_ZONE}
-    - template_default_zone_prod=${_TEMPLATE_DEFAULT_ZONE_PROD}
-    - template_default_provider=${_TEMPLATE_DEFAULT_PROVIDER}
-    - template_default_provider_org_id=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID}
-    - template_default_provider_org_id_prod=${_TEMPLATE_DEFAULT_PROVIDER_ORG_ID_PROD}
-    - template_default_provider_region=${_TEMPLATE_DEFAULT_PROVIDER_REGION}
-    - template_default_provider_region_prod=${_TEMPLATE_DEFAULT_PROVIDER_REGION_PROD}
-    - template_default_provider_zone=${_TEMPLATE_DEFAULT_PROVIDER_ZONE}
-    - template_default_provider_zone_prod=${_TEMPLATE_DEFAULT_PROVIDER_ZONE_PROD}
-    - template_default_monitoring_uptime_channels_prod=${_TEMPLATE_DEFAULT_MONITORING_UPTIME_CHANNELS_PROD}
-    - template_default_container_registry=${_TEMPLATE_DEFAULT_CONTAINER_REGISTRY}
-    - template_default_kubernetes=${_TEMPLATE_DEFAULT_KUBERNETES}
-    - template_default_kubernetes_cluster_prefix=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX}
-    - template_default_kubernetes_cluster_prefix_prod=${_TEMPLATE_DEFAULT_KUBERNETES_CLUSTER_PREFIX_PROD}
-    - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
-    - template_default_mysql_host=${_TEMPLATE_DEFAULT_MYSQL_HOST}
-    - template_default_mysql_host_prod=${_TEMPLATE_DEFAULT_MYSQL_HOST_PROD}
-    - template_default_mysql_master_username=${_TEMPLATE_DEFAULT_MYSQL_MASTER_USERNAME}
-    - template_default_mysql_master_password_hint=${_TEMPLATE_DEFAULT_MYSQL_MASTER_PASSWORD_HINT}
-
-- id: artifact-push-wordpress
-  waitFor: ['artifact-build-wordpress']
-  name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
-  args: ['artifact-push:wordpress:$BRANCH_NAME', '$COMMIT_SHA']
-  env:
-    - taito_mode=ci
+    # NOTE: These are removed by 'taito project create'
     - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
     - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
     - template_default_organization_abbr=${_TEMPLATE_DEFAULT_ORGANIZATION_ABBR}
@@ -257,6 +195,7 @@ steps:
   env:
     - taito_mode=ci
     - branch_name=$BRANCH_NAME
+    # NOTE: These are removed by 'taito project create'
     - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
     - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
     - template_default_organization_abbr=${_TEMPLATE_DEFAULT_ORGANIZATION_ABBR}
@@ -298,6 +237,7 @@ steps:
   args: ['deployment-deploy:$BRANCH_NAME', '$COMMIT_SHA']
   env:
     - taito_mode=ci
+    # NOTE: These are removed by 'taito project create'
     - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
     - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
     - template_default_organization_abbr=${_TEMPLATE_DEFAULT_ORGANIZATION_ABBR}
@@ -326,13 +266,14 @@ steps:
     - template_default_mysql_master_username=${_TEMPLATE_DEFAULT_MYSQL_MASTER_USERNAME}
     - template_default_mysql_master_password_hint=${_TEMPLATE_DEFAULT_MYSQL_MASTER_PASSWORD_HINT}
 
-# Publish and release
+# Release build
 
 - id: build-release
   name: '${_TEMPLATE_DEFAULT_TAITO_IMAGE}'
   args: ['build-release:$BRANCH_NAME']
   env:
     - taito_mode=ci
+    # NOTE: These are removed by 'taito project create'
     - template_default_taito_image=${_TEMPLATE_DEFAULT_TAITO_IMAGE}
     - template_default_organization=${_TEMPLATE_DEFAULT_ORGANIZATION}
     - template_default_organization_abbr=${_TEMPLATE_DEFAULT_ORGANIZATION_ABBR}

@@ -1,10 +1,9 @@
 #!/bin/bash
 # shellcheck disable=SC2034
-: "${taito_env:?}"
 : "${taito_target_env:?}"
 
 # Configuration instructions:
-# - https://github.com/TaitoUnited/taito-cli/blob/master/docs/manual/04-configuration.md
+# - https://github.com/TaitoUnited/taito-cli/blob/master/docs/manual/05-configuration.md
 # - https://github.com/TaitoUnited/taito-cli/blob/master/docs/plugins.md
 
 # Taito-cli
@@ -16,8 +15,8 @@ taito_plugins="
   docker docker-compose:local kubectl:-local helm:-local
   mysql-db
   gcloud-storage:-local
-  gcloud-ci:-local
   gcloud-monitoring:-local
+  gcloud-ci:-local
   npm git-global links-global
   semantic-release
 "

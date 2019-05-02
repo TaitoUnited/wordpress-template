@@ -1,0 +1,51 @@
+image:
+  name: $template_default_taito_image
+  username: $template_default_taito_image_username
+  password: $template_default_taito_image_password
+  email: $template_default_taito_image_email
+options:
+  docker: true
+  max-time: 60
+definitions:
+  services:
+    docker:
+      memory: 3072
+
+pipelines:
+  branches:
+    '{dev,test,stag,canary,master}':
+    # Prepare build
+    - step:
+        script:
+          - export taito_mode=ci
+          - taito build-prepare:$BITBUCKET_BRANCH
+    # Prepare artifacts for deployment in parallel
+    - parallel:
+      - step: # wordpress prepare
+          script:
+            - export taito_mode=ci
+            - taito artifact-prepare:wordpress:$BITBUCKET_BRANCH $BITBUCKET_COMMIT true
+          artifacts:
+            - wordpress.docker
+            - wordpress-tester.docker
+    # Update wordpress plugins
+    - step:
+        script:
+          - export taito_mode=ci
+          - "taito wp-plugin-update:$BITBUCKET_BRANCH || echo WARNING: Failed updating wordpress plugins"
+    # Deploy the changes to target environment
+    - step:
+        script:
+          - export taito_mode=ci
+          - taito deployment-deploy:$BITBUCKET_BRANCH $BITBUCKET_COMMIT
+    # Release artifacts (push previously built container images with a new tag)
+    - parallel:
+      - step: # wordpress release
+          script:
+            - export taito_mode=ci
+            - taito artifact-release:wordpress:$BITBUCKET_BRANCH $BITBUCKET_COMMIT
+    # Release build
+    - step:
+        script:
+          - export taito_mode=ci
+          - taito build-release:$BITBUCKET_BRANCH
