@@ -21,8 +21,11 @@ sed -i "s|password-change-it-7983p4nWgRE2p4No2d9|${admin_password}|g" docker-com
 sed -i "s|password-change-it-7983p4nWgRE2p4No2d9|${admin_password}|g" README.md
 
 # Replace some strings
-if [[ ${mode} != "upgrade" ]] || [[ -z "${taito_project_short}" ]]; then
-  echo "Give a short version of the project name '${taito_project}'."
+taito_project_short="${taito_project_short:-$taito_vc_repository}"
+if [[ ${mode} != "upgrade" ]] || \
+   [[ -z "${taito_project_short}" ]] || \
+   [[ "${#taito_project_short}" -gt 10 ]]; then
+  echo "Give a short version of the project name '${taito_vc_repository}'."
   echo "It should be unique but also descriptive as it will be used"
   echo "as a database name and as a database username."
   echo
