@@ -58,9 +58,11 @@ taito_image_registry=${template_default_container_registry:?}/$taito_vc_reposito
 
 # Stack
 taito_targets="wordpress database"
-taito_databases="database"
 taito_storages="$taito_random_name-$taito_env"
 taito_networks="default"
+
+# Stack types ('container' by default)
+taito_target_type_database=database
 
 # Database definitions for database plugins
 db_database_instance=${template_default_mysql:?}
