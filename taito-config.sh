@@ -9,13 +9,10 @@
 # Taito-cli
 taito_version=1
 taito_plugins="
-  gcloud:-local
   terraform:-local
-  gcloud-secrets:-local default-secrets generate-secrets
+  default-secrets generate-secrets
   docker docker-compose:local kubectl:-local helm:-local
   mysql-db
-  gcloud-storage:-local
-  gcloud-monitoring:-local
   gcloud-ci:-local
   npm git-global links-global
   semantic-release
@@ -99,7 +96,7 @@ taito_default_password=secret1234
 # CI/CD settings
 # NOTE: Most of these should be enabled for dev and feature envs only
 ci_exec_build=false        # build a container if does not exist already
-ci_exec_deploy=true        # deploy automatically
+ci_exec_deploy=${template_default_ci_exec_deploy:-true}        # deploy automatically
 ci_exec_test=false         # execute test suites after deploy
 ci_exec_test_wait=1        # how many seconds to wait for deployment/restart
 ci_exec_test_init=false    # run 'init --clean' before each test suite
@@ -116,14 +113,11 @@ jira_project_id=
 template_name=WORDPRESS-TEMPLATE
 template_source_git=git@github.com:TaitoUnited
 
-# Google Cloud settings
-gcloud_service_account_enabled=true
-
 # Kubernetes plugin
 kubernetes_name=${template_default_kubernetes:?}
 kubernetes_cluster="${template_default_kubernetes_cluster_prefix:?}${kubernetes_name}"
 kubernetes_replicas=1
-kubernetes_db_proxy_enabled=false
+kubernetes_db_proxy_enabled=true
 
 # Helm plugin
 # helm_deploy_options="--recreate-pods" # Force restart
@@ -166,6 +160,9 @@ case $taito_env in
     taito_monitoring_timeouts=" 5s "
     # You can list all monitoring channels with `taito env info:prod`
     taito_monitoring_uptime_channels="${template_default_monitoring_uptime_channels_prod:-}"
+
+    # CI/CD
+    ci_exec_deploy=${template_default_ci_exec_deploy_prod:-true}
     ;;
   stag)
     taito_zone=${template_default_zone_prod:?}
@@ -180,10 +177,11 @@ case $taito_env in
     kubernetes_cluster="${template_default_kubernetes_cluster_prefix_prod:?}${kubernetes_name}"
     db_database_real_host="${template_default_mysql_host_prod:?}"
 
+    # CI/CD
+    ci_exec_deploy=${template_default_ci_exec_deploy_prod:-true}
     # NOTE: dev/test not deployed on Kubernetes, therefore containers are
     # built for staging.
     ci_exec_build=true        # allow build of a new container
-    ci_exec_deploy=true       # deploy automatically
     ;;
   local)
     # local overrides
@@ -212,18 +210,58 @@ link_urls="
   * git=https://${template_default_git_url:?}/$taito_vc_repository GitHub repository
   * docs=https://${template_default_git_url:?}/$taito_vc_repository/wiki Project documentation
   * project=https://${template_default_git_url:?}/$taito_vc_repository/projects Project management
-  * services[:ENV]=https://console.cloud.google.com/apis/credentials?project=$taito_resource_namespace_id Google services (:ENV)
   * builds=https://console.cloud.google.com/cloud-build/builds?project=$taito_zone&query=source.repo_source.repo_name%3D%22github-${template_default_git_organization:?}-$taito_vc_repository%22 Build logs
   * storage:ENV=$taito_storage_url Storage bucket (:ENV)
-  * logs:ENV=https://console.cloud.google.com/logs/viewer?project=$taito_zone&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2F$kubernetes_name%2Fnamespace_id%2F$taito_namespace Logs (:ENV)
-  * uptime=https://app.google.stackdriver.com/uptime?project=$taito_zone Uptime monitoring (Stackdriver)
 "
 
-# Secrets
+# ------ Secrets ------
+
 taito_secrets="
   github-buildbot.token:read/devops
-  $db_database_name-db-mgr.password:random
   $db_database_name-db-app.password:random
   $taito_project-$taito_env-basic-auth.auth:htpasswd-plain
   $taito_project-$taito_env-admin.initialpassword:random
 "
+
+# Define database mgr password for automatic CI/CD deployments
+if [[ $ci_exec_deploy == "true" ]]; then
+  taito_remote_secrets="
+    $db_database_name-db-mgr.password/devops:random
+  "
+fi
+
+# ------ Provider specific settings ------
+
+case $taito_provider in
+  aws)
+    taito_plugins="
+      aws:-local
+      ${taito_plugins}
+      aws-storage:-local
+    "
+
+    link_urls="
+      ${link_urls}
+      * logs:ENV=https://${template_default_provider_region}.console.aws.amazon.com/cloudwatch/home?region=${template_default_provider_region}#logs: Logs (:ENV)
+    "
+    ;;
+  gcloud)
+    taito_plugins="
+      gcloud:-local
+      gcloud-secrets:-local
+      ${taito_plugins}
+      gcloud-storage:-local
+      gcloud-monitoring:-local
+    "
+
+    link_urls="
+      ${link_urls}
+      * services[:ENV]=https://console.cloud.google.com/apis/dashboard?project=$taito_resource_namespace_id Google services (:ENV)
+      * logs:ENV=https://console.cloud.google.com/logs/viewer?project=$taito_zone&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2F$kubernetes_name%2Fnamespace_id%2F$taito_namespace Logs (:ENV)
+      * uptime=https://app.google.stackdriver.com/uptime?project=$taito_zone&f.search=$taito_project Uptime monitoring (Stackdriver)
+    "
+
+    kubernetes_db_proxy_enabled=false # use google cloud sql proxy instead
+    gcloud_service_account_enabled=true
+    ;;
+esac
