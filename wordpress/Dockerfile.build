@@ -11,3 +11,7 @@ RUN cat /template/init.sh > /template/temp.sh && \
   chmod +x /app-entrypoint.sh
 
 COPY ./data /data-image
+
+# Give wordpress write access to some directories
+RUN mkdir -p /data-image/wordpress/wp-content/uploads
+RUN chown -R daemon:daemon /data-image/wordpress/wp-content/uploads
