@@ -1,5 +1,8 @@
 FROM bitnami/wordpress:5.1.1 as builder
 
+# TODO: remove this (hack to go around montly upload folder created by root)
+RUN apt-get -y update && apt-get -y install acl
+
 COPY *.sh *.js /template/
 RUN /template/setup.sh
 
@@ -13,5 +16,9 @@ RUN cat /template/init.sh > /template/temp.sh && \
 COPY ./data /data-image
 
 # Give wordpress write access to some directories
-RUN mkdir -p /data-image/wordpress/wp-content/uploads
-RUN chown -R daemon:daemon /data-image/wordpress/wp-content/uploads
+RUN mkdir -p /data-image/wordpress/wp-content/uploads && \
+    chown -R daemon:daemon /data-image/wordpress/wp-content/uploads
+
+# TODO: remove this (hack to go around montly upload folder created by root)
+RUN chmod g+ws /data-image/wordpress/wp-content/uploads && \
+    setfacl -dm u::rwx,g::rwx,o::rx /data-image/wordpress/wp-content/uploads
