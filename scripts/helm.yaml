@@ -25,7 +25,7 @@ full-stack:
     class: nginx
     oldRewritePolicy: false
     tls: true
-    maxBodySize: 1m
+    maxBodySize: 5m
     basicAuth:
       enabled: true
       htpasswdSecret: ${taito_project}-${taito_env}-basic-auth
