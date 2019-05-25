@@ -1,17 +1,14 @@
 global:
   domain: ${taito_domain}
   url: https://${taito_domain}
+  publicPort: 443
   logFormat: stackdriver
   logLevel: info    # trace, debug, info, warn, error, fatal
   registry: ${taito_image_registry}
   imagePullPolicy: ''
+  debug: false
 
 full-stack:
-  # TODO: --enable-pod-security-policy:
-  # https://cloud.google.com/kubernetes-engine/docs/how-to/pod-security-policies
-  podSecurityPolicy:
-    enabled: false
-
   persistence:
     enabled: ${wordpress_persistence_enabled}
     existingClaim:
