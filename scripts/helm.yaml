@@ -22,22 +22,23 @@ full-stack:
     class: nginx
     oldRewritePolicy: false
     tls: true
-    maxBodySize: 5m
-    basicAuth:
-      enabled: ${taito_basic_auth_enabled}
-      htpasswdSecret: ${taito_project}-${taito_env}-basic-auth
     domains:
       - name: ${taito_domain}
+
+  serviceDefaults:
+    # Path defaults
+    basicAuthEnabled: ${taito_basic_auth_enabled}
+    basicAuthHtpasswdSecret: ${taito_project}-${taito_env}-basic-auth
+    clientMaxBodySize: 5m
+    limitRate:
+    limitRateAfter:
+    rewriteTarget:
+    rewriteTargetDisabled:
 
   services:
     wordpress:
       paths:
         - path:
-      #   maxBodySize:
-      #   limitRate:
-      #   limitRateAfter:
-      #   rewriteTarget:
-      #   rewriteTargetDisabled:
       port: 80
       tier: frontend
       livenessPath: /wp-login.php
