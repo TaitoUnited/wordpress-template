@@ -4,7 +4,7 @@ global:
   publicPort: 443
   logFormat: stackdriver
   logLevel: info    # trace, debug, info, warn, error, fatal
-  registry: ${taito_image_registry}
+  registry: ${taito_container_registry}
   imagePullPolicy: ''
   debug: false
 
@@ -23,15 +23,23 @@ full-stack:
     oldRewritePolicy: false
     tls: true
     maxBodySize: 5m
+    limitRate:
+    limitRateAfter:
     basicAuth:
-      enabled: true
+      enabled: ${taito_basic_auth_enabled}
       htpasswdSecret: ${taito_project}-${taito_env}-basic-auth
     domains:
       - name: ${taito_domain}
 
   services:
     wordpress:
-      path: /
+      paths:
+        - path:
+      #   maxBodySize:
+      #   limitRate:
+      #   limitRateAfter:
+      #   rewriteTarget:
+      #   rewriteTargetDisabled:
       port: 80
       tier: frontend
       livenessPath: /wp-login.php
@@ -39,7 +47,7 @@ full-stack:
       livenessInitialDelay: 360
       readinessFailureThreshold: 36 # livenessInitialDelay / 10
       runAsUser:
-      fsGroup:
+      runAsGroup:
       cpuRequest: 20m
       cpuLimit: 200m
       memoryRequest: 256Mi

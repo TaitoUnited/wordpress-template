@@ -11,7 +11,7 @@ workflow "Build, deploy, test, publish" {
 
 action "build-prepare" {
   uses = "docker://$template_default_taito_image"
-  runs = ["bash", "-c", "taito build-prepare:${GITHUB_REF#refs/heads/}"]
+  runs = ["bash", "-c", "taito build prepare:${GITHUB_REF#refs/heads/}"]
   env = {
     taito_mode = "ci"
   }
@@ -24,7 +24,7 @@ action "artifact-prepare:wordpress" {
   uses = "docker://$template_default_taito_image"
   runs = [
     "bash", "-c",
-    "taito artifact-prepare:wordpress:${GITHUB_REF#refs/heads/} $GITHUB_SHA"
+    "taito artifact prepare:wordpress:${GITHUB_REF#refs/heads/} $GITHUB_SHA"
   ]
   env = {
     taito_mode = "ci"
@@ -35,7 +35,7 @@ action "artifact-prepare:wordpress" {
 
 action "wp-plugin-update" {
   uses = "docker://$template_default_taito_image"
-  runs = ["bash", "-c", "taito wp-plugin-update:${GITHUB_REF#refs/heads/} || echo WARNING: Failed updating wordpress plugins"]
+  runs = ["bash", "-c", "taito wp plugin update:${GITHUB_REF#refs/heads/} || echo WARNING: Failed updating wordpress plugins"]
   env = {
     taito_mode = "ci"
   }
@@ -45,7 +45,7 @@ action "wp-plugin-update" {
 
 action "deployment-deploy" {
   uses = "docker://$template_default_taito_image"
-  runs = ["bash", "-c", "taito deployment-deploy:${GITHUB_REF#refs/heads/} $GITHUB_SHA"]
+  runs = ["bash", "-c", "taito deployment deploy:${GITHUB_REF#refs/heads/} $GITHUB_SHA"]
   env = {
     taito_mode = "ci"
   }
@@ -58,7 +58,7 @@ action "artifact-release:wordpress" {
   uses = "docker://$template_default_taito_image"
   runs = [
     "bash", "-c",
-    "taito artifact-release:wordpress:${GITHUB_REF#refs/heads/} $GITHUB_SHA"
+    "taito artifact release:wordpress:${GITHUB_REF#refs/heads/} $GITHUB_SHA"
   ]
   env = {
     taito_mode = "ci"
@@ -71,7 +71,7 @@ action "build-release" {
   uses = "docker://$template_default_taito_image"
   runs = [
     "bash", "-c",
-    "taito build-release:${GITHUB_REF#refs/heads/}"
+    "taito build release:${GITHUB_REF#refs/heads/}"
   ]
   env = {
     taito_mode = "ci"

@@ -12,7 +12,6 @@
 : "${template_default_organization_abbr:?}"
 : "${template_default_vc_organization:?}"
 : "${template_default_vc_url:?}"
-: "${template_default_sentry_organization:?}"
 : "${template_default_domain:?}"
 : "${template_default_domain_prod:?}"
 : "${template_default_zone:?}"
@@ -22,20 +21,8 @@
 : "${template_default_ci_provider_prod:?}"
 : "${template_default_provider:?}"
 : "${template_default_provider_prod:?}"
-: "${template_default_provider_org_id:?}"
-: "${template_default_provider_org_id_prod:?}"
-: "${template_default_provider_region:?}"
-: "${template_default_provider_region_prod:?}"
-: "${template_default_provider_zone:?}"
-: "${template_default_provider_zone_prod:?}"
-: "${template_default_monitoring_uptime_channels_prod:-}"
-: "${template_default_container_registry:?}"
-: "${template_default_container_registry_prod:?}"
 : "${template_default_source_git:?}"
 : "${template_default_dest_git:?}"
-: "${template_default_kubernetes:?}"
-: "${template_default_kubernetes_cluster_prefix:?}"
-: "${template_default_kubernetes_cluster_prefix_prod:?}"
 : "${template_default_ci_exec_deploy:?}"
 : "${template_default_ci_exec_deploy_prod:?}"
 
@@ -66,8 +53,8 @@ rm LICENSE
 ######################
 
 ci=${template_default_ci_provider:-}
-while [[ " aws azure bitbucket github gitlab gcp jenkins shell travis " != *" $ci "* ]]; do
-  echo "Select CI/CD: aws, azure, bitbucket, github, gitlab, gcp, jenkins, shell, or travis"
+while [[ " aws azure bitbucket github gitlab gcp jenkins local travis " != *" $ci "* ]]; do
+  echo "Select CI/CD: aws, azure, bitbucket, github, gitlab, gcp, jenkins, local, or travis"
   read -r ci
 done
 
@@ -76,7 +63,7 @@ done
 #######################
 
 if [[ ! ${taito_random_name} ]] || [[ ${taito_random_name} == *"-template" ]]; then
-  taito_random_name="$(taito -q util-random-words: 3)"
+  taito_random_name="$(taito -q util random words: 3)"
 fi
 echo "Setting random name: ${taito_random_name}"
 sed -i "s/^taito_random_name=.*$/taito_random_name=${taito_random_name}/" taito-config.sh
@@ -97,50 +84,63 @@ sed -i "s/\${template_default_organization:?}/${template_default_organization}/g
 sed -i "s/\${template_default_organization_abbr:?}/${template_default_organization_abbr}/g" taito-config.sh
 sed -i "s/\${template_default_vc_organization:?}/${template_default_vc_organization}/g" taito-config.sh
 sed -i "s|\${template_default_vc_url:?}|${template_default_vc_url}|g" taito-config.sh
-sed -i "s/\${template_default_sentry_organization:?}/${template_default_sentry_organization}/g" taito-config.sh
+sed -i "s/\${template_default_sentry_organization:-}/${template_default_sentry_organization}/g" taito-config.sh
 sed -i "s/\${template_default_domain:?}/${template_default_domain}/g" taito-config.sh
 sed -i "s/\${template_default_domain_prod:?}/${template_default_domain_prod}/g" taito-config.sh
 sed -i "s/\${template_default_zone:?}/${template_default_zone}/g" taito-config.sh
 sed -i "s/\${template_default_zone_prod:?}/${template_default_zone_prod}/g" taito-config.sh
 sed -i "s/\${template_default_provider:?}/${template_default_provider}/g" taito-config.sh
 sed -i "s/\${template_default_provider_prod:?}/${template_default_provider_prod}/g" taito-config.sh
-sed -i "s/\${template_default_provider_org_id:?}/${template_default_provider_org_id}/g" taito-config.sh
-sed -i "s/\${template_default_provider_org_id_prod:?}/${template_default_provider_org_id_prod}/g" taito-config.sh
-sed -i "s/\${template_default_provider_region:?}/${template_default_provider_region}/g" taito-config.sh
-sed -i "s/\${template_default_provider_zone:?}/${template_default_provider_zone}/g" taito-config.sh
-sed -i "s/\${template_default_provider_region_prod:?}/${template_default_provider_region_prod}/g" taito-config.sh
-sed -i "s/\${template_default_provider_zone_prod:?}/${template_default_provider_zone_prod}/g" taito-config.sh
+sed -i "s/\${template_default_provider_org_id:-}/${template_default_provider_org_id}/g" taito-config.sh
+sed -i "s/\${template_default_provider_org_id_prod:-}/${template_default_provider_org_id_prod}/g" taito-config.sh
+sed -i "s/\${template_default_provider_region:-}/${template_default_provider_region}/g" taito-config.sh
+sed -i "s/\${template_default_provider_region_prod:-}/${template_default_provider_region_prod}/g" taito-config.sh
+sed -i "s/\${template_default_provider_zone:-}/${template_default_provider_zone}/g" taito-config.sh
+sed -i "s/\${template_default_provider_zone_prod:-}/${template_default_provider_zone_prod}/g" taito-config.sh
+sed -i "s|\${template_default_monitoring_uptime_channels:-}|${template_default_monitoring_uptime_channels}|g" taito-config.sh
 sed -i "s|\${template_default_monitoring_uptime_channels_prod:-}|${template_default_monitoring_uptime_channels_prod}|g" taito-config.sh
-sed -i "s|\${template_default_container_registry:?}|${template_default_container_registry}|g" taito-config.sh
-sed -i "s|\${template_default_container_registry_prod:?}|${template_default_container_registry_prod}|g" taito-config.sh
 sed -i "s/\${template_default_source_git:?}/${template_default_source_git}/g" taito-config.sh
 sed -i "s/\${template_default_dest_git:?}/${template_default_dest_git}/g" taito-config.sh
+
+# Hosts
+sed -i "s/\${template_default_host:-}/${template_default_host:-}/g" taito-config.sh
+sed -i "s/\${template_default_host_prod:-}/${template_default_host_prod:-}/g" taito-config.sh
+
+# Misc providers
+sed -i "s/\${template_default_uptime_provider:-}/${template_default_uptime_provider:-}/g" taito-config.sh
+sed -i "s/\${template_default_uptime_provider_prod:-}/${template_default_uptime_provider_prod:-}/g" taito-config.sh
+sed -i "s/\${template_default_uptime_provider_org_id:-}/${template_default_uptime_provider_org_id:-}/g" taito-config.sh
+sed -i "s/\${template_default_uptime_provider_org_id_prod:-}/${template_default_uptime_provider_org_id_prod:-}/g" taito-config.sh
 
 # CI/CD
 sed -i "s/\${template_default_ci_provider:?}/${template_default_ci_provider}/g" taito-config.sh
 sed -i "s/\${template_default_ci_provider_prod:?}/${template_default_ci_provider_prod}/g" taito-config.sh
 sed -i "s/\${template_default_vc_provider:?}/${template_default_vc_provider}/g" taito-config.sh
+sed -i "s/\${template_default_container_registry_provider:-}/${template_default_container_registry_provider}/g" taito-config.sh
+sed -i "s/\${template_default_container_registry_provider_prod:-}/${template_default_container_registry_provider_prod}/g" taito-config.sh
+sed -i "s|\${template_default_container_registry:-}|${template_default_container_registry}|g" taito-config.sh
+sed -i "s|\${template_default_container_registry_prod:-}|${template_default_container_registry_prod}|g" taito-config.sh
 sed -i "s/\${template_default_ci_exec_deploy:-true}/${template_default_ci_exec_deploy}/g" taito-config.sh
 sed -i "s/\${template_default_ci_exec_deploy_prod:-true}/${template_default_ci_exec_deploy_prod}/g" taito-config.sh
 
 # Kubernetes
-sed -i "s/\${template_default_kubernetes:?}/${template_default_kubernetes}/g" taito-config.sh
-sed -i "s|\${template_default_kubernetes_cluster_prefix:?}|${template_default_kubernetes_cluster_prefix}|g" taito-config.sh
-sed -i "s|\${template_default_kubernetes_cluster_prefix_prod:?}|${template_default_kubernetes_cluster_prefix_prod}|g" taito-config.sh
+sed -i "s/\${template_default_kubernetes:-}/${template_default_kubernetes}/g" taito-config.sh
+sed -i "s|\${template_default_kubernetes_cluster_prefix:-}|${template_default_kubernetes_cluster_prefix}|g" taito-config.sh
+sed -i "s|\${template_default_kubernetes_cluster_prefix_prod:-}|${template_default_kubernetes_cluster_prefix_prod}|g" taito-config.sh
 
 # Postgres
-sed -i "s/\${template_default_postgres:?}/${template_default_postgres:-}/g" taito-config.sh
-sed -i "s/\${template_default_postgres_host:?}/${template_default_postgres_host:-}/g" taito-config.sh
-sed -i "s/\${template_default_postgres_host_prod:?}/${template_default_postgres_host_prod:-}/g" taito-config.sh
-sed -i "s/\${template_default_postgres_master_username:?}/${template_default_postgres_master_username:-}/g" taito-config.sh
-sed -i "s/\${template_default_postgres_master_password_hint:?}/${template_default_postgres_master_password_hint:-}/g" taito-config.sh
+sed -i "s/\${template_default_postgres:-}/${template_default_postgres:-}/g" taito-config.sh
+sed -i "s/\${template_default_postgres_host:-}/${template_default_postgres_host:-}/g" taito-config.sh
+sed -i "s/\${template_default_postgres_host_prod:-}/${template_default_postgres_host_prod:-}/g" taito-config.sh
+sed -i "s/\${template_default_postgres_master_username:-}/${template_default_postgres_master_username:-}/g" taito-config.sh
+sed -i "s/\${template_default_postgres_master_password_hint:-}/${template_default_postgres_master_password_hint:-}/g" taito-config.sh
 
 # MySQL
-sed -i "s/\${template_default_mysql:?}/${template_default_mysql:-}/g" taito-config.sh
-sed -i "s/\${template_default_mysql_host:?}/${template_default_mysql_host:-}/g" taito-config.sh
-sed -i "s/\${template_default_mysql_host_prod:?}/${template_default_mysql_host_prod:-}/g" taito-config.sh
-sed -i "s/\${template_default_mysql_master_username:?}/${template_default_mysql_master_username:-}/g" taito-config.sh
-sed -i "s/\${template_default_mysql_master_password_hint:?}/${template_default_mysql_master_password_hint:-}/g" taito-config.sh
+sed -i "s/\${template_default_mysql:-}/${template_default_mysql:-}/g" taito-config.sh
+sed -i "s/\${template_default_mysql_host:-}/${template_default_mysql_host:-}/g" taito-config.sh
+sed -i "s/\${template_default_mysql_host_prod:-}/${template_default_mysql_host_prod:-}/g" taito-config.sh
+sed -i "s/\${template_default_mysql_master_username:-}/${template_default_mysql_master_username:-}/g" taito-config.sh
+sed -i "s/\${template_default_mysql_master_password_hint:-}/${template_default_mysql_master_password_hint:-}/g" taito-config.sh
 
 # Storage
 sed -i "s/\${template_default_storage_class:-}/${template_default_storage_class:-}/g" taito-config.sh
@@ -177,7 +177,7 @@ sed -i '/template_default_taito_image/d' cloudbuild.yaml
 sed -i "s|_IMAGE_REGISTRY: eu.gcr.io/\$PROJECT_ID|_IMAGE_REGISTRY: ${template_default_container_registry}|" cloudbuild.yaml
 
 ci_scripts="aws-pipelines.yml azure-pipelines.yml bitbucket-pipelines.yml \
-  .github/main.workflow .gitlab-ci.yml cloudbuild.yaml Jenkinsfile build.sh \
+  .github/main.workflow .gitlab-ci.yml cloudbuild.yaml Jenkinsfile local-ci.sh \
   .travis.yml"
 
 sed -i "s/\$template_default_taito_image_username/${template_default_taito_image_username:-}/g" ${ci_scripts}
@@ -227,9 +227,9 @@ if [[ $ci != "jenkins" ]] && [[ $template_default_ci_provider_prod != "jenkins" 
 fi
 
 # shell
-if [[ $ci != "shell" ]] && [[ $template_default_ci_provider_prod != "shell" ]]; then
-  rm -f build.sh
-fi
+# if [[ $ci != "local" ]] && [[ $template_default_ci_provider_prod != "local" ]]; then
+#   rm -f local-ci.sh
+# fi
 
 # travis
 if [[ $ci != "travis" ]] && [[ $template_default_ci_provider_prod != "travis" ]]; then

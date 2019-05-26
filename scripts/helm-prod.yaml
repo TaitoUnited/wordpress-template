@@ -1,11 +1,6 @@
 # NOTE: Here you can override default settings for production environment.
-# For example, you can diable basic authentication here.
 
 full-stack:
-  ingress:
-    basicAuth:
-      # enabled: false
-
   services:
     wordpress:
       livenessInitialDelay: 180

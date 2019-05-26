@@ -7,6 +7,7 @@ Table of contents:
 * [Prerequisites](#prerequisites)
 * [Workflow](#workflow)
 * [Local development](#local-development)
+* [Development tips](#development-tips)
 * [Version control](#version-control)
 * [Deployment](#deployment)
 * [Upgrading](#upgrading)
@@ -133,6 +134,12 @@ Run `taito -h` to get detailed instructions for all commands. Run `taito COMMAND
 > If you run into authorization errors, authenticate with the `taito auth:ENV` command.
 
 > It's common that idle applications are run down to save resources on non-production environments. If your application seems to be down, you can start it by running `taito start:ENV`, or by pushing some changes to git.
+
+## Development tips
+
+### Performance tuning
+
+Docker volume mounts can be slow on non-Linux systems. The template uses *delegated* volume mounts to mitigate this issue on macOS. TODO: windows performance tuning.
 
 ## Version control
 
