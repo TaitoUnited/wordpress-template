@@ -58,4 +58,4 @@ variable "taito_monitoring_uptime_channels" {
 }
 
 /* Google Cloud */
-variable "gcloud_service_account_enabled" {}
+variable "gcp_service_account_enabled" {}

@@ -53,7 +53,7 @@ Persistent volume claim (PVC) is disabled by default. This means that all data m
 If you don't need to manage media files directly on the production website, you can manage media files with your locally running wordpress and save the media files in git. This way the media files will be under version control, and will be bundled inside the Docker container.
 
 You can also store media files to a storage bucket with one of the following wp-plugins. Note that bucket and service account are created automatically by Terraform on `taito env apply:ENV`. You can use dev environment resources also for local development (see [Creating a new server environment](#creating-a-new-server-environment)). You can open the bucket with `taito open storage:ENV` and the service account details with `taito open services:ENV`.
-  * [wp-stateless](https://wordpress.org/plugins/wp-stateless/) for Google Cloud. Settings: mode=`Stateless`, bucket=`wordpress-template-ENV`, bucket folder=`/media`, create a JSON key for `wordpress-template-ENV` service account from gcloud console (`taito open services:ENV` -> Credentials -> Create service account key).
+  * [wp-stateless](https://wordpress.org/plugins/wp-stateless/) for Google Cloud. Settings: mode=`Stateless`, bucket=`wordpress-template-ENV`, bucket folder=`/media`, create a JSON key for `wordpress-template-ENV` service account from gcp console (`taito open services:ENV` -> Credentials -> Create service account key).
   * [https://github.com/humanmade/S3-Uploads](S3-Uploads) for AWS.
 
 Remember to delete all service account keys and other secrets from your local disk.

@@ -4,8 +4,8 @@ provider "google" {
   zone = "${var.taito_provider_zone}"
 }
 
-module "common-gcloud" {
-  source = "../common/gcloud"
+module "common-gcp" {
+  source = "../common/gcp"
 
   taito_project = "${var.taito_project}"
   taito_env = "${var.taito_env}"
@@ -33,5 +33,5 @@ module "common-gcloud" {
   taito_monitoring_timeouts = "${var.taito_monitoring_timeouts}"
   taito_monitoring_uptime_channels = "${var.taito_monitoring_uptime_channels}"
 
-  gcloud_service_account_enabled = "${var.gcloud_service_account_enabled}"
+  gcp_service_account_enabled = "${var.gcp_service_account_enabled}"
 }
