@@ -57,16 +57,6 @@ Remember to delete all service account keys and other secrets from your local di
 
 ---
 
-## Remote environments
-
-You create the other environments just like the dev environment (see the previous chapter). However, you don't need to write down the basic auth credentials anymore, since you can reuse the same credentials as in dev environment.
-
-Examples for environment names: `f-orders`, `dev`, `test`, `stag`, `canary`, `prod`. You configure project environments with `taito_environments` setting in `taito-config.sh`.
-
-See [6. Remote environments](https://github.com/TaitoUnited/taito-cli/blob/master/docs/tutorial/05-remote-environments.md) chapter of Taito CLI tutorial for more thorough instructions.
-
-Operations on production and staging environments usually require admin rights. Please contact DevOps personnel if necessary.
-
 ## Kubernetes
 
 If you need to, you can configure Kubernetes settings by modifying `heml*.yaml` files located under the `scripts`-directory. The default settings, however, are ok for most sites.
