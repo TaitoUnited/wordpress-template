@@ -54,9 +54,9 @@ echo "Generating unique random ports (avoid conflicts with other projects)..."
 ingress_port=$(shuf -i 8000-9999 -n 1)
 db_port=$(shuf -i 6000-7999 -n 1)
 sed -i "s/7587/${db_port}/g" taito-config.sh docker-compose.yaml \
-  TAITOLESS.md &> /dev/null
+  TAITOLESS.md &> /dev/null || :
 sed -i "s/4635/${ingress_port}/g" docker-compose.yaml taito-config.sh \
-  TAITOLESS.md &> /dev/null
+  TAITOLESS.md &> /dev/null || :
 
 ./scripts/taito-template/common.sh
 echo init done
