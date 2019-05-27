@@ -5,7 +5,7 @@
 : "${taito_project:?}"
 : "${mode:?}"
 
-${taito_setv:?}
+${taito_setv:-}
 
 # Remove .gitignore to allow committing data to git
 rm wordpress/data/.gitignore
