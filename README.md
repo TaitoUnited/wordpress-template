@@ -16,6 +16,7 @@ Table of contents:
 * [Links](#links)
 * [Contacts](#contacts)
 * [Responsibilities](#responsibilities)
+* [Manually configured settings](#manually-configured-settings)
 * [Recurring issues and solutions](#recurring-issues-and-solutions)
 * [Miscellaneous notes](#miscellaneous-notes)
 * [Conventions](#conventions)
@@ -45,6 +46,10 @@ LINKS WILL BE GENERATED HERE
 ## Responsibilities
 
 Hosting, billing and control of 3rd party services, SSL/TLS certificates, etc.
+
+## Manually configured settings
+
+> Try to keep all configurations in version control. However, if you have configured something manually, describe manually configured settings here.
 
 ## Recurring issues and solutions
 
