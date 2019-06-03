@@ -39,9 +39,9 @@ taito_env=${taito_target_env/canary/prod} # canary -> prod
 
 # Provider and namespaces
 taito_provider=${template_default_provider:?}
-taito_provider_org_id=${template_default_provider_org_id:?}
-taito_provider_region=${template_default_provider_region:?}
-taito_provider_zone=${template_default_provider_zone:?}
+taito_provider_org_id=${template_default_provider_org_id:-}
+taito_provider_region=${template_default_provider_region:-}
+taito_provider_zone=${template_default_provider_zone:-}
 taito_zone=${template_default_zone:?}
 taito_namespace=$taito_project-$taito_env
 taito_resource_namespace=$taito_organization_abbr-$taito_company-dev
@@ -136,8 +136,8 @@ template_name=WORDPRESS-TEMPLATE
 template_source_git=git@github.com:TaitoUnited
 
 # Kubernetes plugin
-kubernetes_name=${template_default_kubernetes:?}
-kubernetes_cluster="${template_default_kubernetes_cluster_prefix:?}${kubernetes_name}"
+kubernetes_name=${template_default_kubernetes:-}
+kubernetes_cluster="${template_default_kubernetes_cluster_prefix:-}${kubernetes_name}"
 kubernetes_replicas=1
 kubernetes_db_proxy_enabled=true
 
@@ -160,9 +160,9 @@ case $taito_env in
     # Provider and namespaces
     taito_zone=${template_default_zone_prod:?}
     taito_provider=${template_default_provider_prod:?}
-    taito_provider_org_id=${template_default_provider_org_id_prod:?}
-    taito_provider_region=${template_default_provider_region_prod:?}
-    taito_provider_zone=${template_default_provider_zone_prod:?}
+    taito_provider_org_id=${template_default_provider_org_id_prod:-}
+    taito_provider_region=${template_default_provider_region_prod:-}
+    taito_provider_zone=${template_default_provider_zone_prod:-}
     taito_resource_namespace=$taito_organization_abbr-$taito_company-prod
 
     # Domain and resources
@@ -200,9 +200,9 @@ case $taito_env in
     # Provider and namespaces
     taito_zone=${template_default_zone_prod:?}
     taito_provider=${template_default_provider_prod:?}
-    taito_provider_org_id=${template_default_provider_org_id_prod:?}
-    taito_provider_region=${template_default_provider_region_prod:?}
-    taito_provider_zone=${template_default_provider_zone_prod:?}
+    taito_provider_org_id=${template_default_provider_org_id_prod:-}
+    taito_provider_region=${template_default_provider_region_prod:-}
+    taito_provider_zone=${template_default_provider_zone_prod:-}
     taito_resource_namespace=$taito_organization_abbr-$taito_company-prod
 
     # Domain and resources
