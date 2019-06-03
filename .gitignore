@@ -1,5 +1,7 @@
+secrets
 mnt
-scripts/helm/charts/*.gz
+taito-run-env.sh
+taito-user-config.sh
 node_modules
 site-packages
 tmp
@@ -13,3 +15,7 @@ template-tmp
 *.tmp
 *.pyc
 *~
+
+# Eclipse
+.metadata
+RemoteSystemsTempFiles
