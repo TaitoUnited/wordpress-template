@@ -3,9 +3,15 @@
 set -a
 : "${taito_target_env:?}"
 
-# Configuration instructions:
-# - https://taito.dev/docs/05-configuration
-# - https://taito.dev/plugins
+##########################################################################
+# Root taito-config.sh file
+##########################################################################
+
+# ------------------------------------------------------------------------
+# NOTE: This file is updated during 'taito project upgrade'. There should
+# rarely be need to modify it manually. Modify taito-domain-config.sh,
+# taito-environments-config.sh or taito-test-config.sh instead.
+# ------------------------------------------------------------------------
 
 # Taito CLI
 taito_version=1
@@ -34,7 +40,6 @@ taito_suffix=
 taito_project_icon=$taito_project-dev.${template_default_domain:?}/favicon.ico
 
 # Environments
-taito_environments="dev stag prod"
 taito_env=${taito_target_env/canary/prod} # canary -> prod
 
 # Provider and namespaces
@@ -154,7 +159,6 @@ wordpress_plugin_update_flags="--all --debug --minor"
 case $taito_env in
   prod)
     # Settings
-    taito_basic_auth_enabled=true
     kubernetes_replicas=1
 
     # Provider and namespaces
@@ -166,7 +170,6 @@ case $taito_env in
     taito_resource_namespace=$taito_organization_abbr-$taito_company-prod
 
     # Domain and resources
-    taito_domain=
     taito_domain=$taito_project-$taito_target_env.${template_default_domain_prod:?} # TEMPLATE-REMOVE
     taito_default_domain=$taito_project-$taito_target_env.${template_default_domain_prod:?}
     taito_app_url=https://$taito_domain
@@ -191,6 +194,9 @@ case $taito_env in
     taito_container_registry=${template_default_container_registry_prod:-}/$taito_vc_repository
     taito_ci_provider=${template_default_ci_provider_prod:?}
     ci_exec_deploy=${template_default_ci_exec_deploy_prod:-true}
+
+    # shellcheck disable=SC1091
+    . taito-domain-config.sh
     ;;
   stag)
     # Settings
@@ -248,22 +254,6 @@ taito_uptime_namespace_id=$taito_zone
 taito_admin_url=$taito_app_url/wp-admin/
 taito_storage_url="https://console.cloud.google.com/storage/browser/$taito_random_name-$taito_env?project=$taito_resource_namespace_id"
 
-# Link plugin
-link_urls="
-  * wp[:ENV]#app=$taito_app_url Wordpress (:ENV)
-  * admin[:ENV]#admin=$taito_admin_url Admin user interface (:ENV)
-  * git=https://${template_default_vc_url:?}/$taito_vc_repository GitHub repository
-  * storage:ENV=$taito_storage_url Storage bucket (:ENV)
-"
-
-# ------ Secrets ------
-
-taito_secrets="
-  $db_database_name-db-mgr.password/devops:random
-  $taito_project-$taito_env-basic-auth.auth:htpasswd-plain
-  $taito_project-$taito_env-admin.initialpassword:random
-"
-
 # ------ Database users ------
 
 # app user for application
@@ -276,6 +266,11 @@ db_database_mgr_secret="${db_database_name//_/-}-db-mgr.password"
 # master user for creating and destroying databases
 db_database_master_username="${template_default_mysql_master_username:-}"
 db_database_master_password_hint="${template_default_mysql_master_password_hint:-}"
+
+# ------ Environments config ------
+
+# shellcheck disable=SC1091
+. taito-environments-config.sh
 
 # ------ Taito config override (optional) ------
 
