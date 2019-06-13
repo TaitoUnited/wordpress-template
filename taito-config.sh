@@ -83,7 +83,7 @@ taito_uptime_targets=" wordpress "
 taito_uptime_paths=" / "
 taito_uptime_timeouts=" 5s "
 # You can list all monitoring channels with `taito env info:ENV`
-taito_uptime_uptime_channels="${template_default_monitoring_uptime_channels:-}"
+taito_uptime_channels="${template_default_uptime_channels:-}"
 
 # Stack
 taito_targets="wordpress database"
@@ -184,7 +184,7 @@ case $taito_env in
     # Monitoring
     taito_uptime_provider=${template_default_uptime_provider_prod:-}
     taito_uptime_provider_org_id=${template_default_uptime_provider_org_id_prod:-}
-    taito_uptime_channels="${template_default_monitoring_uptime_channels_prod:-}"
+    taito_uptime_channels="${template_default_uptime_channels_prod:-}"
 
     # CI/CD and repositories
     taito_container_registry_provider=${template_default_container_registry_provider_prod:-}
@@ -216,7 +216,7 @@ case $taito_env in
     # Monitoring
     taito_uptime_provider=${template_default_uptime_provider_prod:-}
     taito_uptime_provider_org_id=${template_default_uptime_provider_org_id_prod:-}
-    taito_uptime_channels="${template_default_monitoring_uptime_channels_prod:-}"
+    taito_uptime_channels="${template_default_uptime_channels_prod:-}"
 
     # CI/CD and repositories
     taito_container_registry_provider=${template_default_container_registry_provider_prod:-}
