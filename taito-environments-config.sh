@@ -5,13 +5,16 @@
 # Environment settings
 ##########################################################################
 
+# Define environments here in correct order (e.g. dev test stag canary prod)
 taito_environments="dev stag prod"
 
 # NOTE: Uncomment this line to disable basic auth from ALL environments.
-# Use taito-domain-config.sh to disable basic auth from PROD env only.
+# NOTE: Use taito-domain-config.sh to disable basic auth from PROD env only.
 # taito_basic_auth_enabled=false
 
 # ------ Links ------
+# Add custom links here. You can regenerate README.md links with
+# 'taito project docs'.
 
 link_urls="
   * wp[:ENV]#app=$taito_app_url Wordpress (:ENV)
