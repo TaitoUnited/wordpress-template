@@ -53,7 +53,7 @@ Hosting, billing and control of 3rd party services, SSL/TLS certificates, etc.
 
 ## Recurring issues and solutions
 
-See trouble.txt or run `taito --trouble`.
+See trouble.txt or run `taito trouble`.
 
 ## Miscellaneous notes
 

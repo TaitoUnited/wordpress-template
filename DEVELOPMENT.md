@@ -129,7 +129,7 @@ The commands mentioned above work also for server environments (`feat`, `dev`, `
     taito db diff:stag test                 # Show diff between dev and test schemas
     taito db copy to:stag prod              # Copy prod database to stag
 
-Run `taito -h` to get detailed instructions for all commands. Run `taito COMMAND -h` to show command help (e.g `taito db -h`, `taito db import -h`). For troubleshooting run `taito --trouble`. See PROJECT.md for project specific conventions and documentation.
+Run `taito -h` to get detailed instructions for all commands. Run `taito COMMAND -h` to show command help (e.g `taito db -h`, `taito db import -h`). For troubleshooting run `taito trouble`. See PROJECT.md for project specific conventions and documentation.
 
 > If you run into authorization errors, authenticate with the `taito auth:ENV` command.
 

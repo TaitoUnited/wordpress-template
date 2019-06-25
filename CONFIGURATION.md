@@ -10,7 +10,7 @@ This file has been copied from [WORDPRESS-TEMPLATE](https://github.com/TaitoUnit
 
 ## Local development environment
 
-Start your local development environment by running `taito kaboom`. Once the command starts to install libraries, you can leave it on the background while you continue with configuration. Once the application has started, open the web gui with `taito open wp` and `taito open admin`. More information on local development you can find from [DEVELOPMENT.md](DEVELOPMENT.md).
+Start your local development environment by running `taito kaboom`. Once the command starts to install libraries, you can leave it on the background while you continue with configuration. Once the application has started, open the web gui with `taito open wp` and `taito open admin`. If the application fails to start, run `taito trouble` to see troubleshooting. More information on local development you can find from [DEVELOPMENT.md](DEVELOPMENT.md).
 
 > TIP: If you use a storage bucket or other external resources in your WordPress setup, but you do not need a separate `dev` remote environment, you can create `dev` environment resources by running `taito env apply:dev terraform` and use those resources in local development.
 
