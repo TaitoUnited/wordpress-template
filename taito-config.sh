@@ -238,7 +238,7 @@ case $taito_env in
     db_database_external_port=7587
     db_database_host=$taito_project-database
     db_database_port=3306
-    db_database_password=secret
+    db_database_password=$taito_default_password
     db_database_username=${taito_project_short}${taito_env}
 
     # shellcheck disable=SC1091

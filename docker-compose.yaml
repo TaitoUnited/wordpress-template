@@ -56,10 +56,10 @@ services:
     ports:
       - "7587:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: wptemplatelocal
       MYSQL_USER: wptemplatelocal
       MYSQL_PASSWORD: ${taito_default_password}
+      MYSQL_ROOT_PASSWORD: ${taito_default_password}
 
 networks:
   default:
