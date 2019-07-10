@@ -59,7 +59,7 @@ services:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: wptemplatelocal
       MYSQL_USER: wptemplatelocal
-      MYSQL_PASSWORD: secret
+      MYSQL_PASSWORD: ${taito_default_password}
 
 networks:
   default:

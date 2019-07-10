@@ -23,20 +23,24 @@ sed -i "s|password-change-it-7983p4nWgRE2p4No2d9|${admin_password}|g" README.md
 # Replace some strings
 taito_project_short="${taito_project_short:-$taito_vc_repository}"
 taito_project_short="${taito_project_short//-/}"
-if [[ "${#taito_project_short}" -lt 5 ]] || \
+if [[ ! ${taito_project_short} ]] || \
+   [[ "${#taito_project_short}" -lt 5 ]] || \
    [[ "${#taito_project_short}" -gt 10 ]]; then
   echo "Give a short version of the project name '${taito_vc_repository}'."
   echo "It should be unique but also descriptive as it will be used"
   echo "as a database name and as a database username."
   echo
   export taito_project_short=""
-  while [[ "${#taito_project_short}" -lt 5 ]] || \
+  while [[ ! ${taito_project_short} ]] || \
+    [[ "${#taito_project_short}" -lt 5 ]] || \
     [[ "${#taito_project_short}" -gt 10 ]]
   do
     echo "Short project name (5-10 characters)?"
     read -r taito_project_short
   done
 fi
+
+echo "Project short name: $taito_project_short"
 
 echo "Replacing project and company names in files. Please wait..."
 find . -type f -exec sed -i \

@@ -24,7 +24,7 @@ It is recommended to do most modifications in local or staging environment. Use 
 
 ## Local development
 
-> You can use either local or staging database for development by modifying `docker-compose.yaml`. If you use staging database for development, you must enable one of the media storage plugins (see [server environments](#server-environments) chapter). See [deployment](#deployment) chapter for instructions on copying data from one environment to another.
+> You can use either local or staging database for development by modifying `docker-compose.yaml`. If you use staging database for development, you must enable one of the media storage plugins (see [configuring file persistence](CONFIGURATION.md#configuring-file-persistence-for-media-etc)). See [deployment](#deployment) chapter for instructions on copying data from one environment to another.
 
 Create local environment by installing some libraries and generating secrets (add `--clean` to recreate clean environment):
 

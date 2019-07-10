@@ -77,7 +77,7 @@ full-stack:
           volumePath: wordpress
           readOnly: false
       secretEnv:
-        WORDPRESS_DATABASE_PASSWORD: ${db_database_name}-db-mgr.password
+        WORDPRESS_DATABASE_PASSWORD: ${db_database_mgr_secret}
         WORDPRESS_PASSWORD: ${taito_project}-${taito_env}-admin.initialpassword
       env:
         MARIADB_HOST: '${db_database_real_host}'

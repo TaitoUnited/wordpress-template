@@ -10,9 +10,7 @@ This file has been copied from [WORDPRESS-TEMPLATE](https://github.com/TaitoUnit
 
 ## Local development environment
 
-Start your local development environment by running `taito kaboom`. Once the command starts to install libraries, you can leave it on the background while you continue with configuration. Once the application has started, open the web gui with `taito open wordpress` and `taito open admin`. If the application fails to start, run `taito trouble` to see troubleshooting. More information on local development you can find from [DEVELOPMENT.md](DEVELOPMENT.md).
-
-> TIP: If you use a storage bucket or other external resources in your WordPress setup, but you do not need a separate `dev` remote environment, you can create `dev` environment resources by running `taito env apply:dev terraform` and use those resources in local development.
+Start your local development environment by running `taito kaboom`. Once the command starts to install libraries, you can leave it on the background while you continue with configuration. Once the application has started, open the web gui with `taito open wordpress`. You can open the admin gui with `taito open admin` and display initial admin credentials with `taito info`. If the application fails to start, run `taito trouble` to see troubleshooting. More information on local development you can find from [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ## Basic settings
 
@@ -59,7 +57,7 @@ See it build and deploy:
     taito status:stag
     taito open wordpress:stag
 
-Generate a new random admin password on admin GUI. The initial admin password in `password-change-it-7983p4nWgRE2p4No2d9`:
+Change admin username and password on admin GUI. The initial username is `changeme` and you can see the initial password with `taito info:stag`:
 
     taito open admin:stag
 
@@ -78,6 +76,8 @@ You can also store media files to a storage bucket with one of the following wp-
   * [https://github.com/humanmade/S3-Uploads](S3-Uploads) for AWS.
 
 Remember to delete all service account keys and other secrets from your local disk.
+
+> TIP: If you use a storage bucket or other external resources in your WordPress setup, but you do not need a the `dev` remote environment, you can create `dev` environment resources by running `taito env apply:dev terraform` and use those resources in local development. Or alternatively you can also use the `stag` environment resources directly also for local development (see [local development](DEVELOPMENT.md#local-development)).
 
 * [ ] All done
 

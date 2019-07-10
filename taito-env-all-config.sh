@@ -52,7 +52,7 @@ link_urls="
 # https://taitounited.github.io/taito-cli/tutorial/06-env-variables-and-secrets/
 
 taito_secrets="
-  $db_database_name-db-mgr.password/devops:random
+  $db_database_mgr_secret:random
   $taito_project-$taito_env-basic-auth.auth:htpasswd-plain
   $taito_project-$taito_env-admin.initialpassword:random
 "

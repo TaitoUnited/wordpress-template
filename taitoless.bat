@@ -1,6 +1,6 @@
 # Env
 SET taito_env="local"
-SET taito_project="full-stack-template"
+SET taito_project="wordpress-template"
 SET taito_host_uname="WINDOWS_NT"
 
 # Docker
