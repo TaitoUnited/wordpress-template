@@ -20,8 +20,12 @@ sed -i "s|password-change-it-7983p4nWgRE2p4No2d9|${admin_password}|g" scripts/he
 sed -i "s|password-change-it-7983p4nWgRE2p4No2d9|${admin_password}|g" docker-compose.yaml
 sed -i "s|password-change-it-7983p4nWgRE2p4No2d9|${admin_password}|g" README.md
 
-# Replace some strings
-taito_project_short="${taito_project_short:-$taito_vc_repository}"
+# Determine project short name
+if [[ $taito_project_short != "wptemplate" ]]; then
+  taito_project_short="${taito_project_short}"
+else
+  taito_project_short="${taito_vc_repository}"
+fi
 taito_project_short="${taito_project_short//-/}"
 if [[ ! ${taito_project_short} ]] || \
    [[ "${#taito_project_short}" -lt 5 ]] || \
@@ -39,7 +43,6 @@ if [[ ! ${taito_project_short} ]] || \
     read -r taito_project_short
   done
 fi
-
 echo "Project short name: $taito_project_short"
 
 echo "Replacing project and company names in files. Please wait..."
