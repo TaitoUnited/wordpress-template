@@ -7,9 +7,12 @@
 
 # ------------------------------------------------------------------------
 # NOTE: This file is updated during 'taito project upgrade'. There should
-# be no need to modify it manually. Modify taito-domain-config.sh,
-# taito-environments-config.sh or taito-test-config.sh instead.
+# rarely be need to modify it manually. Modify taito-env-*-config.sh,
+# or taito-testing-config.sh instead.
 # ------------------------------------------------------------------------
+
+taito_provider_db_proxy_secret=
+taito_provider_service_account_secret=
 
 case $taito_provider in
   aws)
@@ -36,17 +39,35 @@ case $taito_provider in
     link_urls="
       ${link_urls}
       * services[:ENV]=https://console.cloud.google.com/apis/dashboard?project=$taito_resource_namespace_id Google services (:ENV)
-      * logs:ENV=https://console.cloud.google.com/logs/viewer?project=$taito_zone&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2F$kubernetes_name%2Fnamespace_id%2F$taito_namespace Logs (:ENV)
     "
 
-    taito_remote_secrets="
-      $taito_remote_secrets
-      cloudsql-gserviceaccount.key:copy/devops
-      $taito_project-$taito_env-gserviceaccount.key:file
-    "
+    # Set google specific storage url
+    if [[ $taito_env != "local" ]] && [[ $taito_storages ]]; then
+      storages=( $taito_storages )
+      taito_storage_url="https://console.cloud.google.com/storage/browser/${storages[0]}?project=$taito_resource_namespace_id"
+    fi
 
     kubernetes_db_proxy_enabled=false # use google cloud sql proxy instead
-    gcp_service_account_enabled=true
+    if [[ -z "${gcp_service_account_enabled}" ]]; then
+      gcp_service_account_enabled=false
+    fi
+    if [[ ${taito_storages:-} ]]; then
+      gcp_service_account_enabled=true
+    fi
+
+    if [[ $gcp_service_account_enabled == "true" ]]; then
+      taito_provider_service_account_secret=$taito_project-$taito_env-gserviceaccount.key
+      taito_remote_secrets="
+        $taito_remote_secrets
+        $taito_provider_service_account_secret:file
+      "
+    fi
+
+    taito_provider_db_proxy_secret=cloudsql-gserviceaccount.key
+    taito_remote_secrets="
+      $taito_remote_secrets
+      $taito_provider_db_proxy_secret:copy/devops
+    "
     ;;
   linux)
     # shellcheck disable=SC1091
@@ -58,6 +79,24 @@ case $taito_provider in
     ;;
 esac
 
+taito_logging_provider=${taito_logging_provider:-$taito_provider}
+case $taito_logging_provider in
+  efk)
+    # TODO: EFK running on Kubernetes
+    ;;
+  gcp)
+    taito_logging_format=stackdriver
+    link_urls="
+      ${link_urls}
+      * logs:ENV=https://console.cloud.google.com/logs/viewer?project=$taito_zone&minLogLevel=0&expandAll=false&resource=container%2Fcluster_name%2F$kubernetes_name%2Fnamespace_id%2F$taito_namespace Logs (:ENV)
+    "
+    ;;
+  *)
+    taito_logging_format=text
+    ;;
+esac
+
+taito_uptime_provider=${taito_uptime_provider:-$taito_provider}
 case $taito_uptime_provider in
   gcp)
     taito_plugins="${taito_plugins/gcp:-local/}"
@@ -156,6 +195,7 @@ case $taito_container_registry_provider in
     ;;
 esac
 
+# Sentry
 if [[ $taito_plugins == *"sentry"* ]]; then
   sentry_organization=${template_default_sentry_organization:-}
   link_urls="

@@ -9,8 +9,8 @@ set -a
 
 # ------------------------------------------------------------------------
 # NOTE: This file is updated during 'taito project upgrade'. There should
-# rarely be need to modify it manually. Modify taito-domain-config.sh,
-# taito-environments-config.sh or taito-test-config.sh instead.
+# rarely be need to modify it manually. Modify taito-env-*-config.sh,
+# or taito-testing-config.sh instead.
 # ------------------------------------------------------------------------
 
 # Taito CLI
@@ -84,19 +84,8 @@ taito_messaging_monitoring_channel=monitoring
 # Uptime monitoring
 taito_uptime_provider= # only for prod by default
 taito_uptime_provider_org_id=${template_default_uptime_provider_org_id:-}
-taito_uptime_targets=" wordpress "
-taito_uptime_paths=" / "
-taito_uptime_timeouts=" 5s "
 # You can list all monitoring channels with `taito env info:ENV`
 taito_uptime_channels="${template_default_uptime_channels:-}"
-
-# Stack
-taito_targets="wordpress database"
-taito_storages="$taito_random_name-$taito_env"
-taito_networks="default"
-
-# Stack types ('container' by default)
-taito_target_type_database=database
 
 # Database definitions for database plugins
 # NOTE: database users are defined later in this file
@@ -107,7 +96,7 @@ db_database_host=127.0.0.1
 db_database_port=5001
 db_database_real_host="${template_default_mysql_host:?}"
 db_database_real_port=3306
-db_database_create=true
+db_database_create=false
 
 # Storage definitions for Terraform
 taito_storage_classes="${template_default_storage_class:-}"
@@ -131,7 +120,6 @@ taito_default_password=secret1234
 ci_exec_build=false        # build a container if does not exist already
 ci_exec_deploy=${template_default_ci_exec_deploy:-true}        # deploy automatically
 ci_exec_test=false         # execute test suites after deploy
-ci_exec_test_wait=1        # how many seconds to wait for deployment/restart
 ci_exec_test_init=false    # run 'init --clean' before each test suite
 ci_exec_revert=false       # revert deploy automatically on fail
 
@@ -146,14 +134,6 @@ kubernetes_name=${template_default_kubernetes:-}
 kubernetes_cluster="${template_default_kubernetes_cluster_prefix:-}${kubernetes_name}"
 kubernetes_replicas=1
 kubernetes_db_proxy_enabled=true
-
-# Helm plugin
-# helm_deploy_options="--atomic --cleanup-on-fail --force"
-
-# Wordpress settings
-# WARNING: Setting this from true to false deletes the existing persistent disk
-wordpress_persistence_enabled=false
-wordpress_plugin_update_flags="--all --debug --minor"
 
 # --- Override settings for different environments ---
 
@@ -195,7 +175,7 @@ case $taito_env in
     ci_exec_deploy=${template_default_ci_exec_deploy_prod:-true}
 
     # shellcheck disable=SC1091
-    . taito-domain-config.sh
+    if [[ -f taito-env-prod-config.sh ]]; then . taito-env-prod-config.sh; fi
     ;;
   stag)
     # Settings
@@ -228,19 +208,41 @@ case $taito_env in
     taito_container_registry=${template_default_container_registry_prod:-}/$taito_vc_repository
     taito_ci_provider=${template_default_ci_provider_prod:?}
     ci_exec_deploy=${template_default_ci_exec_deploy_prod:-true}
+
     # NOTE: dev/test not deployed on Kubernetes, therefore containers are
-    # built for staging.
-    ci_exec_build=true        # allow build of a new container
+    # built for staging by default.
+    ci_exec_build=true        # allow build of a new container on staging
+
+    # shellcheck disable=SC1091
+    if [[ -f taito-env-stag-config.sh ]]; then . taito-env-stag-config.sh; fi
     ;;
   local)
     # local overrides
-    ci_exec_test_init=false   # run 'init --clean' before each test suite
     taito_app_url=http://localhost:4635
+    taito_storage_url=http://localhost:4635/minio
     db_database_external_port=7587
     db_database_host=$taito_project-database
     db_database_port=3306
     db_database_password=secret
     db_database_username=${taito_project_short}${taito_env}
+
+    # shellcheck disable=SC1091
+    if [[ -f taito-env-local-config.sh ]]; then . taito-env-local-config.sh; fi
+    ;;
+  *)
+    # dev and feature branches
+    if [[ $taito_env == "dev" ]] || [[ $taito_env == "f-"* ]]; then
+      ci_exec_build=true        # allow build of a new container
+      # shellcheck disable=SC1091
+      if [[ -f taito-env-dev-config.sh ]]; then . taito-env-dev-config.sh; fi
+    fi
+    # hotfix branches
+    if [[ $taito_env == "h-"* ]]; then
+      ci_exec_build=true        # allow build of a new container
+      # shellcheck disable=SC1091
+      if [[ -f taito-env-hotfix-config.sh ]]; then . taito-env-hotfix-config.sh; fi
+    fi
+    ;;
 esac
 
 # ------ Derived values after environment specific settings ------
@@ -251,7 +253,6 @@ taito_uptime_namespace_id=$taito_zone
 
 # URLs
 taito_admin_url=$taito_app_url/wp-admin/
-taito_storage_url="https://console.cloud.google.com/storage/browser/$taito_random_name-$taito_env?project=$taito_resource_namespace_id"
 
 # ------ Database users ------
 
@@ -271,10 +272,10 @@ db_database_default_secret="${db_database_name//_/-}-db-mgr.password"
 db_database_master_username="${template_default_mysql_master_username:-}"
 db_database_master_password_hint="${template_default_mysql_master_password_hint:-}"
 
-# ------ Environments config ------
+# ------ All environments config ------
 
 # shellcheck disable=SC1091
-. taito-environments-config.sh
+. taito-env-all-config.sh
 
 # ------ Taito config override (optional) ------
 
@@ -287,5 +288,17 @@ fi
 
 # shellcheck disable=SC1091
 . taito-provider-config.sh
+
+# ------ Derived values ------
+
+link_urls="
+  ${link_urls}
+  * storage:ENV=$taito_storage_url Storage bucket (:ENV)
+"
+
+# ------ Test suite settings ------
+
+# shellcheck disable=SC1091
+. taito-testing-config.sh
 
 set +a

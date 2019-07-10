@@ -47,7 +47,7 @@ substitutions:
 steps:
 
 # NOTE: This first ugly step is an optimization. We execute cancel with
-# the google provided kubectl container instead of taito-cli, because it
+# the google provided kubectl container instead of Taito CLI, because it
 # doesn't need to be pulled before execution -> cancel executes immediately.
 - id: manual-cancel
   name: 'gcr.io/cloud-builders/kubectl'
@@ -103,7 +103,7 @@ steps:
     export taito_env="$${taito_target_env}"
     source ./taito-config.sh
 
-    # TODO: should be implemented in taito-cli plugin
+    # TODO: should be implemented in Taito CLI plugin
     echo "- Get cluster credentials"
     if ! gcloud container clusters get-credentials "$${kubernetes_name}" \
       --zone "$${taito_provider_zone}"; then
@@ -121,7 +121,7 @@ steps:
     echo "- We ignore all fails during cancel (hence the last echo)"
 
 
-# ----------------------- Taito-cli ----------------------------------
+# ----------------------- Taito CLI ----------------------------------
 
 # Prepare build
 

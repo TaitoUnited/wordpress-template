@@ -2,8 +2,6 @@
 
 This file has been copied from [WORDPRESS-TEMPLATE](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/). Keep modifications minimal and improve the [original](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/blob/dev/TAITOLESS.md) instead. Project specific conventions are located in [README.md](README.md#conventions).
 
-> TODO: Improve instructions
-
 Table of contents:
 
 * [Prerequisites](#prerequisites)
@@ -13,49 +11,52 @@ Table of contents:
 
 ## Prerequisites
 
-* [Node.js](https://nodejs.org/)
+* [npm](https://github.com/npm/cli) that usually ships with [Node.js](https://nodejs.org/)
 * [Docker Compose](https://docs.docker.com/compose/install/)
-* MySQL client
-* Optional: eslint and prettier plugins for your code editor
+* [MySQL client](https://dev.mysql.com/doc/refman/8.0/en/programs-client.html)
 
 ## Quick start
 
-Install libraries on host:
+Install mandatory libraries on host:
 
     npm install
+
+Install additional libraries on host for autocompletion/linting on editor (optional):
+
+    # TODO: Support for Windows without bash
     npm run install-dev
 
-Setup local secrets:
+Set up environment variables required by `docker-compose.yaml`:
 
-    TODO
+    # On unix-like shell
+    . taitoless.sh
 
-Start containers:
+    # On Windows shell
+    taitoless.bat
+
+Setup secrets required by `docker-compose.yaml`:
+
+> See the secret file paths at the end of `docker-compose.yaml` and set the secret file contents accordingly.
+
+Start containers defined in `docker-compose.yaml`:
 
     docker-compose up
 
-Import data to database:
+Connect development database:
 
-    TODO import database/data/local.sql
+    mysql -h localhost -P 7587 -D $db_database_name -u $db_database_mgr_username
 
-Open the site on browser:
+Open the application on browser:
 
-    http://localhost:9999
+    http://localhost:4635
 
-Open admin GUI in browser:
+Connect to database using password `secret1234`:
 
-    http://localhost:9999/admin
-
-Connect to database:
-
-    TODO
+    psql -h localhost -p 6000 -d $db_database_name -U $db_database_app_username
 
 Use `npm`, `docker-compose` and `docker` normally to run commands and operate containers.
 
-If you would like to use some of the additional commands provided by Taito CLI also without using Taito CLI, first run the command with verbose option (`taito -v`) to see which commands Taito CLI executes under the hood, and then implement them in your package.json or makefile.
-
-## Testing
-
-You may run Cypress against any remote environment without Taito CLI or docker. See `client/test/README.md` for more instructions.
+If you would like to use some of the additional commands provided by Taito CLI also without using Taito CLI, first run the command with verbose option (`taito -v`) to see which commands Taito CLI executes under the hood, and then implement them in your `package.json` or `Makefile`.
 
 ## Configuration
 
@@ -63,17 +64,17 @@ Instructions defined in [CONFIGURATION.md](CONFIGURATION.md) apply. You just nee
 
 ### Creating an environment
 
-* Run taito-config.sh to set the environment variables:
+* Run taito-config.sh to set the environment variables for the environment in question (dev, test, stag, canary, or prod):
     ```
     set -a
     taito_target_env=dev
     . taito-config.sh
     set +a
     ```
-* Run terraform scripts that are located at `scripts/terraform/`. Note that the scripts assume that a cloud provider project defined by `taito_resource_namespace` and `taito_resource_namespace_id` already exists and Terraform is allowed to create resources for that project.
-* (TODO create database with terraform) -> Create a relational database (or databases) for an environment e.g. by using cloud provider web UI. See `db_*` settings in `taito-config.sh` for database definitions. Create two user accounts for the database: `SERVER_TEMPLATE_ENV` for deploying the database migrations (broad user rights) and `SERVER_TEMPLATE_ENV_app` for the application (concise user rights). Configure also database extensions if required by the application (see `database/db.sql`).
+* Run terraform scripts that are located at `scripts/terraform/`. Use `scripts/terraform/common/backend.tf` as backend, if you want to store terraform state on git. Note that the terraform scripts assume that a cloud provider project defined by `taito_resource_namespace` and `taito_resource_namespace_id` already exists and Terraform is allowed to create resources for that project.
+* (TODO: create database with terraform instead): Create a relational database (or databases) for an environment e.g. by using cloud provider web UI. See `db_*` settings in `taito-config.sh` for database definitions. Create two user accounts for the database: `FULL_STACK_TEMPLATE_ENV` for deploying the database migrations (broad user rights) and `FULL_STACK_TEMPLATE_ENV_app` for the application (concise user rights). Configure also database extensions if required by the application (see `database/db.sql`).
 * Set Kubernetes secret values with `kubectl`. The secrets are defined by `taito_secrets` in `taito-config.sh`, and they are referenced in `scripts/helm*.yaml` files.
 
 ### Setting up CI/CD
 
-You can easily implement CI/CD steps without Taito CLI. See [continuous integration and delivery](https://github.com/TaitoUnited/taito-cli/blob/master/docs/manual/06-continuous-integration-and-delivery.md) chapter of Taito CLI manual for instructions.
+You can easily implement CI/CD steps without Taito CLI. See [continuous integration and delivery](https://taitounited.github.io/taito-cli/docs/06-continuous-integration-and-delivery) chapter of Taito CLI manual for instructions.

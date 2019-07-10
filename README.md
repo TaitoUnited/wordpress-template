@@ -34,7 +34,7 @@ LINKS WILL BE GENERATED HERE
 
 [//]: # (GENERATED LINKS END)
 
-> You can update this section by configuring links in `taito-config.sh` and running `taito project docs`.
+> You can update this section by configuring links in `taito-env-all-config.sh` and running `taito project docs`.
 
 ## Contacts
 

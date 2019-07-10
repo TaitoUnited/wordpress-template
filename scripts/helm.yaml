@@ -2,7 +2,8 @@ global:
   domain: ${taito_domain}
   url: https://${taito_domain}
   publicPort: 443
-  logFormat: stackdriver
+  logProvider: ${taito_logging_provider}
+  logFormat: ${taito_logging_format}
   logLevel: info    # trace, debug, info, warn, error, fatal
   registry: ${taito_container_registry}
   imagePullPolicy: ''
@@ -14,7 +15,7 @@ full-stack:
     existingClaim:
     storageClass:
     # NOTE: Google does not support ReadWriteMany
-    # --> all containers will be placed on the same Kubernetes node
+    # ReadWriteOnce -> all containers will be placed on the same Kubernetes node
     accessMode: ReadWriteOnce
     size: 8Gi
 
@@ -27,19 +28,27 @@ full-stack:
         altName: ${taito_altdomain}
 
   serviceDefaults:
+    # Basics
+    image: # For 3rd party container image
+    command:
+    port: 8080
+    tier:
+    livenessPath: /healthz
+    livenessInitialDelay: 3
     # Path defaults
     basicAuthEnabled: ${taito_basic_auth_enabled}
     basicAuthHtpasswdSecret: ${taito_project}-${taito_env}-basic-auth
-    clientMaxBodySize: 5m
-    limitRate:
-    limitRateAfter:
-    rewriteTarget:
-    rewriteTargetDisabled:
+    clientMaxBodySize: 1m
+    # Env
+    env:
+      # Environment variables
+      COMMON_ENV: ${taito_env}
 
   services:
     wordpress:
       paths:
         - path:
+          clientMaxBodySize: 5m
       port: 80
       tier: frontend
       livenessPath: /wp-login.php
@@ -52,7 +61,11 @@ full-stack:
       cpuLimit: 200m
       memoryRequest: 256Mi
       memoryLimit: 512Mi
+      # Scaling
       replicas: ${kubernetes_replicas}
+      autoscale: false
+      minReplicas: ${kubernetes_replicas}
+      maxReplicas: 5
       persistentVolumeMounts:
         - mountPath: /bitnami/apache
           volumePath: apache
@@ -70,6 +83,6 @@ full-stack:
         MARIADB_HOST: '${db_database_real_host}'
         MARIADB_PORT_NUMBER: '${db_database_real_port}'
         WORDPRESS_DATABASE_NAME: ${db_database_name}
-        WORDPRESS_DATABASE_USER: ${db_database_name}
+        WORDPRESS_DATABASE_USER: ${db_database_mgr_username}
         # Wordpress initial username
         WORDPRESS_USERNAME: changeme
