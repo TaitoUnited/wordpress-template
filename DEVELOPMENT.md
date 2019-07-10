@@ -1,6 +1,6 @@
 # Development
 
-This file has been copied from [WORDPRESS-TEMPLATE](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/). Keep modifications minimal and improve the [original](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/blob/dev/DEVELOPMENT.md) instead. Project specific conventions are located in [README.md](README.md#conventions). See the [Taito CLI tutorial](https://github.com/TaitoUnited/taito-cli/blob/master/docs/tutorial/README.md) for more thorough development instructions. Note that Taito CLI is optional (see [TAITOLESS.md](TAITOLESS.md)).
+This file has been copied from [WORDPRESS-TEMPLATE](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/). Keep modifications minimal and improve the [original](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/blob/dev/DEVELOPMENT.md) instead. Project specific conventions are located in [README.md](README.md#conventions). See the [Taito CLI tutorial](https://taitounited.github.io/taito-cli/tutorial) for more thorough development instructions.
 
 Table of contents:
 
@@ -16,7 +16,7 @@ Table of contents:
 
 * [node.js](https://nodejs.org/)
 * [docker-compose](https://docs.docker.com/compose/install/)
-* [Taito CLI](https://github.com/TaitoUnited/taito-cli#readme) (or see [TAITOLESS.md](TAITOLESS.md))
+* [Taito CLI](https://taitounited.github.io/taito-cli/) (or see [TAITOLESS.md](TAITOLESS.md))
 
 ## Workflow
 
@@ -45,7 +45,7 @@ Show user accounts and other information that you can use to log in:
 
 Open wordpress site in browser:
 
-    taito open wp
+    taito open wordpress
 
 Open admin GUI in browser:
 
@@ -114,7 +114,7 @@ The commands mentioned above work also for server environments (`feat`, `dev`, `
     taito push                              # Push changes to current branch (dev)
     taito env merge:dev stag                # Merge changes from dev to stag
     taito open builds:stag                  # Show build status and build logs
-    taito open wp:stag                      # Open wordpress site in browser
+    taito open wordpress:stag               # Open wordpress site in browser
     taito open admin:stag                   # Open admin GUI in browser
     taito info:stag                         # Show info
     taito status:stag                       # Show status of dev environment

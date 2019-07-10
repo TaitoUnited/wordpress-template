@@ -1,16 +1,16 @@
 # Configuration
 
-This file has been copied from [WORDPRESS-TEMPLATE](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/). Keep modifications minimal and improve the [original](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/blob/dev/CONFIGURATION.md) instead. Note that Taito CLI is optional (see [TAITOLESS.md](TAITOLESS.md)).
+This file has been copied from [WORDPRESS-TEMPLATE](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/). Keep modifications minimal and improve the [original](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/blob/dev/CONFIGURATION.md) instead.
 
 ## Prerequisites
 
 * [npm](https://github.com/npm/cli) that usually ships with [Node.js](https://nodejs.org/)
 * [Docker Compose](https://docs.docker.com/compose/install/)
-* [Taito CLI](https://github.com/TaitoUnited/taito-cli#readme) (or see [TAITOLESS.md](TAITOLESS.md))
+* [Taito CLI](https://taitounited.github.io/taito-cli/) (or see [TAITOLESS.md](TAITOLESS.md))
 
 ## Local development environment
 
-Start your local development environment by running `taito kaboom`. Once the command starts to install libraries, you can leave it on the background while you continue with configuration. Once the application has started, open the web gui with `taito open wp` and `taito open admin`. If the application fails to start, run `taito trouble` to see troubleshooting. More information on local development you can find from [DEVELOPMENT.md](DEVELOPMENT.md).
+Start your local development environment by running `taito kaboom`. Once the command starts to install libraries, you can leave it on the background while you continue with configuration. Once the application has started, open the web gui with `taito open wordpress` and `taito open admin`. If the application fails to start, run `taito trouble` to see troubleshooting. More information on local development you can find from [DEVELOPMENT.md](DEVELOPMENT.md).
 
 > TIP: If you use a storage bucket or other external resources in your WordPress setup, but you do not need a separate `dev` remote environment, you can create `dev` environment resources by running `taito env apply:dev terraform` and use those resources in local development.
 
@@ -43,6 +43,12 @@ Write down the basic auth credentials to `taito-testing-config.sh`:
 
     EDIT taito-testing-config.sh  # Edit this: ci_test_base_url=https://username:secretpassword@...
 
+Push changes to dev branch with a [Conventional Commits](http://conventionalcommits.org/) commit message (e.g. `chore: configuration`):
+
+    taito stage                   # Or just: git add .
+    taito commit                  # Or just: git commit -m 'chore: configuration'
+    taito push                    # Or just: git push
+
 Merge changes to stag branch:
 
     taito env merge:dev stag
@@ -51,7 +57,7 @@ See it build and deploy:
 
     taito open builds:stag
     taito status:stag
-    taito open wp:stag
+    taito open wordpress:stag
 
 Generate a new random admin password on admin GUI. The initial admin password in `password-change-it-7983p4nWgRE2p4No2d9`:
 
