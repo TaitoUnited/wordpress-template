@@ -61,6 +61,8 @@ Open site on browser and install wordpress according to instructions:
     taito open wordpress:stag     # Open site
     taito open admin:stag         # Open admin GUI
 
+You should use really strong passwords for your admin accounts. You can generate a strong password for your user in the WordPress Admin GUI.
+
 > TIP: You can copy local database to staging with `taito db dump:local dump.sql`, replace urls in dump.sql, `taito db import:stag dump.sql`, `rm dump.sql`.
 
 > If you have some trouble creating an environment, you can destroy it by running `taito env destroy:stag` and then try again with `taito env apply:stag`.
