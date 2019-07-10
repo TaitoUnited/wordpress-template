@@ -1,7 +1,7 @@
 #!/bin/bash
 # shellcheck disable=SC2034
 set -a
-: "${taito_target_env:?}"
+taito_target_env=${taito_target_env:-local}
 
 ##########################################################################
 # Root taito-config.sh file
@@ -135,7 +135,22 @@ kubernetes_cluster="${template_default_kubernetes_cluster_prefix:-}${kubernetes_
 kubernetes_replicas=1
 kubernetes_db_proxy_enabled=true
 
-# --- Override settings for different environments ---
+# ------ OS specific docker settings ------
+
+if [[ ! ${taito_host_uname} ]]; then
+  taito_host_uname="$(uname)"
+fi
+
+# Default dockerfile
+dockerfile=${dockerfile:-Dockerfile}
+
+# Mitigate slow docker volume mounts on Windows with rsync
+if [[ "${taito_host_uname}" == *"_NT"* ]]; then
+  DC_PATH='/rsync'
+  DC_COMMAND='sh -c \"cp -rf /rsync/service/. /service; (while true; do rsync -rtq /rsync/service/. /service; sleep 2; done) &\" '
+fi
+
+# ------ Environment specific settings ------
 
 case $taito_env in
   prod)
