@@ -55,11 +55,13 @@ See it build and deploy:
 
     taito open builds:stag
     taito status:stag
-    taito open wordpress:stag
 
-Change admin username and password on admin GUI. The initial username is `changeme` and you can see the initial password with `taito info:stag`:
+Open site on browser and install wordpress according to instructions:
 
-    taito open admin:stag
+    taito open wordpress:stag     # Open site
+    taito open admin:stag         # Open admin GUI
+
+> TIP: You can copy local database to staging with `taito db dump:local dump.sql`, replace urls in dump.sql, `taito db import:stag dump.sql`, `rm dump.sql`.
 
 > If you have some trouble creating an environment, you can destroy it by running `taito env destroy:stag` and then try again with `taito env apply:stag`.
 

@@ -85,4 +85,4 @@ full-stack:
         WORDPRESS_DATABASE_NAME: ${db_database_name}
         WORDPRESS_DATABASE_USER: ${db_database_mgr_username}
         # Wordpress initial username
-        WORDPRESS_USERNAME: changeme
+        WORDPRESS_USERNAME: deleteme

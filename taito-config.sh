@@ -89,12 +89,12 @@ taito_uptime_channels="${template_default_uptime_channels:-}"
 
 # Database definitions for database plugins
 # NOTE: database users are defined later in this file
-db_database_instance=${template_default_mysql:?}
+db_database_instance=${template_default_mysql:-}
 db_database_type=mysql
 db_database_name=${taito_project_short}${taito_env}
 db_database_host=127.0.0.1
 db_database_port=5001
-db_database_real_host="${template_default_mysql_host:?}"
+db_database_real_host="${template_default_mysql_host:-}"
 db_database_real_port=3306
 db_database_create=false
 
@@ -169,7 +169,7 @@ case $taito_env in
     taito_app_url=https://$taito_domain
     taito_host="${template_default_host_prod:-}"
     kubernetes_cluster="${template_default_kubernetes_cluster_prefix_prod:-}${kubernetes_name}"
-    db_database_real_host="${template_default_postgres_host_prod:-}"
+    db_database_real_host="${template_default_mysql_host_prod:-}"
 
     # Storage
     taito_storage_classes="${template_default_storage_class_prod:-}"
@@ -211,7 +211,7 @@ case $taito_env in
     taito_app_url=https://$taito_domain
     taito_host="${template_default_host_prod:-}"
     kubernetes_cluster="${template_default_kubernetes_cluster_prefix_prod:-}${kubernetes_name}"
-    db_database_real_host="${template_default_postgres_host_prod:-}"
+    db_database_real_host="${template_default_mysql_host_prod:-}"
 
     # Monitoring
     taito_uptime_provider= # only for prod by default
