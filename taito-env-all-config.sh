@@ -6,7 +6,7 @@
 ##########################################################################
 
 # Environments: In the correct order (e.g. dev test stag canary prod)
-taito_environments="${template_default_environments:?}"
+taito_environments="dev stag prod"
 
 # Basic auth: Uncomment the line below to disable basic auth from ALL
 # environments. Use taito-env-prod-config.sh to disable basic auth from prod
