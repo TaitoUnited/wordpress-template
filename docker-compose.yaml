@@ -35,15 +35,13 @@ services:
   #   image: ${taito_image:-taitounited/taito-cli:latest}
   #   restart: unless-stopped
   #   entrypoint: /bin/sh -c "cd /project && taito db-proxy:stag 3306"
-  #   user: "${taito_host_user}"
+  #   user: taito
   #   networks:
   #     - default
   #   ports:
   #     - "7587:3306"
   #   volumes:
   #     - ".:/project:delegated"
-  #     - "${HOME}/.taito:${taito_container_home}/.taito:delegated"
-  #     - "${HOME}/.ssh:${taito_container_home}/.ssh:delegated"
   #   environment:
   #     taito_docker: 'true'
 
