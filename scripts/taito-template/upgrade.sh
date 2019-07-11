@@ -7,26 +7,20 @@ export ingress_port
 ingress_port=$(grep ":80\"" "${template_project_path}/docker-compose.yaml" | head -1 | sed 's/.*"\(.*\):.*/\1/')
 export db_port
 db_port=$(grep ":5432\"\|:3306\"" "${template_project_path}/docker-compose.yaml" | head -1 | sed 's/.*"\(.*\):.*/\1/')
-export www_port
-www_port=$(grep ":8080\"" "${template_project_path}/docker-compose.yaml" | head -1 | sed 's/.*"\(.*\):.*/\1/')
 
 ${taito_setv:-}
 ./scripts/taito-template/init.sh
 
 shopt -s dotglob
 
-echo "Remove obsolete alternatives"
-rm -rf "alternatives"
-
 echo "Remove obsolete root files not to be copied"
 rm -f \
-  docker-*
-  # TODO: also ->
-  # README.md \
-  # taito-env-all-config.sh \
-  # taito-env-prod-config.sh \
-  # taito-testing-config.sh \
-  # trouble.txt
+  docker-* \
+  README.md \
+  taito-env-all-config.sh \
+  taito-env-prod-config.sh \
+  taito-testing-config.sh \
+  trouble.txt
 
 echo "Mark all configurations as 'done'"
 sed -i "s/\[ \] All done/[x] All done/g" CONFIGURATION.md
@@ -34,21 +28,9 @@ sed -i "s/\[ \] All done/[x] All done/g" CONFIGURATION.md
 echo "Copy all root files from template"
 (yes | cp * "${template_project_path}" 2> /dev/null || :)
 
-# TODO: remove
-rm -rf ${template_project_path}/scripts/helm/*
-
 echo "Copy helm scripts from template"
 mkdir -p "${template_project_path}/scripts/helm"
 yes | cp -f scripts/helm/* "${template_project_path}/scripts/helm"
-
-# TODO: remove
-rm -rf "${template_project_path}/scripts/terraform/gcloud"
-# TODO: remove
-rm -rf "${template_project_path}/scripts/terraform/.terraform"
-# TODO: remove
-sed -i "s/oldRewritePolicy: false/oldRewritePolicy: true/g" scripts/helm.yaml
-# TODO: remove
-(yes | cp -f scripts/*.yaml "${template_project_path}/scripts")
 
 echo "Copy terraform scripts from template"
 cp -rf scripts/terraform "${template_project_path}/scripts"
@@ -58,7 +40,7 @@ yes | cp -r scripts/update/* \
   "${template_project_path}/scripts/update/" 2> /dev/null
 
 echo "Copy dockerfiles from template"
-yes | cp -r wordpress/Docker* \
+yes | cp wordpress/* \
   "${template_project_path}/wordpress/" 2> /dev/null
 
 echo "Generate README.md links"

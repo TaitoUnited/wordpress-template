@@ -58,8 +58,8 @@ find . -type f -exec sed -i \
   -e "s/WORDPRESS-TEMPLATE/wordpress-template/g" 2> /dev/null {} \;
 
 echo "Generating unique random ports (avoid conflicts with other projects)..."
-ingress_port=$(shuf -i 8000-9999 -n 1)
-db_port=$(shuf -i 6000-7999 -n 1)
+if [[ ! $ingress_port ]]; then ingress_port=$(shuf -i 8000-9999 -n 1); fi
+if [[ ! $db_port ]]; then db_port=$(shuf -i 6000-7999 -n 1); fi
 sed -i "s/7587/${db_port}/g" taito-config.sh docker-compose.yaml \
   TAITOLESS.md &> /dev/null || :
 sed -i "s/4635/${ingress_port}/g" docker-compose.yaml taito-config.sh \
