@@ -11,11 +11,11 @@ services:
     ports:
       - "4635:80"
     volumes:
-      - "./wordpress/data:/bitnami:delegated"
+      - "./wordpress/data:${DC_PATH}/bitnami:delegated"
     environment:
       DC_COMMAND: ${DC_COMMAND}
       HOST_UNAME: ${taito_host_uname}
-      COMMON_PUBLIC_PORT: 9999
+      COMMON_PUBLIC_PORT: 4635
       WORDPRESS_USERNAME: deleteme    # SHOW ON INFO
       WORDPRESS_PASSWORD: password-change-it-7983p4nWgRE2p4No2d9 # SHOW ON INFO
       MARIADB_HOST: wordpress-template-database
@@ -35,14 +35,15 @@ services:
   #   image: ${taito_image:-taitounited/taito-cli:latest}
   #   restart: unless-stopped
   #   entrypoint: /bin/sh -c "cd /project && taito db-proxy:stag 3306"
+  #   user: "${taito_host_user}"
   #   networks:
   #     - default
   #   ports:
   #     - "7587:3306"
   #   volumes:
   #     - ".:/project:delegated"
-  #     - "${HOME}/.taito:/root/.taito:delegated"
-  #     - "${HOME}/.ssh:/root/.ssh:delegated"
+  #     - "${HOME}/.taito:/home/taito/.taito:delegated"
+  #     - "${HOME}/.ssh:/home/taito/.ssh:delegated"
   #   environment:
   #     taito_docker: 'true'
 

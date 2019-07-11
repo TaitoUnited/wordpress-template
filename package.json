@@ -3,7 +3,7 @@
   "scripts": {
     "install-ci": "echo '# No additional dependencies need to be installed in ci mode'",
     "install-dev": "echo '# No additional dependencies need to be installed'",
-    "taito-init": "npm run import-db-data",
+    "taito-init": "echo 'taito init without clean not supported. Run with clean: taito init --clean'",
     "taito-init:clean": "npm run import-db-data",
     "import-db-data": "if [ -f ./database/data/${taito_env}.sql ]; then taito ${taito_options} db-import:${taito_env} ./database/data/${taito_env}.sql; fi",
     "taito-db-dump-data:local": "taito ${taito_options} db-dump:local ./database/data/${taito_env}.sql",

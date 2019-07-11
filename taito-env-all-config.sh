@@ -44,7 +44,7 @@ taito_uptime_timeouts="5s"
 link_urls="
   * wordpress[:ENV]#app=$taito_app_url Wordpress (:ENV)
   * admin[:ENV]#admin=$taito_admin_url Admin user interface (:ENV)
-  * git=https://${template_default_vc_url:?}/$taito_vc_repository GitHub repository
+  * git=https://$taito_vc_repository_url Git repository
 "
 
 # ------ Secrets ------
