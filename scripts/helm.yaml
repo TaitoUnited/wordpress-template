@@ -67,12 +67,6 @@ full-stack:
       minReplicas: ${kubernetes_replicas}
       maxReplicas: 5
       persistentVolumeMounts:
-        - mountPath: /bitnami/apache
-          volumePath: apache
-          readOnly: false
-        - mountPath: /bitnami/php
-          volumePath: php
-          readOnly: false
         - mountPath: /bitnami/wordpress
           volumePath: wordpress
           readOnly: false

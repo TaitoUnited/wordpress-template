@@ -51,8 +51,10 @@ link_urls="
 # Configuration instructions:
 # https://taitounited.github.io/taito-cli/tutorial/06-env-variables-and-secrets/
 
+taito_remote_secrets="
+  $taito_project-$taito_env-basic-auth.auth:htpasswd-plain
+"
 taito_secrets="
   $db_database_mgr_secret:random
-  $taito_project-$taito_env-basic-auth.auth:htpasswd-plain
   $taito_project-$taito_env-admin.initialpassword:random
 "
