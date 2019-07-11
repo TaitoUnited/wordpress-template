@@ -41,7 +41,7 @@ yes | cp -r scripts/update/* \
 
 echo "Copy dockerfiles from template"
 yes | cp wordpress/* \
-  "${template_project_path}/wordpress/" 2> /dev/null
+  "${template_project_path}/wordpress/" 2> /dev/null || :
 
 echo "Generate README.md links"
 (cd "${template_project_path}" && (taito project docs || :))
