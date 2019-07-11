@@ -42,8 +42,8 @@ services:
   #     - "7587:3306"
   #   volumes:
   #     - ".:/project:delegated"
-  #     - "${HOME}/.taito:/home/taito/.taito:delegated"
-  #     - "${HOME}/.ssh:/home/taito/.ssh:delegated"
+  #     - "${HOME}/.taito:${taito_container_home}/.taito:delegated"
+  #     - "${HOME}/.ssh:${taito_container_home}/.ssh:delegated"
   #   environment:
   #     taito_docker: 'true'
 
