@@ -6,8 +6,11 @@
 
 # TODO: all secrets (e.g. db password) should be read from disk mount instead of env vars
 # TODO: replace also salts and keys, so that they can be kept in kubernetes secrets
+# TODO: wp-config.php: define( 'AUTOMATIC_UPDATER_DISABLED', true ); -> or leave on?
+# TODO: wp-config.php: define( 'WP_SITEURL', 'http://' . $_SERVER['HTTP_HOST'] . '/' );
+# TODO: wp-config.php: define( 'WP_HOME', 'http://' . $_SERVER['HTTP_HOST'] . '/' );
 # TODO: ---> replace all of this with a wp-config.php mounted from secret
-#
+
 echo "setup.sh: Adding support for database environment variables"
 
 echo "setup.sh: Modifying getDatabaseProperties() function of helpers.js"
