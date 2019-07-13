@@ -169,7 +169,6 @@ case $taito_env in
     taito_resource_namespace=$taito_organization_abbr-$taito_company-prod
 
     # Domain and resources
-    taito_app_url=https://$taito_domain
     taito_host="${template_default_host_prod:-}"
     kubernetes_cluster="${template_default_kubernetes_cluster_prefix_prod:-}${kubernetes_name}"
     db_database_real_host="${template_default_mysql_host_prod:-}"
@@ -210,7 +209,6 @@ case $taito_env in
     # Domain and resources
     taito_domain=$taito_project-$taito_target_env.${template_default_domain_prod:?}
     taito_default_domain=$taito_project-$taito_target_env.${template_default_domain_prod:?}
-    taito_app_url=https://$taito_domain
     taito_host="${template_default_host_prod:-}"
     kubernetes_cluster="${template_default_kubernetes_cluster_prefix_prod:-}${kubernetes_name}"
     db_database_real_host="${template_default_mysql_host_prod:-}"
@@ -269,6 +267,9 @@ taito_resource_namespace_id=$taito_resource_namespace
 taito_uptime_namespace_id=$taito_zone
 
 # URLs
+if [[ $taito_env != "local" ]]; then
+ taito_app_url=https://$taito_domain
+fi
 taito_admin_url=$taito_app_url/wp-admin/
 
 # ------ Database users ------
