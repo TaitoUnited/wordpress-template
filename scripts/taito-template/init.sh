@@ -3,7 +3,6 @@
 : "${taito_vc_repository:?}"
 : "${taito_vc_repository_alt:?}"
 : "${taito_project:?}"
-: "${mode:?}"
 
 ${taito_setv:-}
 
