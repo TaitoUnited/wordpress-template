@@ -5,13 +5,11 @@ taito_target_env=${taito_target_env:-local}
 
 ##########################################################################
 # Root taito-config.sh file
-##########################################################################
-
-# ------------------------------------------------------------------------
+#
 # NOTE: This file is updated during 'taito project upgrade'. There should
-# rarely be need to modify it manually. Modify taito-env-*-config.sh,
-# or taito-testing-config.sh instead.
-# ------------------------------------------------------------------------
+# rarely be need to modify it manually. Modify taito-project-config.sh,
+# taito-env-prod-config.sh, and taito-testing-config.sh instead.
+##########################################################################
 
 # Taito CLI
 taito_version=1
@@ -293,7 +291,7 @@ db_database_master_password_hint="${template_default_mysql_master_password_hint:
 # ------ All environments config ------
 
 # shellcheck disable=SC1091
-. taito-env-all-config.sh
+. taito-project-config.sh
 
 # ------ Taito config override (optional) ------
 

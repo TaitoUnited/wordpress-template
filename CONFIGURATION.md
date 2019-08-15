@@ -15,7 +15,7 @@ Start your local development environment by running `taito kaboom`. Once the com
 ## Basic settings
 
 1. Run `taito open conventions` in the project directory to see organization specific settings that you should configure for your git repository. At least you should set `dev` as the default branch to avoid people using master branch for development by accident.
-2. Modify `taito-env-all-config.sh` if you need to change some settings. The default settings are ok for most projects.
+2. Modify `taito-project-config.sh` if you need to change some settings. The default settings are ok for most projects.
 3. Run `taito project apply`
 4. Commit and push changes
 
@@ -71,7 +71,7 @@ You should use really strong passwords for your admin accounts. You can generate
 
 ## Configuring file persistence (for media, etc)
 
-Persistent volume claim (PVC) is disabled by default. This means that all data must be saved either to database or storage bucket. Try to use such wordpress plugins that do not save any permanent data to local disk. If this is not possible, you can enable PVC in `taito-env-all-config.sh` with the `wordpress_persistence_enabled` setting and set persistent file paths in `scripts/helm.yaml` with the `persistentVolumeMounts` setting.
+Persistent volume claim (PVC) is disabled by default. This means that all data must be saved either to database or storage bucket. Try to use such wordpress plugins that do not save any permanent data to local disk. If this is not possible, you can enable PVC in `taito-project-config.sh` with the `wordpress_persistence_enabled` setting and set persistent file paths in `scripts/helm.yaml` with the `persistentVolumeMounts` setting.
 
 If you don't need to manage media files directly on the production website, you can manage media files with your locally running wordpress and save the media files in git. This way the media files will be under version control, and will be bundled inside the Docker container.
 
@@ -99,6 +99,6 @@ If you need to, you can configure Kubernetes settings by modifying `heml*.yaml` 
 
 You can add a new secret like this:
 
-1. Add a secret definition to the `taito_secrets` setting in `taito-env-all-config.sh`.
+1. Add a secret definition to the `taito_secrets` setting in `taito-project-config.sh`.
 2. Map the secret definition to a secret in `docker-compose.yaml` for Docker Compose and in `scripts/helm.yaml` for Kubernetes.
 3. Run `taito env rotate:ENV SECRET` to generate a secret value for an environment. Run the command for each environment separately. Note that the rotate command restarts all pods in the same namespace.

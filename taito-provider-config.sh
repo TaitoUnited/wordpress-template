@@ -3,13 +3,11 @@
 
 ##########################################################################
 # Provider specific settings
-##########################################################################
-
-# ------------------------------------------------------------------------
+#
 # NOTE: This file is updated during 'taito project upgrade'. There should
-# rarely be need to modify it manually. Modify taito-env-*-config.sh,
-# or taito-testing-config.sh instead.
-# ------------------------------------------------------------------------
+# rarely be need to modify it manually. Modify taito-project-config.sh,
+# taito-env-prod-config.sh, and taito-testing-config.sh instead.
+##########################################################################
 
 taito_provider_db_proxy_secret=
 taito_provider_service_account_secret=
