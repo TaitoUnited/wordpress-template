@@ -22,7 +22,7 @@ Table of contents:
 * [Conventions](#conventions)
 * [Architecture Overview](#architecture-overview)
 * [Security](#security)
-* [GDPR](#gdpr)
+* [Compliance](#compliance)
 
 ## Links
 
@@ -74,6 +74,8 @@ Project specific conventions.
 
 > Add security details either here or in a separate document. See the [security](https://taitounited.github.io/taito-cli/tutorial/d-security/) appendix of the [Taito CLI tutorial](https://taitounited.github.io/taito-cli/tutorial).
 
-## GDPR
+## Compliance
 
-> Add GDPR details either here or in a separate document. See the [data protection and privacy](https://taitounited.github.io/taito-cli/tutorial/e-data-protection-and-privacy) appendix of the [Taito CLI tutorial](https://taitounited.github.io/taito-cli/tutorial).
+> Add compliance requirements and implementation details either here or in a separate document. For GDPR, see the [data protection and privacy](https://taitounited.github.io/taito-cli/tutorial/e-data-protection-and-privacy) appendix of the [Taito CLI tutorial](https://taitounited.github.io/taito-cli/tutorial).
+
+### GDPR

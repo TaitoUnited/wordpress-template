@@ -229,4 +229,6 @@ TODO how to revert: container image, database, volume snapshot, (storage bucket)
 
 ### Project template
 
-Run `taito template upgrade`. The command copies the latest versions of reusable Helm charts, terraform templates and CI/CD scripts to your project folder, and also this README.md file. You should not make project specific modifications to them as they are designed to be reusable and easily configurable for various needs. Improve the originals instead, and then upgrade.
+Run `taito project upgrade`. The command copies the latest versions of reusable Helm charts, terraform templates and CI/CD scripts to your project folder, and also this README.md file. You should not make project specific modifications to them as they are designed to be reusable and easily configurable for various needs. Improve the originals instead, and then upgrade.
+
+> TIP: You can use the `taito -o ORG project upgrade` command also for moving the project to a different platform (e.g. from AWS to GCP).
