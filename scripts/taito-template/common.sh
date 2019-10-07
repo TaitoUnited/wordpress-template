@@ -1,5 +1,6 @@
 #!/bin/bash -e
-# Common logic for full-stack-template, website-template, and wordpress-template
+# Common logic for full-stack-template, website-template, wordpress-template,
+# and minimal-template.
 
 : "${taito_organization:?}"
 : "${taito_company:?}"
@@ -153,6 +154,10 @@ sed -i "s|\${template_default_kubernetes_cluster_prefix_prod:-}|${template_defau
 sed -i "s/\${template_default_postgres:-}/${template_default_postgres:-}/g" taito-config.sh
 sed -i "s/\${template_default_postgres_host:-}/${template_default_postgres_host:-}/g" taito-config.sh
 sed -i "s/\${template_default_postgres_host_prod:-}/${template_default_postgres_host_prod:-}/g" taito-config.sh
+sed -i "s/\${template_default_postgres_ssl_enabled:-true}/${template_default_postgres_ssl_enabled:-true}/g" taito-config.sh
+sed -i "s/\${template_default_postgres_ssl_enabled_prod:-true}/${template_default_postgres_ssl_enabled_prod:-true}/g" taito-config.sh
+sed -i "s/\${template_default_postgres_proxy_ssl_enabled:-true}/${template_default_postgres_proxy_ssl_enabled:-true}/g" taito-config.sh
+sed -i "s/\${template_default_postgres_proxy_ssl_enabled_prod:-true}/${template_default_postgres_proxy_ssl_enabled_prod:-true}/g" taito-config.sh
 sed -i "s/\${template_default_postgres_master_username:-}/${template_default_postgres_master_username:-}/g" taito-config.sh
 sed -i "s/\${template_default_postgres_master_password_hint:-}/${template_default_postgres_master_password_hint:-}/g" taito-config.sh
 
@@ -160,6 +165,10 @@ sed -i "s/\${template_default_postgres_master_password_hint:-}/${template_defaul
 sed -i "s/\${template_default_mysql:-}/${template_default_mysql:-}/g" taito-config.sh
 sed -i "s/\${template_default_mysql_host:-}/${template_default_mysql_host:-}/g" taito-config.sh
 sed -i "s/\${template_default_mysql_host_prod:-}/${template_default_mysql_host_prod:-}/g" taito-config.sh
+sed -i "s/\${template_default_mysql_ssl_enabled:-true}/${template_default_mysql_ssl_enabled:-true}/g" taito-config.sh
+sed -i "s/\${template_default_mysql_ssl_enabled_prod:-true}/${template_default_mysql_ssl_enabled_prod:-true}/g" taito-config.sh
+sed -i "s/\${template_default_mysql_proxy_ssl_enabled:-true}/${template_default_mysql_proxy_ssl_enabled:-true}/g" taito-config.sh
+sed -i "s/\${template_default_mysql_proxy_ssl_enabled_prod:-true}/${template_default_mysql_proxy_ssl_enabled_prod:-true}/g" taito-config.sh
 sed -i "s/\${template_default_mysql_master_username:-}/${template_default_mysql_master_username:-}/g" taito-config.sh
 sed -i "s/\${template_default_mysql_master_password_hint:-}/${template_default_mysql_master_password_hint:-}/g" taito-config.sh
 
@@ -261,17 +270,20 @@ fi
 # Remove obsolete provider scripts
 ####################################
 
-if [[ $template_default_provider != "linux" ]] && \
+if [[ -d scripts/linux-provider ]] && \
+   [[ $template_default_provider != "linux" ]] && \
    [[ $template_default_provider_prod != "linux" ]]; then
   rm -rf scripts/linux-provider
 fi
 
-if [[ $template_default_provider != "custom" ]] && \
+if [[ -d scripts/custom-provider ]] && \
+   [[ $template_default_provider != "custom" ]] && \
    [[ $template_default_provider_prod != "custom" ]]; then
   rm -rf scripts/custom-provider
 fi
 
-if [[ $template_default_provider != "linux" ]] && \
+if [[ -f docker-compose-remote.yaml ]] && \
+   [[ $template_default_provider != "linux" ]] && \
    [[ $template_default_provider_prod != "linux" ]] && \
    [[ $template_default_provider != "custom" ]] && \
    [[ $template_default_provider_prod != "custom" ]]; then

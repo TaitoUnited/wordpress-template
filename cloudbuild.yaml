@@ -37,6 +37,10 @@ substitutions:
   _TEMPLATE_DEFAULT_MYSQL:
   _TEMPLATE_DEFAULT_MYSQL_HOST:
   _TEMPLATE_DEFAULT_MYSQL_HOST_PROD:
+  _TEMPLATE_DEFAULT_MYSQL_SSL_ENABLED:
+  _TEMPLATE_DEFAULT_MYSQL_SSL_ENABLED_PROD:
+  _TEMPLATE_DEFAULT_MYSQL_PROXY_SSL_ENABLED:
+  _TEMPLATE_DEFAULT_MYSQL_PROXY_SSL_ENABLED_PROD:
   _TEMPLATE_DEFAULT_MYSQL_MASTER_USERNAME:
   _TEMPLATE_DEFAULT_MYSQL_MASTER_PASSWORD_HINT:
 
@@ -86,6 +90,10 @@ steps:
     export template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
     export template_default_mysql_host=${_TEMPLATE_DEFAULT_MYSQL_HOST}
     export template_default_mysql_host_prod=${_TEMPLATE_DEFAULT_MYSQL_HOST_PROD}
+    export template_default_mysql_ssl_enabled=${_TEMPLATE_DEFAULT_MYSQL_SSL_ENABLED}
+    export template_default_mysql_ssl_enabled_prod=${_TEMPLATE_DEFAULT_MYSQL_SSL_ENABLED_PROD}
+    export template_default_mysql_proxy_ssl_enabled=${_TEMPLATE_DEFAULT_MYSQL_PROXY_SSL_ENABLED}
+    export template_default_mysql_proxy_ssl_enabled_prod=${_TEMPLATE_DEFAULT_MYSQL_PROXY_SSL_ENABLED_PROD}
     export template_default_mysql_master_username=${_TEMPLATE_DEFAULT_MYSQL_MASTER_USERNAME}
     export template_default_mysql_master_password_hint=${_TEMPLATE_DEFAULT_MYSQL_MASTER_PASSWORD_HINT}
     export taito_target_env="$${branch_name//master/prod}"
@@ -138,6 +146,10 @@ steps:
     - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
     - template_default_mysql_host=${_TEMPLATE_DEFAULT_MYSQL_HOST}
     - template_default_mysql_host_prod=${_TEMPLATE_DEFAULT_MYSQL_HOST_PROD}
+    - template_default_mysql_ssl_enabled=${_TEMPLATE_DEFAULT_MYSQL_SSL_ENABLED}
+    - template_default_mysql_ssl_enabled_prod=${_TEMPLATE_DEFAULT_MYSQL_SSL_ENABLED_PROD}
+    - template_default_mysql_proxy_ssl_enabled=${_TEMPLATE_DEFAULT_MYSQL_PROXY_SSL_ENABLED}
+    - template_default_mysql_proxy_ssl_enabled_prod=${_TEMPLATE_DEFAULT_MYSQL_PROXY_SSL_ENABLED_PROD}
     - template_default_mysql_master_username=${_TEMPLATE_DEFAULT_MYSQL_MASTER_USERNAME}
     - template_default_mysql_master_password_hint=${_TEMPLATE_DEFAULT_MYSQL_MASTER_PASSWORD_HINT}
 
@@ -181,6 +193,10 @@ steps:
     - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
     - template_default_mysql_host=${_TEMPLATE_DEFAULT_MYSQL_HOST}
     - template_default_mysql_host_prod=${_TEMPLATE_DEFAULT_MYSQL_HOST_PROD}
+    - template_default_mysql_ssl_enabled=${_TEMPLATE_DEFAULT_MYSQL_SSL_ENABLED}
+    - template_default_mysql_ssl_enabled_prod=${_TEMPLATE_DEFAULT_MYSQL_SSL_ENABLED_PROD}
+    - template_default_mysql_proxy_ssl_enabled=${_TEMPLATE_DEFAULT_MYSQL_PROXY_SSL_ENABLED}
+    - template_default_mysql_proxy_ssl_enabled_prod=${_TEMPLATE_DEFAULT_MYSQL_PROXY_SSL_ENABLED_PROD}
     - template_default_mysql_master_username=${_TEMPLATE_DEFAULT_MYSQL_MASTER_USERNAME}
     - template_default_mysql_master_password_hint=${_TEMPLATE_DEFAULT_MYSQL_MASTER_PASSWORD_HINT}
 
@@ -222,6 +238,10 @@ steps:
     - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
     - template_default_mysql_host=${_TEMPLATE_DEFAULT_MYSQL_HOST}
     - template_default_mysql_host_prod=${_TEMPLATE_DEFAULT_MYSQL_HOST_PROD}
+    - template_default_mysql_ssl_enabled=${_TEMPLATE_DEFAULT_MYSQL_SSL_ENABLED}
+    - template_default_mysql_ssl_enabled_prod=${_TEMPLATE_DEFAULT_MYSQL_SSL_ENABLED_PROD}
+    - template_default_mysql_proxy_ssl_enabled=${_TEMPLATE_DEFAULT_MYSQL_PROXY_SSL_ENABLED}
+    - template_default_mysql_proxy_ssl_enabled_prod=${_TEMPLATE_DEFAULT_MYSQL_PROXY_SSL_ENABLED_PROD}
     - template_default_mysql_master_username=${_TEMPLATE_DEFAULT_MYSQL_MASTER_USERNAME}
     - template_default_mysql_master_password_hint=${_TEMPLATE_DEFAULT_MYSQL_MASTER_PASSWORD_HINT}
   entrypoint: 'bash'
@@ -269,6 +289,10 @@ steps:
     - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
     - template_default_mysql_host=${_TEMPLATE_DEFAULT_MYSQL_HOST}
     - template_default_mysql_host_prod=${_TEMPLATE_DEFAULT_MYSQL_HOST_PROD}
+    - template_default_mysql_ssl_enabled=${_TEMPLATE_DEFAULT_MYSQL_SSL_ENABLED}
+    - template_default_mysql_ssl_enabled_prod=${_TEMPLATE_DEFAULT_MYSQL_SSL_ENABLED_PROD}
+    - template_default_mysql_proxy_ssl_enabled=${_TEMPLATE_DEFAULT_MYSQL_PROXY_SSL_ENABLED}
+    - template_default_mysql_proxy_ssl_enabled_prod=${_TEMPLATE_DEFAULT_MYSQL_PROXY_SSL_ENABLED_PROD}
     - template_default_mysql_master_username=${_TEMPLATE_DEFAULT_MYSQL_MASTER_USERNAME}
     - template_default_mysql_master_password_hint=${_TEMPLATE_DEFAULT_MYSQL_MASTER_PASSWORD_HINT}
 
@@ -311,6 +335,10 @@ steps:
     - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
     - template_default_mysql_host=${_TEMPLATE_DEFAULT_MYSQL_HOST}
     - template_default_mysql_host_prod=${_TEMPLATE_DEFAULT_MYSQL_HOST_PROD}
+    - template_default_mysql_ssl_enabled=${_TEMPLATE_DEFAULT_MYSQL_SSL_ENABLED}
+    - template_default_mysql_ssl_enabled_prod=${_TEMPLATE_DEFAULT_MYSQL_SSL_ENABLED_PROD}
+    - template_default_mysql_proxy_ssl_enabled=${_TEMPLATE_DEFAULT_MYSQL_PROXY_SSL_ENABLED}
+    - template_default_mysql_proxy_ssl_enabled_prod=${_TEMPLATE_DEFAULT_MYSQL_PROXY_SSL_ENABLED_PROD}
     - template_default_mysql_master_username=${_TEMPLATE_DEFAULT_MYSQL_MASTER_USERNAME}
     - template_default_mysql_master_password_hint=${_TEMPLATE_DEFAULT_MYSQL_MASTER_PASSWORD_HINT}
 
@@ -352,5 +380,9 @@ steps:
     - template_default_mysql=${_TEMPLATE_DEFAULT_MYSQL}
     - template_default_mysql_host=${_TEMPLATE_DEFAULT_MYSQL_HOST}
     - template_default_mysql_host_prod=${_TEMPLATE_DEFAULT_MYSQL_HOST_PROD}
+    - template_default_mysql_ssl_enabled=${_TEMPLATE_DEFAULT_MYSQL_SSL_ENABLED}
+    - template_default_mysql_ssl_enabled_prod=${_TEMPLATE_DEFAULT_MYSQL_SSL_ENABLED_PROD}
+    - template_default_mysql_proxy_ssl_enabled=${_TEMPLATE_DEFAULT_MYSQL_PROXY_SSL_ENABLED}
+    - template_default_mysql_proxy_ssl_enabled_prod=${_TEMPLATE_DEFAULT_MYSQL_PROXY_SSL_ENABLED_PROD}
     - template_default_mysql_master_username=${_TEMPLATE_DEFAULT_MYSQL_MASTER_USERNAME}
     - template_default_mysql_master_password_hint=${_TEMPLATE_DEFAULT_MYSQL_MASTER_PASSWORD_HINT}

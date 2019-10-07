@@ -76,6 +76,7 @@ full-stack:
       env:
         MARIADB_HOST: '${db_database_real_host}'
         MARIADB_PORT_NUMBER: '${db_database_real_port}'
+        TODO_MARIADB_SSL_ENABLED: ${db_database_ssl_enabled} # TODO: require ssl
         WORDPRESS_DATABASE_NAME: ${db_database_name}
         WORDPRESS_DATABASE_USER: ${db_database_mgr_username}
         # Wordpress initial username
