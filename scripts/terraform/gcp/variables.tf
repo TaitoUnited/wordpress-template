@@ -1,72 +1,73 @@
-variable "taito_project" {
-}
-
-variable "taito_env" {
-}
-
-variable "taito_domain" {
-}
-
-variable "taito_zone" {
-}
-
-variable "taito_namespace" {
-}
-
-variable "taito_resource_namespace" {
-}
-
-variable "taito_resource_namespace_id" {
-}
-
-variable "taito_provider" {
-}
+# Provider
 
 variable "taito_provider_region" {
+  type = string
 }
 
 variable "taito_provider_zone" {
+  type = string
 }
 
-variable "taito_organization" {
+# Project
+
+variable "taito_project" {
+  type = string
 }
 
-variable "taito_organization_abbr" {
+variable "taito_env" {
+  type = string
 }
 
-/* Storage */
+variable "taito_domain" {
+  type = string
+}
+
+# Namespaces
+
+variable "taito_namespace" {
+  type = string
+}
+
+variable "taito_resource_namespace_id" {
+  type = string
+}
+
+# Service account
+
+variable "provider_service_account_enabled" {
+  type = bool
+}
+
+# Storage
+
 variable "taito_storages" {
-  type    = list(string)
-  default = []
+  type = string  # whitespace delimited strings
+  default = ""
 }
 
 variable "taito_storage_locations" {
-  type    = list(string)
-  default = []
+  type = string  # whitespace delimited strings
+  default = ""
 }
 
 variable "taito_storage_classes" {
-  type    = list(string)
-  default = []
+  type = string  # whitespace delimited strings
+  default = ""
 }
 
 variable "taito_storage_days" {
-  type    = list(string)
-  default = []
+  type = string  # whitespace delimited strings
+  default = ""
 }
 
-/* Backup */
+# Backup
+
 variable "taito_backup_locations" {
-  type    = list(string)
-  default = []
+  type = string  # whitespace delimited strings
+  default = ""
 }
 
 variable "taito_backup_days" {
-  type    = list(string)
-  default = []
+  type = string  # whitespace delimited strings
+  default = ""
 }
-
-/* Google Cloud */
-variable "gcp_service_account_enabled" {
-}
-

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # shellcheck disable=SC2034
 # shellcheck disable=SC2154
 
@@ -6,16 +6,17 @@
 # Project specific settings
 ##########################################################################
 
-# Environments: In the correct order (e.g. dev test stag canary prod)
-taito_environments="dev stag prod"
+# Environments: In the correct order (e.g. dev test uat stag canary prod)
+taito_environments="${template_default_environments}"
 
 # Basic auth: Uncomment the line below to disable basic auth from ALL
 # environments. Use taito-env-prod-config.sh to disable basic auth from prod
 # environment only.
 # taito_basic_auth_enabled=false
 
-# Service account: Uncomment the line below to always create GCP service account
-# gcp_service_account_enabled=true
+# Service account: Uncomment the line below to always create Cloud provider
+# service account
+# provider_service_account_enabled=true
 
 # ------ Wordpress ------
 
@@ -27,7 +28,6 @@ wordpress_plugin_update_flags="--all --debug --minor"
 
 # Stack
 taito_targets="wordpress database"
-taito_storages="$taito_random_name-$taito_env"
 taito_networks="default"
 
 # Stack types ('container' by default)
@@ -36,7 +36,7 @@ taito_target_type_database=database
 # Stack uptime monitoring
 taito_uptime_targets="wordpress"
 taito_uptime_paths="/"
-taito_uptime_timeouts="5s"
+taito_uptime_timeouts="5"
 
 # ------ Links ------
 # Add custom links here. You can regenerate README.md links with
@@ -54,6 +54,11 @@ link_urls="
 
 taito_remote_secrets="
   $taito_project-$taito_env-basic-auth.auth:htpasswd-plain
+  $db_database_instance-ssl.ca:copy/devops
+  $db_database_instance-ssl.cert:copy/devops
+  $db_database_instance-ssl.key:copy/devops
+"
+taito_local_secrets="
 "
 taito_secrets="
   $db_database_mgr_secret:random

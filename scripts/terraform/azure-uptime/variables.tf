@@ -1,17 +1,3 @@
-# Provider
-
-variable "taito_provider_region" {
-  type = string
-}
-
-variable "taito_provider_user_profile" {
-  type    = string
-  default = ""
-}
-
-variable "taito_organization" {
-}
-
 # Project
 
 variable "taito_project" {
@@ -23,6 +9,12 @@ variable "taito_env" {
 }
 
 variable "taito_domain" {
+  type = string
+}
+
+# Namespaces
+
+variable "taito_uptime_namespace_id" {
   type = string
 }
 
@@ -38,13 +30,7 @@ variable "taito_uptime_paths" {
   default = ""
 }
 
-/* TODO: use timeout */
 variable "taito_uptime_timeouts" {
   type = string  # whitespace delimited numbers
-  default = ""
-}
-
-variable "taito_uptime_channels" {
-  type = string  # whitespace delimited strings
   default = ""
 }

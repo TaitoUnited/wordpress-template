@@ -89,7 +89,7 @@ Remember to delete all service account keys and other secrets from your local di
 
 ## Custom provider
 
-If you cannot use Docker containers on your remote environments, you can customize the deployment with a custom provider. Instead of deploying the application as docker container images, you can, for example, install everything directly on the remote host. You can enable the custom provider with the `taito_provider` setting in `taito-config.sh` and implement [custom deployment scripts](https://github.com/TaitoUnited/FULL-STACK-TEMPLATE/blob/master/scripts/custom-provider) yourself.
+If you cannot use Docker containers on your remote environments, you can customize the deployment with a custom provider. Instead of deploying the application as docker container images, you can, for example, install everything directly on the remote host. You can enable the custom provider with the `taito_provider` setting in `taito-config.sh` and implement [custom deployment scripts](https://github.com/TaitoUnited/WORDPRESS-TEMPLATE/blob/master/scripts/custom-provider) yourself.
 
 ## Kubernetes
 

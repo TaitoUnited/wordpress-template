@@ -1,13 +1,10 @@
 terraform {
-  backend "s3" {
+  backend "azurerm" {
   }
   required_version = ">= 0.12"
 }
 
-provider "aws" {
-  region                  = var.taito_provider_region
-  profile                 = coalesce(var.taito_provider_user_profile, var.taito_organization)
-  shared_credentials_file = "/home/taito/.aws/credentials"
+provider "azurerm" {
 }
 
 /* Convert whitespace delimited strings into list(string) */
@@ -18,26 +15,18 @@ locals {
     split(" ", trimspace(replace(var.taito_uptime_paths, "/\\s+/", " "))))
   taito_uptime_timeouts = (var.taito_uptime_timeouts == "" ? [] :
     split(" ", trimspace(replace(var.taito_uptime_timeouts, "/\\s+/", " "))))
-  taito_uptime_channels = (var.taito_uptime_channels == "" ? [] :
-    split(" ", trimspace(replace(var.taito_uptime_channels, "/\\s+/", " "))))
 }
 
-module "aws-uptime" {
-  source  = "TaitoUnited/uptime-monitoring/aws"
-  version = "1.0.2"
+module "azure-uptime" {
+  source  = "TaitoUnited/uptime-monitoring/azurerm"
+  version = "1.0.3"
 
-  # Provider
-  region                = var.taito_provider_region
-  user_profile          = coalesce(var.taito_provider_user_profile, var.taito_organization)
-
-  # Project
+  resource_group        = var.taito_uptime_namespace_id
   project               = var.taito_project
   env                   = var.taito_env
   domain                = var.taito_domain
 
-  # Monitoring
   uptime_targets        = local.taito_uptime_targets
   uptime_paths          = local.taito_uptime_paths
   uptime_timeouts       = local.taito_uptime_timeouts
-  uptime_channels       = local.taito_uptime_channels
 }

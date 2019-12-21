@@ -1,19 +1,7 @@
-variable "taito_env" {
-}
-
-variable "taito_domain" {
-}
-
-variable "taito_project" {
-}
-
-variable "taito_provider_region" {
-}
+# Provider
 
 variable "taito_organization" {
-}
-
-variable "taito_vc_repository" {
+  type = string
 }
 
 variable "taito_provider_user_profile" {
@@ -21,34 +9,65 @@ variable "taito_provider_user_profile" {
   default = ""
 }
 
+variable "taito_provider_region" {
+  type = string
+}
+
+# Project
+
+variable "taito_project" {
+  type = string
+}
+
+variable "taito_domain" {
+  type = string
+}
+
+variable "taito_env" {
+  type = string
+}
+
+variable "taito_vc_repository" {
+  type = string
+}
+
 variable "taito_container_registry_provider" {
   type    = string
   default = ""
 }
 
-variable "taito_targets" {
-  type = list(string)
+# Shared infrastructure
+
+variable "taito_functions_bucket" {
+  type = string
+  default = ""
 }
 
-/* Storage */
+# Targets
+
+variable "taito_container_targets" {
+  type = string  # whitespace delimited strings
+  default = ""
+}
+
+# Storage
 
 variable "taito_storages" {
-  type    = list(string)
-  default = []
+  type = string  # whitespace delimited strings
+  default = ""
 }
 
 variable "taito_storage_locations" {
-  type    = list(string)
-  default = []
+  type = string  # whitespace delimited strings
+  default = ""
 }
 
 variable "taito_storage_classes" {
-  type    = list(string)
-  default = []
+  type = string  # whitespace delimited strings
+  default = ""
 }
 
 variable "taito_storage_days" {
-  type    = list(string)
-  default = []
+  type = string  # whitespace delimited strings
+  default = ""
 }
-

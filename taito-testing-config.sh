@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # shellcheck disable=SC2034
 # shellcheck disable=SC2154
 
@@ -12,7 +12,7 @@
 case $taito_env in
   local)
     # local environment
-    ci_test_base_url=http://website-template-ingress:80
+    ci_test_base_url=http://wordpress-template-ingress:80
     ;;
   *)
     # dev and feature environments

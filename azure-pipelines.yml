@@ -1,1 +1,66 @@
-# TODO execute the same steps that are defined in build.sh
+# Instructions: https://aka.ms/yaml
+
+trigger:
+- dev
+- test
+- uat
+- stag
+- canary
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+resources:
+  containers:
+  - container: taito
+    image: ${_TEMPLATE_DEFAULT_TAITO_IMAGE}
+    env:
+      taito_mode: ci
+      taito_image: ${_TEMPLATE_DEFAULT_TAITO_IMAGE}
+      taito_ci_phases: $(TAITO_CI_PHASES)
+      AZURE_CLIENT_ID: $(AZURE_CLIENT_ID)
+      AZURE_CLIENT_SECRET: $(AZURE_CLIENT_SECRET)
+
+jobs:
+- job: build
+  container: taito
+  steps:
+
+  # init
+  - bash: |
+      # Azure creates a new user that we need to initialize
+      /taito-cli-deps/tools/user-init.sh
+      # TODO: Cancel other ongoing builds for ENV
+      # - taito deployment cancel:$(Build.SourceBranchName) TODO_CURRENT_BUILD_ID
+    displayName: init
+
+  # prepare
+  - bash: |
+      taito build prepare:$(Build.SourceBranchName) $(Build.SourceVersion)
+    displayName: prepare
+    env:
+      VC_TOKEN: $(VC_TOKEN)
+
+  # prepare artifacts
+  - bash: |
+      taito artifact prepare:wordpress:$(Build.SourceBranchName) $(Build.SourceVersion)
+      taito wp-plugin-update:$${branch_name} || echo "WARNING: Failed updating wordpress plugins"
+    displayName: prepare artifacts
+
+  # deploy
+  - bash: |
+      taito deployment deploy:$(Build.SourceBranchName) $(Build.SourceVersion)
+    displayName: deploy
+
+  # release artifacts
+  - bash: |
+      taito artifact release:wordpress:$(Build.SourceBranchName) $(Build.SourceVersion)
+    displayName: release artifacts
+
+  # release
+  - bash: |
+      taito build release:$(Build.SourceBranchName)
+    displayName: release
+    env:
+      VC_TOKEN: $(VC_TOKEN)
