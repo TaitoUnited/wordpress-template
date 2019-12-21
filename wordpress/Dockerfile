@@ -1,4 +1,4 @@
-FROM bitnami/wordpress:5.2.3 as builder
+FROM bitnami/wordpress:5.3.2 as builder
 
 COPY *.sh *.js /template/
 RUN /template/setup.sh
