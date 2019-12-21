@@ -4,7 +4,9 @@
 : "${taito_vc_repository_alt:?}"
 : "${taito_project:?}"
 
-${taito_setv:-}
+if [[ ${taito_verbose:-} == "true" ]]; then
+  set -x
+fi
 
 # Remove .gitignore to allow committing data to git
 rm wordpress/data/.gitignore
