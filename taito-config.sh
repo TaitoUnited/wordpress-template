@@ -262,9 +262,9 @@ case $taito_env in
     ;;
   local)
     taito_deployment_platforms=docker-compose
-    taito_app_url=http://localhost:9999
-    taito_storage_url=http://localhost:9999/minio
-    db_database_external_port=6000
+    taito_app_url=http://localhost:4635
+    taito_storage_url=http://localhost:4635/minio
+    db_database_external_port=7587
     db_database_host=$taito_project-database
     db_database_port=3306
     db_database_ssl_enabled=false

@@ -52,7 +52,7 @@ Open the application on browser:
 
 Connect to database using password `secret1234`:
 
-    psql -h localhost -p 6000 -d $db_database_name -U $db_database_app_username
+    psql -h localhost -p 7587 -d $db_database_name -U $db_database_app_username
 
 Use `npm`, `docker-compose` and `docker` normally to run commands and operate containers.
 
