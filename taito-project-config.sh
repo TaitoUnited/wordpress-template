@@ -54,13 +54,12 @@ link_urls="
 
 taito_remote_secrets="
   $taito_project-$taito_env-basic-auth.auth:htpasswd-plain
-  $db_database_instance-ssl.ca:copy/devops
-  $db_database_instance-ssl.cert:copy/devops
-  $db_database_instance-ssl.key:copy/devops
+  database-proxy-serviceaccount.key:copy/db-proxy
 "
 taito_local_secrets="
 "
 taito_secrets="
+  $db_database_app_secret:random
   $db_database_mgr_secret:random
   $taito_project-$taito_env-admin.initialpassword:random
 "

@@ -249,6 +249,10 @@ case $taito_env in
     taito_ci_organization=${template_default_ci_organization_prod}
     ci_exec_deploy=${template_default_ci_exec_deploy_prod:-true}
 
+    # NOTE: dev/test not deployed on Kubernetes, therefore containers are
+    # built for staging by default.
+    ci_exec_build=true
+
     # shellcheck disable=SC1091
     if [[ -f taito-env-stag-config.sh ]]; then . taito-env-stag-config.sh; fi
     ;;
@@ -301,9 +305,11 @@ taito_admin_url=$taito_app_url/wp-admin/
 # ------ Database users ------
 
 # app user for application
-# NOTE: wordpress uses mgr account because wordpress creates db tables
+db_database_app_username="${db_database_name}_app${db_database_username_suffix}"
+db_database_app_secret="${db_database_name//_/-}-db-app.password"
 
 # mgr user for deploying database migrations (CI/CD)
+# NOTE: wordpress uses mgr account because wordpress creates db tables
 db_database_mgr_username="${db_database_name}${db_database_username_suffix}"
 db_database_mgr_secret="${db_database_name//_/-}-db-mgr.password"
 

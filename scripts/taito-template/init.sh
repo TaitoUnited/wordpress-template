@@ -66,5 +66,12 @@ sed -i "s/7587/${db_port}/g" taito-config.sh docker-compose.yaml \
 sed -i "s/4635/${ingress_port}/g" docker-compose.yaml taito-config.sh \
   TAITOLESS.md &> /dev/null || :
 
+if [[ ${taito_provider:?} != "gcp" ]]; then
+  echo "Removing database proxy"
+  sed -i 'database-proxy-serviceaccount/d' taito-project-config.sh
+  sed -i '# db-proxy/d' ./scripts/helm.yaml
+  sed -i "s/db_database_host/db_database_real_host/" ./scripts/helm.yaml
+fi
+
 ./scripts/taito-template/common.sh
 echo init done
