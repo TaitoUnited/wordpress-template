@@ -33,13 +33,9 @@ Create the environment:
 
     taito env apply:stag          # NOTE: Please use a strong basic auth password on WP projects
 
-Write down the basic auth credentials to [README.md#links](README.md#links):
+OPTIONAL: If the git repository is private, you may choose to write down the basic auth credentials to [README.md#links](README.md#links):
 
     EDIT README.md                # Edit the links section
-
-Write down the basic auth credentials to `taito-testing-config.sh`:
-
-    EDIT taito-testing-config.sh  # Edit this: ci_test_base_url=https://username:secretpassword@...
 
 Push changes to dev branch with a [Conventional Commits](http://conventionalcommits.org/) commit message (e.g. `chore: configuration`):
 
