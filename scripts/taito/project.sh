@@ -10,7 +10,7 @@
 taito_environments="dev stag prod"
 
 # Basic auth: Uncomment the line below to disable basic auth from ALL
-# environments. Use taito-env-prod-config.sh to disable basic auth from prod
+# environments. Use scripts/taito/prod-env.sh to disable basic auth from prod
 # environment only.
 # taito_basic_auth_enabled=false
 

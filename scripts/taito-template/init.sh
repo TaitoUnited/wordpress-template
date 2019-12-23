@@ -61,14 +61,14 @@ find . -type f -exec sed -i \
 echo "Generating unique random ports (avoid conflicts with other projects)..."
 if [[ ! $ingress_port ]]; then ingress_port=$(shuf -i 8000-9999 -n 1); fi
 if [[ ! $db_port ]]; then db_port=$(shuf -i 6000-7999 -n 1); fi
-sed -i "s/7587/${db_port}/g" taito-config.sh docker-compose.yaml \
-  TAITOLESS.md &> /dev/null || :
-sed -i "s/4635/${ingress_port}/g" docker-compose.yaml taito-config.sh \
-  TAITOLESS.md &> /dev/null || :
+sed -i "s/7587/${db_port}/g" scripts/taito/config/main.sh docker-compose.yaml \
+  scripts/taito/TAITOLESS.md &> /dev/null || :
+sed -i "s/4635/${ingress_port}/g" docker-compose.yaml scripts/taito/config/main.sh \
+  scripts/taito/TAITOLESS.md &> /dev/null || :
 
 if [[ ${taito_provider:?} != "gcp" ]]; then
   echo "Removing database proxy"
-  sed -i 'database-proxy-serviceaccount/d' taito-project-config.sh
+  sed -i 'database-proxy-serviceaccount/d' scripts/taito/project.sh
   sed -i '# db-proxy/d' ./scripts/helm.yaml
   sed -i "s/db_database_host/db_database_real_host/" ./scripts/helm.yaml
 fi
