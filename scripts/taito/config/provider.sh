@@ -328,3 +328,11 @@ if [[ $provider_service_account_enabled == "true" ]]; then
 else
   provider_service_account_enabled="false"
 fi
+
+# Storage link
+if [[ $taito_storage_url ]] && [[ $taito_storage_url != *"localhost"* ]]; then
+  link_urls="
+    ${link_urls}
+    * storage:ENV=$taito_storage_url Storage bucket (:ENV)
+  "
+fi
