@@ -81,7 +81,7 @@ taito_ci_image=${template_default_taito_image}
 
 # Container registry
 taito_container_registry_provider=${template_default_container_registry_provider}
-taito_container_registry=${template_default_container_registry}/$taito_vc_repository
+taito_container_registry=${template_default_container_registry}/$taito_project
 
 # Messaging
 taito_messaging_provider=slack
@@ -205,7 +205,7 @@ case $taito_env in
 
     # CI/CD and repositories
     taito_container_registry_provider=${template_default_container_registry_provider_prod}
-    taito_container_registry=${template_default_container_registry_prod}/$taito_vc_repository
+    taito_container_registry=${template_default_container_registry_prod}/$taito_project
     taito_ci_provider=${template_default_ci_provider_prod}
     taito_ci_organization=${template_default_ci_organization_prod}
     ci_exec_deploy=${template_default_ci_exec_deploy_prod:-true}
@@ -244,7 +244,7 @@ case $taito_env in
 
     # CI/CD and repositories
     taito_container_registry_provider=${template_default_container_registry_provider_prod}
-    taito_container_registry=${template_default_container_registry_prod}/$taito_vc_repository
+    taito_container_registry=${template_default_container_registry_prod}/$taito_project
     taito_ci_provider=${template_default_ci_provider_prod}
     taito_ci_organization=${template_default_ci_organization_prod}
     ci_exec_deploy=${template_default_ci_exec_deploy_prod:-true}
