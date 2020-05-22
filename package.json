@@ -16,6 +16,7 @@
     "sync-from:local": "echo Give environment",
     "project-contacts": "cat PROJECT.md | sed -n -e '/^## Contacts.*$/,/^#.*$/{ /^## Contacts.*$/d; /^#.*$/d; p; }'",
     "check-deps": "npm run _check-deps-script -- . ",
+    "check-deps:root": "npm run _check-deps-script -- . ",
     "_check-deps-script": "sh -c 'echo --- ${0} --- && cd ${0} && (npm-check ${@} || :) && echo && echo \"NOTE: Many of the devDependencies and ~ references are actually in use even if reported unused. But all unused dependencies can usually be removed from package.json.\" && echo' ",
     "release-pre:prod": "semantic-release --dry-run",
     "release-post:prod": "semantic-release --no-ci"
@@ -109,11 +110,11 @@
     "url": "git+https://github.com/TaitoUnited/wordpress-template.git"
   },
   "devDependencies": {
-    "@commitlint/cli": "^8.2.0",
-    "@commitlint/config-conventional": "^8.2.0",
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
     "git-branch-is": "^3.1.0",
-    "husky": "^3.1.0",
+    "husky": "^4.2.5",
     "npm-run-all": "~4.1.5",
-    "semantic-release": "^15.14.0"
+    "semantic-release": "^17.0.7"
   }
 }
