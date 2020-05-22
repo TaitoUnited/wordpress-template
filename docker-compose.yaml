@@ -9,7 +9,7 @@ services:
     networks:
       - default
     ports:
-      - "4635:80"
+      - "127.0.0.1:4635:80"
     volumes:
       - "./wordpress/data:${DC_PATH}/bitnami:delegated"
     environment:
@@ -39,7 +39,7 @@ services:
   #   networks:
   #     - default
   #   ports:
-  #     - "7587:3306"
+  #     - "127.0.0.1:7587:3306"
   #   volumes:
   #     - ".:/project:delegated"
   #   environment:
@@ -53,7 +53,7 @@ services:
     networks:
       - default
     ports:
-      - "7587:3306"
+      - "127.0.0.1:7587:3306"
     environment:
       MYSQL_DATABASE: wptemplatelocal
       MYSQL_USER: wptemplatelocal
