@@ -14,13 +14,13 @@
 echo "setup.sh: Adding support for database environment variables"
 
 echo "setup.sh: Modifying getDatabaseProperties() function of helpers.js"
-cp /root/.nami/components/com.bitnami.wordpress/helpers.js \
-  /root/.nami/components/com.bitnami.wordpress/helpers.orig.js
+cp /.nami/components/com.bitnami.wordpress/helpers.js \
+  /.nami/components/com.bitnami.wordpress/helpers.orig.js
 sed 's/app.helpers.getDatabaseProperties/app.helpers.getDatabasePropertiesOrig/' \
-  /root/.nami/components/com.bitnami.wordpress/helpers.orig.js \
-  > /root/.nami/components/com.bitnami.wordpress/helpers.js
+  /.nami/components/com.bitnami.wordpress/helpers.orig.js \
+  > /.nami/components/com.bitnami.wordpress/helpers.js
 cat /template/helpers.js \
-  >> /root/.nami/components/com.bitnami.wordpress/helpers.js
+  >> /.nami/components/com.bitnami.wordpress/helpers.js
 
 echo "setup.sh: Updating wp-config-sample.php with environment variable references"
 cp /opt/bitnami/wordpress/wp-config-sample.php /opt/bitnami/wordpress/wp-config-sample.orig.php

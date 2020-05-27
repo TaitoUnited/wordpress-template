@@ -101,7 +101,7 @@ taito_uptime_channels="${template_default_uptime_channels}"
 # NOTE: database users are defined later in this file
 db_database_instance=${template_default_mysql}
 db_database_type=mysql
-db_database_name=${taito_project//-/_}_${taito_env}
+db_database_name=${taito_project_short}${taito_env}
 db_database_username_suffix=${template_default_mysql_username_suffix}
 db_database_host="127.0.0.1"
 db_database_port=5001
@@ -305,7 +305,7 @@ taito_admin_url=$taito_app_url/wp-admin/
 # ------ Database users ------
 
 # app user for application
-db_database_app_username="${db_database_name}_app${db_database_username_suffix}"
+db_database_app_username="${db_database_name}a${db_database_username_suffix}"
 db_database_app_secret="${db_database_name//_/-}-db-app.password"
 
 # mgr user for deploying database migrations (CI/CD)

@@ -58,8 +58,6 @@ full-stack:
       # TODO: https://github.com/kubernetes/kubernetes/issues/27114
       livenessInitialDelay: 360
       readinessFailureThreshold: 36 # livenessInitialDelay / 10
-      runAsUser:
-      runAsGroup:
       cpuRequest: 20m
       cpuLimit: 200m
       memoryRequest: 256Mi

@@ -9,7 +9,7 @@ services:
     networks:
       - default
     ports:
-      - "127.0.0.1:4635:80"
+      - "127.0.0.1:4635:8080"
     volumes:
       - "./wordpress/data:${DC_PATH}/bitnami:delegated"
     environment:
@@ -26,7 +26,7 @@ services:
       # WORDPRESS_DATABASE_PASSWORD: TODO add_passwd_here # TODO: fetch automatically from kubernetes
       # NOTE: For local database
       WORDPRESS_DATABASE_NAME: wptemplatelocal
-      WORDPRESS_DATABASE_USER: wptemplatelocal
+      WORDPRESS_DATABASE_USER: wptemplatelocala
       WORDPRESS_DATABASE_PASSWORD: ${taito_default_password}
 
   # NOTE: For staging database
@@ -56,7 +56,7 @@ services:
       - "127.0.0.1:7587:3306"
     environment:
       MYSQL_DATABASE: wptemplatelocal
-      MYSQL_USER: wptemplatelocal
+      MYSQL_USER: wptemplatelocala
       MYSQL_PASSWORD: ${taito_default_password}
       MYSQL_ROOT_PASSWORD: ${taito_default_password}
 
