@@ -53,7 +53,7 @@ full-stack:
       paths:
         - path:
           clientMaxBodySize: 5m
-      port: 80
+      port: 8080
       livenessPath: /wp-login.php
       # TODO: https://github.com/kubernetes/kubernetes/issues/27114
       livenessInitialDelay: 360
