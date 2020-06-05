@@ -71,16 +71,17 @@ full-stack:
         - mountPath: /bitnami/wordpress
           volumePath: wordpress
           readOnly: false
-      db: # db-proxy
-        instance: ${taito_zone}:${taito_provider_region}:${db_database_instance} # db-proxy
-        port: '${db_database_real_port}' # db-proxy
-        proxySecret: database-proxy-serviceaccount.key # db-proxy
-        useProxy: true # db-proxy
+      # Database proxy config
+      db:
+        useProxy: false
+        instance: ${taito_zone}:${taito_provider_region}:${db_database_instance}
+        port: '${db_database_real_port}'
+        proxySecret: database-proxy-serviceaccount.key
       secretEnv:
         WORDPRESS_DATABASE_PASSWORD: ${db_database_mgr_secret}
         WORDPRESS_PASSWORD: ${taito_project}-${taito_env}-admin.initialpassword
       env:
-        MARIADB_HOST: '${db_database_host}'
+        MARIADB_HOST: '${db_database_real_host}' # NOTE: use db_database_host with db proxy
         MARIADB_PORT_NUMBER: '${db_database_real_port}'
         TODO_MARIADB_SSL_ENABLED: ${db_database_ssl_enabled} # TODO: require ssl
         WORDPRESS_DATABASE_NAME: ${db_database_name}

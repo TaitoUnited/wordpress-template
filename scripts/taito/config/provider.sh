@@ -66,11 +66,20 @@ case $taito_provider in
       gcp-monitoring:-local
     "
 
-    # Kubernetes details
+    # Kubernetes
     kubernetes_cluster="gke_${taito_zone}_${taito_provider_region}_${kubernetes_name}"
     kubernetes_user="${kubernetes_cluster}"
 
-    gcp_db_proxy_enabled=false # TODO: temporary
+    # Database
+    gcp_db_proxy_enabled=false
+    if [[ ${kubernetes_db_proxy_enabled} != "true" ]]; then
+      gcp_db_proxy_enabled=true
+      taito_provider_db_proxy_secret=cloudsql-gserviceaccount.key
+      taito_remote_secrets="
+        $taito_remote_secrets
+        $taito_provider_db_proxy_secret:copy/devops
+      "
+    fi
 
     # Storage
     if [[ ${storage_name} ]]; then
@@ -167,7 +176,7 @@ case $taito_uptime_provider in
     "
     link_urls="
       ${link_urls}
-      * uptime[:ENV]=https://app.google.stackdriver.com/uptime?project=$taito_zone&f.search=$taito_project Uptime monitoring (:ENV)
+      * uptime[:ENV]=https://console.cloud.google.com/monitoring/uptime?project=$taito_zone
     "
     ;;
 esac
@@ -327,6 +336,19 @@ if [[ $provider_service_account_enabled == "true" ]]; then
   "
 else
   provider_service_account_enabled="false"
+fi
+
+# Database SSL client key
+if [[ $db_database_ssl_client_cert_enabled == "true" ]]; then
+  db_database_ssl_ca_secret=$db_database_instance-ssl.ca
+  db_database_ssl_cert_secret=$db_database_instance-ssl.cert
+  db_database_ssl_key_secret=$db_database_instance-ssl.key
+  taito_remote_secrets="
+    $taito_remote_secrets
+    $db_database_ssl_ca_secret:copy/devops
+    $db_database_ssl_cert_secret:copy/devops
+    $db_database_ssl_key_secret:copy/devops
+  "
 fi
 
 # Storage link
