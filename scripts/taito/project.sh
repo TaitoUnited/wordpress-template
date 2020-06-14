@@ -6,11 +6,17 @@
 # Project specific settings
 ##########################################################################
 
+# Taito CLI: Project specific plugins (for the selected database, etc.)
+taito_plugins="
+  ${taito_plugins}
+  mysql-db
+"
+
 # Environments: In the correct order (e.g. dev test uat stag canary prod)
 taito_environments="dev stag prod"
 
 # Basic auth: Uncomment the line below to disable basic auth from ALL
-# environments. Use scripts/taito/prod-env.sh to disable basic auth from prod
+# environments. Use scripts/taito/env-prod.sh to disable basic auth from prod
 # environment only.
 # taito_basic_auth_enabled=false
 

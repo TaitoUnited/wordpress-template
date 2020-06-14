@@ -61,10 +61,14 @@ find . -type f -exec sed -i \
 echo "Generating unique random ports (avoid conflicts with other projects)..."
 if [[ ! $ingress_port ]]; then ingress_port=$(shuf -i 8000-9999 -n 1); fi
 if [[ ! $db_port ]]; then db_port=$(shuf -i 6000-7999 -n 1); fi
-sed -i "s/7587/${db_port}/g" scripts/taito/config/main.sh docker-compose.yaml \
-  scripts/taito/TAITOLESS.md &> /dev/null || :
-sed -i "s/4635/${ingress_port}/g" docker-compose.yaml scripts/taito/config/main.sh \
-  scripts/taito/TAITOLESS.md &> /dev/null || :
+sed -i "s/7587/${db_port}/g" \
+  docker-compose.yaml \
+  scripts/taito/project.sh scripts/taito/env-local.sh \
+  scripts/taito/TAITOLESS.md www/README.md &> /dev/null || :
+sed -i "s/4635/${ingress_port}/g" \
+  docker-compose.yaml \
+  scripts/taito/project.sh scripts/taito/env-local.sh \
+  scripts/taito/TAITOLESS.md www/README.md &> /dev/null || :
 
 ./scripts/taito-template/common.sh
 echo init done
