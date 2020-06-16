@@ -30,7 +30,8 @@ fi
 taito_project_short="${taito_project_short//-/}"
 if [[ ! ${taito_project_short} ]] || \
    [[ "${#taito_project_short}" -lt 5 ]] || \
-   [[ "${#taito_project_short}" -gt 10 ]]; then
+   [[ "${#taito_project_short}" -gt 10 ]] || \
+   [[ ! "${taito_project_short}" =~ ^[a-zA-Z0-9]*$ ]]; then
   echo "Give a short version of the project name '${taito_vc_repository}'."
   echo "It should be unique but also descriptive as it will be used"
   echo "as a database name and as a database username."
@@ -38,7 +39,8 @@ if [[ ! ${taito_project_short} ]] || \
   export taito_project_short=""
   while [[ ! ${taito_project_short} ]] || \
     [[ "${#taito_project_short}" -lt 5 ]] || \
-    [[ "${#taito_project_short}" -gt 10 ]]
+    [[ "${#taito_project_short}" -gt 10 ]] || \
+    [[ ! "${taito_project_short}" =~ ^[a-zA-Z0-9]*$ ]]
   do
     echo "Short project name (5-10 characters)?"
     read -r taito_project_short
