@@ -33,11 +33,11 @@ wordpress_plugin_update_flags="--all --debug --minor"
 # ------ Stack ------
 
 # Stack
-taito_targets="wordpress database"
+taito_containers="wordpress database"
+taito_functions=""
+taito_databases="database"
+taito_buckets="bucket"
 taito_networks="default"
-
-# Stack types ('container' by default)
-taito_target_type_database=database
 
 # Stack uptime monitoring
 taito_uptime_targets="wordpress"
