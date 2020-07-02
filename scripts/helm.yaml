@@ -63,7 +63,7 @@ full-stack:
       memoryRequest: 256Mi
       memoryLimit: 512Mi
       # Scaling
-      replicas: ${kubernetes_replicas}
+      replicas: 1
       autoscale: false
       minReplicas: ${kubernetes_replicas}
       maxReplicas: 5
@@ -73,15 +73,15 @@ full-stack:
           readOnly: false
       # Database proxy config
       db:
-        useProxy: false
+        useProxy: ${gcp_db_proxy_enabled}
         instance: ${taito_zone}:${taito_provider_region}:${db_database_instance}
-        port: '${db_database_real_port}'
-        proxySecret: database-proxy-serviceaccount.key
+        port: ${db_database_real_port}
+        proxySecret: ${taito_provider_db_proxy_secret}
       secretEnv:
         WORDPRESS_DATABASE_PASSWORD: ${db_database_mgr_secret}
         WORDPRESS_PASSWORD: ${taito_project}-${taito_env}-admin.initialpassword
       env:
-        MARIADB_HOST: '${db_database_real_host}' # NOTE: use db_database_host with db proxy
+        MARIADB_HOST: '${db_database_real_host}'
         MARIADB_PORT_NUMBER: '${db_database_real_port}'
         TODO_MARIADB_SSL_ENABLED: ${db_database_ssl_enabled} # TODO: require ssl
         WORDPRESS_DATABASE_NAME: ${db_database_name}
