@@ -34,6 +34,7 @@ wordpress_plugin_update_flags="--all --debug --minor"
 
 # Stack
 taito_containers="wordpress database"
+taito_static_contents=""
 taito_functions=""
 taito_databases="database"
 taito_buckets="bucket"
