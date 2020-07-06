@@ -130,6 +130,21 @@ taito_default_storage_backup_days="${template_default_backup_days}"
 # Storage definitions for Terraform
 st_bucket_name="$taito_random_name-$taito_env"
 
+# Storage example
+# st_example_name="$taito_random_name-example-$taito_env"
+# st_example_class="${template_default_storage_class}"
+# st_example_location="${template_default_storage_location}"
+# NOTE: Days defines archival days by default (days until deleted files are
+#       permanently deleted). To make all files temporary instead, use
+#       DAYS-expiration (e.g. 60-expiration)
+# st_example_days="${template_default_storage_days}"
+# st_example_cors="https://www.mydomain.com,https://www.mysite.com"
+# st_example_admins="user:john.doe@mydomain.com,user:jane.doe@mydomain.com"
+# st_example_object_admins="user:john.doe@mydomain.com,user:jane.doe@mydomain.com"
+# st_example_object_viewers="domain:mydomain.com,group:viewers@anotherdomain.com"
+# st_example_backup_location="${template_default_backup_location}"
+# st_example_backup_days="${template_default_backup_days}"
+
 # Misc settings
 taito_basic_auth_enabled=true
 taito_default_password=secret1234
@@ -339,6 +354,7 @@ fi
 # ------ Database users ------
 
 db_database_app_user_suffix="_app"
+db_database_viewer_user_suffix="_viewer"
 
 # master user for creating and destroying databases
 if [[ $db_database_type == "pg" ]]; then
@@ -346,6 +362,7 @@ if [[ $db_database_type == "pg" ]]; then
   db_database_master_password_hint="${template_default_postgres_master_password_hint}"
 elif [[ $db_database_type == "mysql" ]]; then
   db_database_app_user_suffix="a"
+  db_database_viewer_user_suffix="v"
   db_database_master_username="${template_default_mysql_master_username}${db_database_username_suffix}"
   db_database_master_password_hint="${template_default_mysql_master_password_hint}"
 fi
@@ -354,17 +371,30 @@ fi
 db_database_app_username="${db_database_name}${db_database_app_user_suffix}${db_database_username_suffix}"
 db_database_app_secret="${db_database_name//_/-}-db-app.password"
 
-# mgr user for deploying database migrations (CI/CD)
 if [[ ${taito_env} != "local" ]]; then
+  # viewer user for browsing the database
+  db_database_viewer_username="${db_database_name}${db_database_viewer_user_suffix}${db_database_username_suffix}"
+  db_database_viewer_secret="${db_database_name//_/-}-db-viewer.password"
+  # mgr user for deploying database migrations (CI/CD)
   db_database_mgr_username="${db_database_name}${db_database_username_suffix}"
   db_database_mgr_secret="${db_database_name//_/-}-db-mgr.password"
   :
 fi
 
-# default user for executing database operations
-# TODO: empty for prod/stag
-db_database_default_username="${db_database_name}${db_database_username_suffix}"
-db_database_default_secret="${db_database_name//_/-}-db-mgr.password"
+# Determine default user for executing database operations
+if [[ ${taito_env} == "local" ]]; then
+  # App in local environment (there is only app user)
+  db_database_default_username="${db_database_app_username}"
+  db_database_default_secret="${db_database_app_secret}"
+elif [[ ${taito_env} == "prod" ]]; then
+  # Viewer in production environment
+  db_database_default_username="${db_database_viewer_username}"
+  db_database_default_secret="${db_database_viewer_secret}"
+else
+  # Manager in other environments
+  db_database_default_username="${db_database_mgr_username}"
+  db_database_default_secret="${db_database_mgr_secret}"
+fi
 
 # ------ All environments config ------
 
