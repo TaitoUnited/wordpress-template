@@ -31,8 +31,9 @@ wordpress_persistence_enabled=false
 wordpress_plugin_update_flags="--all --debug --minor"
 
 # ------ Stack ------
+# Configuration instructions:
+# TODO
 
-# Stack
 taito_containers="wordpress database"
 taito_static_contents=""
 taito_functions=""
@@ -45,28 +46,31 @@ taito_uptime_targets="wordpress"
 taito_uptime_paths="/"
 taito_uptime_timeouts="5"
 
+# ------ Secrets ------
+# Configuration instructions:
+# https://taitounited.github.io/taito-cli/tutorial/06-env-variables-and-secrets/
+
+taito_local_secrets="
+"
+
+taito_remote_secrets="
+  $db_database_mgr_secret:random
+  $db_database_viewer_secret:random
+  $taito_project-$taito_env-basic-auth.auth:htpasswd-plain
+  database-proxy-serviceaccount.key:copy/db-proxy
+"
+
+taito_secrets="
+  $db_database_app_secret:random
+  $taito_project-$taito_env-admin.initialpassword:random
+"
+
 # ------ Links ------
 # Add custom links here. You can regenerate README.md links with
-# 'taito project docs'.
+# 'taito project docs'. Configuration instructions: TODO
 
 link_urls="
   * wordpress[:ENV]#app=$taito_app_url Wordpress (:ENV)
   * admin[:ENV]#admin=$taito_app_url/wp-admin/ Admin user interface (:ENV)
   * git=https://$taito_vc_repository_url Git repository
-"
-
-# ------ Secrets ------
-# Configuration instructions:
-# https://taitounited.github.io/taito-cli/tutorial/06-env-variables-and-secrets/
-
-taito_remote_secrets="
-  $db_database_mgr_secret:random
-  $taito_project-$taito_env-basic-auth.auth:htpasswd-plain
-  database-proxy-serviceaccount.key:copy/db-proxy
-"
-taito_local_secrets="
-"
-taito_secrets="
-  $db_database_app_secret:random
-  $taito_project-$taito_env-admin.initialpassword:random
 "
