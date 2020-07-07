@@ -54,10 +54,9 @@ taito_local_secrets="
 "
 
 taito_remote_secrets="
-  $db_database_mgr_secret:random
-  $db_database_viewer_secret:random
   $taito_project-$taito_env-basic-auth.auth:htpasswd-plain
-  database-proxy-serviceaccount.key:copy/db-proxy
+  $db_database_viewer_secret:random
+  $db_database_mgr_secret:random
 "
 
 taito_secrets="
