@@ -20,10 +20,6 @@ taito_environments="dev stag prod"
 # environment only.
 # taito_basic_auth_enabled=false
 
-# Service account: Uncomment the line below to always create Cloud provider
-# service account
-# provider_service_account_enabled=true
-
 # ------ Wordpress ------
 
 # WARNING: Setting this from true to false deletes the existing persistent disk
@@ -41,11 +37,6 @@ taito_databases="database"
 taito_buckets="bucket"
 taito_networks="default"
 
-# Stack uptime monitoring
-taito_uptime_targets="wordpress"
-taito_uptime_paths="/"
-taito_uptime_timeouts="5"
-
 # ------ Secrets ------
 # Configuration instructions:
 # https://taitounited.github.io/taito-cli/tutorial/06-env-variables-and-secrets/
@@ -55,6 +46,7 @@ taito_local_secrets="
 
 taito_remote_secrets="
   $taito_project-$taito_env-basic-auth.auth:htpasswd-plain
+  $taito_project-$taito_env-wordpress-serviceaccount.key:file
   $db_database_viewer_secret:random
   $db_database_mgr_secret:random
 "

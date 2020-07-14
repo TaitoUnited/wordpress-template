@@ -9,8 +9,7 @@
 ##########################################################################
 
 taito_project=wordpress-template
-# taito_project_short max 10 characters
-taito_project_short=wptemplate
+taito_project_short=wptemplate # Max 10 characters
 taito_random_name=wordpress-template
 taito_company=companyname
 taito_family=

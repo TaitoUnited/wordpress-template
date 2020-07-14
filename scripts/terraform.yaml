@@ -1,0 +1,29 @@
+stack:
+  uptimeEnabled: false
+  backupEnabled: false
+
+  services:
+    wordpress:
+      uptimePath: /docs
+
+    bucket:
+      type: bucket
+      name: ${taito_random_name}-${taito_env}
+      location: ${taito_default_storage_location}
+      storageClass: ${taito_default_storage_class}
+      cors:
+        - domain: https://${taito_domain}
+      # Object lifecycle
+      versioning: true
+      versioningRetainDays: ${taito_default_storage_days}
+      # Backup (TODO: implement)
+      backupRetainDays: ${taito_default_storage_backup_days}
+      backupLocation: ${taito_default_storage_backup_location}
+      # User rights
+      admins:
+      objectAdmins:
+        - id: ${taito_project}-${taito_env}-wordpress
+      objectViewers:
+
+  serviceAccounts:
+    - id: ${taito_project}-${taito_env}-wordpress
