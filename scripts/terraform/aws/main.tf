@@ -11,13 +11,6 @@ provider "aws" {
 }
 
 locals {
-  taito_targets = (var.taito_targets == "" ? [] :
-    split(" ", trimspace(replace(var.taito_targets, "/\\s+/", " "))))
-  taito_containers = (var.taito_containers == "" ? [] :
-    split(" ", trimspace(replace(var.taito_containers, "/\\s+/", " "))))
-  taito_uptime_channels = (var.taito_uptime_channels == "" ? [] :
-    split(" ", trimspace(replace(var.taito_uptime_channels, "/\\s+/", " "))))
-
   # Read json file
   variables = (
     fileexists("${path.root}/../../terraform-${var.taito_env}-merged.yaml")
@@ -28,7 +21,7 @@ locals {
 
 module "aws" {
   source  = "TaitoUnited/project-resources/aws"
-  version = "2.0.2"
+  version = "2.1.3"
 
   # Create flags
   create_domain                       = true
@@ -59,17 +52,21 @@ module "aws" {
   container_image_target_types        = [ "static", "container", "function" ]
   additional_container_images         = (
     var.taito_ci_cache_all_targets_with_docker
-    ? local.taito_targets
-    : local.taito_containers
+    ? var.taito_targets
+    : var.taito_containers
   )
 
   # Uptime
-  uptime_channels             = local.taito_uptime_channels
+  uptime_channels                 = var.taito_uptime_channels
+
+  # Policies
+  cicd_policies                   = var.taito_cicd_policies
+  gateway_policies                = var.taito_gateway_policies
 
   # Network
   elasticache_subnet_ids          = data.aws_subnet_ids.elasticache_subnet_ids.ids
-  elasticache_security_group_ids  = data.aws_security_groups.security_groups.ids
+  elasticache_security_group_ids  = data.aws_security_groups.elasticache_security_groups.ids
 
   # Additional variables as a json file
-  variables                   = local.variables
+  variables                        = local.variables
 }

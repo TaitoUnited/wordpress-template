@@ -29,15 +29,15 @@ variable "taito_uptime_provider" {
 }
 
 variable "taito_uptime_channels" {
-  type = string  # whitespace delimited strings
-  default = ""
+  type = list(string)
+  default = []
 }
 
 # Labels
 
 variable "taito_zone" {
   type = string
-  description = "Name of the zone (e.g. \"my-zone\"). It is required if gateway_asset_reader or secret_resource_path has not been set. "
+  description = "Name of the zone (e.g. \"my-zone\")."
 }
 
 variable "taito_project" {
@@ -62,6 +62,33 @@ variable "taito_vc_repository" {
   description = "For example: \"my-project\""
 }
 
+# Network
+
+variable "taito_network_tags" {
+  type = map(string)
+}
+
+variable "taito_cache_subnet_tags" {
+  type = map(string)
+}
+
+variable "taito_cache_security_group_tags" {
+  type    = map(string)
+  default = {}
+}
+
+# Permissions
+
+variable "taito_cicd_policies" {
+  type    = list(string)
+  description = "Policy ARN:s attached to the CI/CD role. The policies should provide access to Kubernetes, assets bucket, functions bucket, secrets, etc."
+}
+
+variable "taito_gateway_policies" {
+  type    = list(string)
+  description = "Role used by API Gateway to read static assets from assets bucket."
+}
+
 # Containers
 
 variable "taito_container_registry_provider" {
@@ -77,13 +104,13 @@ variable "taito_ci_cache_all_targets_with_docker" {
 }
 
 variable "taito_targets" {
-  type = string  # whitespace delimited strings
-  default = ""
+  type = list(string)
+  default = []
   description = "All targets."
 }
 
 variable "taito_containers" {
-  type = string  # whitespace delimited strings
-  default = ""
+  type = list(string)
+  default = []
   description = "Container targets."
 }
