@@ -29,7 +29,7 @@ Install additional libraries on host for autocompletion/linting on editor (optio
 Set up environment variables required by `docker-compose.yaml`:
 
     # On unix-like shell
-    . taito-config.sh
+    . ./taito-config.sh
 
     # On Windows shell
     taitoless.bat  # Copy from scripts/taito/examples to project root
@@ -42,17 +42,13 @@ Start containers defined in `docker-compose.yaml`:
 
     docker-compose up
 
-Connect development database:
+Connect development database using password `secret1234`:
 
     mysql -h localhost -P 7587 -D $db_database_name -u $db_database_mgr_username
 
 Open the application on browser:
 
     http://localhost:4635
-
-Connect to database using password `secret1234`:
-
-    psql -h localhost -p 7587 -d $db_database_name -U $db_database_app_username
 
 Use `npm`, `docker-compose` and `docker` normally to run commands and operate containers.
 
