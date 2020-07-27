@@ -34,8 +34,11 @@ taito_containers="wordpress database"
 taito_static_contents=""
 taito_functions=""
 taito_databases="database"
-taito_buckets="bucket"
 taito_networks="default"
+
+# Buckets
+taito_buckets="bucket"
+st_bucket_name="$taito_random_name-$taito_env"
 
 # ------ Secrets ------
 # Configuration instructions:
