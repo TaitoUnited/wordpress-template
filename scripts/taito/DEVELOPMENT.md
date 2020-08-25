@@ -145,7 +145,7 @@ Sometimes docker may start hogging up cpu on macOS and Windows. In such case, ju
 
 If the cooling fans of your computer spin fast and the computer seems slow, a high cpu load (or too slow computer) might not be the only cause. Check that your computer is not full of dust, the environment is not too hot, and your computer is not running on low-energy mode to save battery. Many computers start to limit available cpu on too hot conditions, or when battery charge is low.
 
-Docker volume mounts can be slow on non-Linux systems. The template uses *delegated* volume mounts to mitigate this issue on macOS, and *rsync* to mitigate the issue on Windows.
+Docker volume mounts can be slow on non-Linux systems. The template uses *delegated* volume mounts to mitigate this issue on macOS.
 
 ## Version control
 

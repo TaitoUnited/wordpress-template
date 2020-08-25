@@ -11,11 +11,10 @@ services:
     ports:
       - "127.0.0.1:4635:8080"
     volumes:
-      - "./wordpress/data:${DC_PATH}/bitnami:delegated"
+      - "./wordpress/data:/bitnami:delegated"
     user: ${taito_host_user_uid}:0
     environment:
-      DC_COMMAND: ${DC_COMMAND}
-      HOST_UNAME: ${taito_host_uname}
+      HOST_OS: ${taito_host_os}
       COMMON_PUBLIC_PORT: 4635
       WORDPRESS_USERNAME: deleteme    # SHOW ON INFO
       WORDPRESS_PASSWORD: password-change-it-7983p4nWgRE2p4No2d9 # SHOW ON INFO
