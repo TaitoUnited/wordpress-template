@@ -58,8 +58,8 @@ full-stack:
       # TODO: https://github.com/kubernetes/kubernetes/issues/27114
       livenessInitialDelay: 360
       readinessFailureThreshold: 36 # livenessInitialDelay / 10
-      cpuRequest: 20m
-      cpuLimit: 200m
+      cpuRequest: 50m
+      cpuLimit: 500m
       memoryRequest: 256Mi
       memoryLimit: 512Mi
       # Scaling
@@ -88,3 +88,5 @@ full-stack:
         WORDPRESS_DATABASE_USER: ${db_database_mgr_username}
         # Wordpress initial username
         WORDPRESS_USERNAME: deleteme
+        # PHP settings
+        PHP_MEMORY_LIMIT: 256M

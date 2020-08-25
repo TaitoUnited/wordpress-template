@@ -4,3 +4,7 @@ full-stack:
   services:
     wordpress:
       livenessInitialDelay: 180
+      cpuRequest: 100m
+      cpuLimit: 1000m
+      memoryRequest: 256Mi
+      memoryLimit: 512Mi
