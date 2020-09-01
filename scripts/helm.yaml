@@ -31,8 +31,6 @@ full-stack:
       - name: ${taito_domain}
         altName: ${taito_altdomain}
 
-  # NOTE: See helm/values.yaml for a list of all service attributes
-  # and helm/examples.yaml for some examples.
   serviceDefaults:
     # Path defaults
     basicAuthEnabled: ${taito_basic_auth_enabled}
@@ -52,6 +50,9 @@ full-stack:
       COMMON_ENV: ${taito_env}
 
   services:
+    # NOTE: See helm/values.yaml for a list of all service attributes
+    # and helm/examples.yaml for some examples.
+
     wordpress:
       paths:
         - path:
