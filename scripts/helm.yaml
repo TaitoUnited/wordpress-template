@@ -35,15 +35,8 @@ full-stack:
     # Path defaults
     basicAuthEnabled: ${taito_basic_auth_enabled}
     basicAuthHtpasswdSecret: ${taito_project}-${taito_env}-basic-auth
-    # Vertical scaling
-    verticalScaleUpdateMode: Off
     # Horizontal scaling
     replicas: ${kubernetes_replicas}
-    autoscale: false
-    autoscaleCpuPercentage: 70
-    autoscaleMemoryPercentage: 70
-    minReplicas: ${kubernetes_replicas}
-    maxReplicas: 5
     # Env
     env:
       # Environment variables
@@ -68,9 +61,6 @@ full-stack:
       memoryLimit: 512Mi
       # Scaling
       replicas: 1
-      autoscale: false
-      minReplicas: ${kubernetes_replicas}
-      maxReplicas: 5
       persistentVolumeMounts:
         - mountPath: /bitnami/wordpress
           volumePath: wordpress
