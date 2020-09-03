@@ -15,11 +15,18 @@ RUN cat /template/init.sh > /template/temp.sh && \
   mv /template/temp.sh /app-entrypoint.sh && \
   chmod +x /app-entrypoint.sh
 
+RUN rm -r /bitnami/wordpress
+
 COPY ./data /data-image
 
-# Give wordpress write access to some directories
-RUN mkdir -p /data-image/wordpress/wp-content/uploads && \
-    chown -R 1001:daemon /data-image/wordpress/wp-content/uploads
+# Add read permissions for wordpress user
+RUN chmod -R 0550 /data-image
+RUN chown -R 1001:1001 /data-image
+
+# Give wordpress write access to uploads directory
+RUN mkdir -p /data-image/wordpress/wp-content/uploads
+RUN chmod -R 0770 /data-image/wordpress/wp-content/uploads
+RUN chown -R 1001:1001 /data-image/wordpress/wp-content/uploads
 
 # TODO: remove this (hack to go around montly upload folder created by root)
 RUN chmod g+ws /data-image/wordpress/wp-content/uploads && \
