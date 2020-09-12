@@ -52,6 +52,14 @@ See it build and deploy:
     taito open builds:stag
     taito status:stag
 
+> The first CI/CD run takes some time as build cache is empty. Subsequent runs should be faster.
+
+> If CI/CD deployment fails on permissions error during the first run, the CI/CD account might not have enough permissions to deploy all the changes. In such case, execute the deployment manually with `taito deployment deploy:dev IMAGE_TAG`, and the retry the failed CI/CD build.
+
+> If CI/CD tests fail on certificate error during the first CI/CD run, just retry the CI/CD run. Certificate manager probably had not retrieved the certificate yet.
+
+> If you have some trouble creating an environment, you can destroy it by running `taito env destroy:dev` and then try again with `taito env apply:dev`.
+
 Open site on browser and install wordpress according to instructions:
 
     taito open wordpress:stag     # Open site
@@ -60,8 +68,6 @@ Open site on browser and install wordpress according to instructions:
 You should use really strong passwords for your admin accounts. You can generate a strong password for your user in the WordPress Admin GUI.
 
 > TIP: You can copy local database to staging with `taito db dump:local dump.sql`, replace urls in dump.sql, `taito db import:stag dump.sql`, `rm dump.sql`.
-
-> If you have some trouble creating an environment, you can destroy it by running `taito env destroy:stag` and then try again with `taito env apply:stag`.
 
 * [ ] All done
 

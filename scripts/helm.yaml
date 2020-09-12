@@ -29,12 +29,14 @@ full-stack:
     tls: true
     domains:
       - name: ${taito_domain}
-        altName: ${taito_altdomain}
+        altDomains:
+          - name: ${taito_altdomain}
 
   serviceDefaults:
-    # Path defaults
+    # Auth and security
     basicAuthEnabled: ${taito_basic_auth_enabled}
     basicAuthHtpasswdSecret: ${taito_project}-${taito_env}-basic-auth
+    modsecurityEnabled: true
     # Horizontal scaling
     replicas: ${kubernetes_replicas}
     # Env

@@ -1,6 +1,7 @@
 {
   "name": "wordpress-template",
   "scripts": {
+    "install-clean": "rm -f wordpress/data/wordpress/.user_scripts_initialized || :",
     "install-ci": "echo '# No additional dependencies need to be installed in ci mode'",
     "install-dev": "echo '# No additional dependencies need to be installed'",
     "taito-init": "echo 'taito init without clean not supported. Run with clean: taito init --clean'",
