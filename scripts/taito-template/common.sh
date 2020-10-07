@@ -12,7 +12,6 @@ echo "Common template initialization"
 # Defaults
 template_default_organization=${template_default_organization:-myorganization}
 template_default_organization_abbr=${template_default_organization_abbr:-myorg}
-template_default_sentry_organization=${template_default_sentry_organization}
 template_default_ci_organization=${template_default_ci_organization:-$template_default_organization}
 template_default_vc_organization=${template_default_vc_organization:-$template_default_organization}
 template_default_vc_url=${template_default_vc_url:-github.com/$template_default_vc_organization}
@@ -49,7 +48,8 @@ rm LICENSE
 
 # Remove ingress from terraform.yaml if Kubernetes is enabled
 if [[ ${template_default_kubernetes:-} ]] || [[ ${kubernetes_name:-} ]]; then
-  sed -i "/^  ingress:\r*\$/,/^\r*$/d" ./scripts/terraform.yaml
+  sed -i "s/enabled: true # ingress/enabled: false # ingress/g" \
+    ./scripts/terraform.yaml
 fi
 
 ##########################
@@ -80,10 +80,16 @@ then
 fi
 
 if [[ -f docker-compose-test.yaml ]] && \
-   [[ $template_default_provider != "gcp" ]] && \
-   [[ $template_default_provider_prod != "gcp" ]]
+   [[ $template_default_provider != "gcp" ]]
 then
   sed -i '/GOOGLE_/d' docker-compose-test.yaml
+  sed -i '/CICD_TESTER_SERVICEACCOUNT_KEY/d' docker-compose-test.yaml
+  sed -i '/cicd-tester-serviceaccount/d' docker-compose-test.yaml
+fi
+
+if [[ $template_default_provider != "gcp" ]]; then
+  sed -i '/cicd-tester-serviceaccount/d' scripts/taito/project.sh 2> /dev/null || :
+  sed -i '/cicd-tester-serviceaccount/d' scripts/taito/testing.sh 2> /dev/null || :
 fi
 
 # Currently network policy supported only for gcp (database host is static IP)
@@ -124,6 +130,8 @@ sed -i "s/taito_family=.*/taito_family=${taito_family}/g" scripts/taito/labels.s
 sed -i "s/taito_application=.*/taito_application=${taito_application}/g" scripts/taito/labels.sh
 sed -i "s/taito_suffix=.*/taito_suffix=${taito_suffix}/g" scripts/taito/labels.sh
 sed -i "s/taito_project=.*/taito_project=${taito_vc_repository}/g" scripts/taito/labels.sh
+sed -i "s/taito_project=.*/taito_project=${taito_vc_repository}/g" scripts/taito/labels.sh
+sed -i "s/TAITO_RESOURCE_NAMESPACE_PREFIX_SHA1SUM/$(echo "$template_default_organization_abbr-$taito_company" | sha1sum | awk '{print $1;}')/g" scripts/taito/config/main.sh
 
 echo "Replacing template variables with the user specific settings..."
 sed -i "s/\${template_default_environments}/${template_default_environments}/g" scripts/taito/project.sh
@@ -131,7 +139,6 @@ sed -i "s/\${template_default_organization}/${template_default_organization}/g" 
 sed -i "s/\${template_default_organization_abbr}/${template_default_organization_abbr:-}/g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_vc_organization}/${template_default_vc_organization:-}/g" scripts/taito/config/main.sh
 sed -i "s|\${template_default_vc_url}|${template_default_vc_url:-}|g" scripts/taito/config/main.sh
-sed -i "s/\${template_default_sentry_organization}/${template_default_sentry_organization:-}/g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_domain}/${template_default_domain:-}/g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_domain_prod}/${template_default_domain_prod:-}/g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_domain_prod}/${template_default_domain_prod:-}/g" scripts/taito/env-prod.sh
@@ -139,6 +146,8 @@ sed -i "s/\${template_default_cdn_domain}/${template_default_cdn_domain:-}/g" sc
 sed -i "s/\${template_default_cdn_domain_prod}/${template_default_cdn_domain_prod:-}/g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_zone}/${template_default_zone:-}/g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_zone_prod}/${template_default_zone_prod:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_zone_multi_tenant}/${template_default_zone_multi_tenant:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_zone_multi_tenant_prod}/${template_default_zone_multi_tenant_prod:-}/g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_provider}/${template_default_provider}/g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_provider_prod}/${template_default_provider_prod}/g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_provider_org_id}/${template_default_provider_org_id:-}/g" scripts/taito/config/main.sh
@@ -182,27 +191,66 @@ sed -i "s/\${template_default_host_prod}/${template_default_host_prod:-}/g" scri
 sed -i "s/\${template_default_bastion_public_ip}/${template_default_bastion_public_ip:-}/g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_bastion_public_ip_prod}/${template_default_bastion_public_ip_prod:-}/g" scripts/taito/config/main.sh
 
-# Misc providers
+# Uptime provider
 sed -i "s/\${template_default_uptime_provider}/${template_default_uptime_provider:-}/g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_uptime_provider_prod}/${template_default_uptime_provider_prod:-}/g" scripts/taito/config/main.sh
+sed -i "s|\${template_default_uptime_provider_url}|${template_default_uptime_provider_url:-}|g" scripts/taito/config/main.sh
+sed -i "s|\${template_default_uptime_provider_url_prod}|${template_default_uptime_provider_url_prod:-}|g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_uptime_provider_org_id}/${template_default_uptime_provider_org_id:-}/g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_uptime_provider_org_id_prod}/${template_default_uptime_provider_org_id_prod:-}/g" scripts/taito/config/main.sh
+
+# Tracking provider
+sed -i "s/\${template_default_tracking_provider}/${template_default_tracking_provider:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_tracking_provider_prod}/${template_default_tracking_provider_prod:-}/g" scripts/taito/config/main.sh
+sed -i "s|\${template_default_tracking_provider_url}|${template_default_tracking_provider_url:-}|g" scripts/taito/config/main.sh
+sed -i "s|\${template_default_tracking_provider_url_prod}|${template_default_tracking_provider_url_prod:-}|g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_tracking_organization}/${template_default_tracking_organization:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_tracking_organization_prod}/${template_default_tracking_organization_prod:-}/g" scripts/taito/config/main.sh
+
+# Tracing provider
+sed -i "s/\${template_default_tracing_provider}/${template_default_tracing_provider:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_tracing_provider_prod}/${template_default_tracing_provider_prod:-}/g" scripts/taito/config/main.sh
+sed -i "s|\${template_default_tracing_provider_url}|${template_default_tracing_provider_url:-}|g" scripts/taito/config/main.sh
+sed -i "s|\${template_default_tracing_provider_url_prod}|${template_default_tracing_provider_url_prod:-}|g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_tracing_organization}/${template_default_tracing_organization:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_tracing_organization_prod}/${template_default_tracing_organization_prod:-}/g" scripts/taito/config/main.sh
 
 # CI/CD
 sed -i "s/\${template_default_ci_provider}/${template_default_ci_provider:-}/g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_ci_provider_prod}/${template_default_ci_provider_prod:-}/g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_ci_organization}/${template_default_ci_organization:-}/g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_ci_organization_prod}/${template_default_ci_organization_prod:-}/g" scripts/taito/config/main.sh
-sed -i "s/\${template_default_vc_provider}/${template_default_vc_provider:-}/g" scripts/taito/config/main.sh
-sed -i "s/\${template_default_container_registry_provider}/${template_default_container_registry_provider:-}/g" scripts/taito/config/main.sh
-sed -i "s/\${template_default_container_registry_provider_prod}/${template_default_container_registry_provider_prod:-}/g" scripts/taito/config/main.sh
-sed -i "s|\${template_default_container_registry}|${template_default_container_registry:-}|g" scripts/taito/config/main.sh
-sed -i "s|\${template_default_container_registry_prod}|${template_default_container_registry_prod:-}|g" scripts/taito/config/main.sh
+
+# CI/CD settings
 sed -i "s/\${template_default_ci_exec_deploy:-true}/${template_default_ci_exec_deploy:-}/g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_ci_exec_deploy_prod:-true}/${template_default_ci_exec_deploy_prod:-}/g" scripts/taito/config/main.sh
 
+# Version control provider
+sed -i "s/\${template_default_vc_provider}/${template_default_vc_provider:-}/g" scripts/taito/config/main.sh
+
+# Container registry
+sed -i "s/\${template_default_container_registry_provider}/${template_default_container_registry_provider:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_container_registry_provider_prod}/${template_default_container_registry_provider_prod:-}/g" scripts/taito/config/main.sh
+sed -i "s|\${template_default_container_registry_provider_url}|${template_default_container_registry_provider_url:-}|g" scripts/taito/config/main.sh
+sed -i "s|\${template_default_container_registry_provider_url_prod}|${template_default_container_registry_provider_url_prod:-}|g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_container_registry_organization}/${template_default_container_registry_organization:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_container_registry_organization_prod}/${template_default_container_registry_organization_prod:-}/g" scripts/taito/config/main.sh
+sed -i "s|\${template_default_container_registry}|${template_default_container_registry:-}|g" scripts/taito/config/main.sh
+sed -i "s|\${template_default_container_registry_prod}|${template_default_container_registry_prod:-}|g" scripts/taito/config/main.sh
+
 # Kubernetes
 sed -i "s/\${template_default_kubernetes}/${template_default_kubernetes:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_kubernetes_prod}/${template_default_kubernetes_prod:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_kubernetes_regional}/${template_default_kubernetes_regional:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_kubernetes_regional_prod}/${template_default_kubernetes_regional_prod:-}/g" scripts/taito/config/main.sh
+
+# Binary authorization
+sed -i "s/\${template_default_binauthz_attestor}/${template_default_binauthz_attestor:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_binauthz_attestor_prod}/${template_default_binauthz_attestor_prod:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_binauthz_secret_name}/${template_default_binauthz_secret_name:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_binauthz_secret_name_prod}/${template_default_binauthz_secret_name_prod:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_binauthz_public_key_id}/${template_default_binauthz_public_key_id:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_binauthz_public_key_id_prod}/${template_default_binauthz_public_key_id_prod:-}/g" scripts/taito/config/main.sh
 
 # Postgres
 sed -i "s/\${template_default_postgres}/${template_default_postgres:-}/g" scripts/taito/config/main.sh
@@ -243,6 +291,14 @@ sed -i "s/\${template_default_mysql_master_username}/${template_default_mysql_ma
 sed -i "s/\${template_default_mysql_master_password_hint}/${template_default_mysql_master_password_hint:-}/g" scripts/taito/config/main.sh
 
 # Storage
+sed -i "s/\${template_default_state_bucket}/${template_default_state_bucket:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_state_bucket_prod}/${template_default_state_bucket_prod:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_functions_bucket}/${template_default_functions_bucket:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_functions_bucket_prod}/${template_default_functions_bucket_prod:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_public_bucket}/${template_default_public_bucket:-}/g" scripts/taito/config/main.sh
+sed -i "s/\${template_default_public_bucket_prod}/${template_default_public_bucket_prod:-}/g" scripts/taito/config/main.sh
+
+# Storage defaults
 sed -i "s/\${template_default_storage_class}/${template_default_storage_class:-}/g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_storage_class_prod}/${template_default_storage_class_prod:-}/g" scripts/taito/config/main.sh
 sed -i "s/\${template_default_storage_location}/${template_default_storage_location:-}/g" scripts/taito/config/main.sh
@@ -343,16 +399,16 @@ fi
 
 echo "Removing obsolete provider scripts"
 
-if [[ -d scripts/linux-provider ]] && \
+if [[ -d scripts/taito/deploy-docker-compose ]] && \
    [[ $template_default_provider != "linux" ]] && \
    [[ $template_default_provider_prod != "linux" ]]; then
-  rm -rf scripts/linux-provider
+  rm -rf scripts/taito/deploy-docker-compose
 fi
 
-if [[ -d scripts/custom-provider ]] && \
+if [[ -d scripts/taito/deploy-custom ]] && \
    [[ $template_default_provider != "custom" ]] && \
    [[ $template_default_provider_prod != "custom" ]]; then
-  rm -rf scripts/custom-provider
+  rm -rf scripts/taito/deploy-custom
 fi
 
 if [[ -f docker-compose-remote.yaml ]] && \

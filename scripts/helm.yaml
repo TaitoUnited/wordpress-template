@@ -25,8 +25,6 @@ full-stack:
   ingress:
     class: nginx
     namespace: nginx-ingress
-    oldRewritePolicy: false
-    tls: true
     domains:
       - name: ${taito_domain}
         altDomains:
@@ -37,11 +35,12 @@ full-stack:
     basicAuthEnabled: ${taito_basic_auth_enabled}
     basicAuthHtpasswdSecret: ${taito_project}-${taito_env}-basic-auth
     modsecurityEnabled: true
+    serviceAccountRoles: [ "taito-restricted-pod" ]
     # Horizontal scaling
     replicas: ${kubernetes_replicas}
-    # Env
+    minReplicas: ${kubernetes_replicas}
+    # Environment variables
     env:
-      # Environment variables
       COMMON_ENV: ${taito_env}
 
   services:
@@ -67,12 +66,6 @@ full-stack:
         - mountPath: /bitnami/wordpress
           volumePath: wordpress
           readOnly: false
-      # Database proxy config
-      db:
-        useProxy: ${gcp_db_proxy_enabled}
-        instance: ${taito_zone}:${taito_provider_region}:${db_database_instance}
-        port: ${db_database_real_port}
-        proxySecret: ${taito_provider_db_proxy_secret}
       secretEnv:
         WORDPRESS_DATABASE_PASSWORD: ${db_database_mgr_secret}
         WORDPRESS_PASSWORD: ${taito_project}-${taito_env}-admin.initialpassword
