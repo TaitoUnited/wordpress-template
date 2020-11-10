@@ -1,9 +1,14 @@
 # Here you can configure all your cloud resources (non-Kubernetes resources)
 # with a cloud-agnostic and developer-friendly YAML format
 
-stack:
+settings:
   uptimeEnabled: false
   backupEnabled: false
+  alerts: []
+  apiKeys: []
+
+  serviceAccounts:
+    - id: ${taito_project}-${taito_env}-wordpress
 
   services:
     wordpress:
@@ -27,8 +32,5 @@ stack:
       objectAdmins:
         - id: ${taito_project}-${taito_env}-wordpress
       objectViewers:
-
-  serviceAccounts:
-    - id: ${taito_project}-${taito_env}-wordpress
 
 # END

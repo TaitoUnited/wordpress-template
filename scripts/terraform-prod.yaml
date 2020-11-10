@@ -1,6 +1,6 @@
 # Overrides for prod environment
 
-stack:
+settings:
   uptimeEnabled: true
   backupEnabled: true
 

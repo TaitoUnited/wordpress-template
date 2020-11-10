@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
   }
-  required_version = ">= 0.12"
+  required_version = ">= 0.13"
 }
 
 provider "aws" {
@@ -12,16 +12,16 @@ provider "aws" {
 
 locals {
   # Read json file
-  variables = (
+  resources = (
     fileexists("${path.root}/../../terraform-${var.taito_env}-merged.yaml")
       ? yamldecode(file("${path.root}/../../terraform-${var.taito_env}-merged.yaml"))
       : jsondecode(file("${path.root}/../../terraform-merged.json.tmp"))
-  )["stack"]
+  )["settings"]
 }
 
 module "aws" {
   source  = "TaitoUnited/project-resources/aws"
-  version = "2.1.5"
+  version = "2.1.6"
 
   # Create flags
   create_domain                       = true
@@ -67,6 +67,6 @@ module "aws" {
   elasticache_subnet_ids          = data.aws_subnet_ids.elasticache_subnet_ids.ids
   elasticache_security_group_ids  = data.aws_security_groups.elasticache_security_groups.ids
 
-  # Additional variables as a json file
-  variables                        = local.variables
+  # Additional resources as a json file
+  resources                        = local.resources
 }

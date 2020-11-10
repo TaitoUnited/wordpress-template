@@ -1,10 +1,7 @@
 terraform {
   backend "s3" {
-    profile = "taitounited"
-    bucket  = "taito-aws-kubeless1-projects"
-    region = "us-east-1"
-    key  = "acme-serverless1/terraform/aws"
   }
+  required_version = ">= 0.13"
 }
 
 provider "aws" {
@@ -22,19 +19,19 @@ provider "aws" {
 }
 
 locals {
-  variables = (
+  resources = (
     fileexists("${path.root}/../../terraform-${var.taito_env}-merged.yaml")
       ? yamldecode(file("${path.root}/../../terraform-${var.taito_env}-merged.yaml"))
       : jsondecode(file("${path.root}/../../terraform-merged.json.tmp"))
-  )["stack"]
+  )["settings"]
 }
 
 module "aws" {
   source  = "TaitoUnited/project-resources/aws"
-  version = "2.1.5"
+  version = "2.1.6"
 
   # Create flags
-  create_gateway              = true
+  create_ingress              = true
   create_containers           = true
   create_functions            = true
   create_function_permissions = true
@@ -71,6 +68,6 @@ module "aws" {
   function_subnet_ids         = data.aws_subnet_ids.function_subnet_ids.ids
   function_security_group_ids = data.aws_security_groups.function_security_groups.ids
 
-  # Additional variables as a json file
-  variables                   = local.variables
+  # Additional resources as a json file
+  resources                   = local.resources
 }
