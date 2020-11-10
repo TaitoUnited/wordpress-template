@@ -26,6 +26,9 @@ global:
   debug: false
 
 full-stack:
+  serviceAccountCreate: true
+  networkPolicyEnabled: true
+
   persistence:
     enabled: false
     existingClaim:
@@ -68,7 +71,7 @@ full-stack:
     # Path defaults
     basicAuthEnabled: false
     basicAuthHtpasswdSecret:
-    # clientMaxBodySize: 1m
+    clientMaxBodySize: 1k
     # bufferSize: 4k
     # requestBuffering: on
     # connectTimeout: 5
@@ -83,9 +86,9 @@ full-stack:
     runAsUser:
     runAsGroup:
     # Resources
-    cpuRequest: 2m
+    cpuRequest: 20m
     cpuLimit: 100m
-    memoryRequest: 50Mi
+    memoryRequest: 70Mi
     memoryLimit: 256Mi
     # Vertical scaling
     verticalScaleUpdateMode: Off

@@ -44,9 +44,6 @@ taito_provider_zone=${template_default_provider_zone}
 taito_zone=${template_default_zone}
 taito_zone_multi_tenant=${template_default_zone_multi_tenant}
 
-# Namespace
-taito_namespace=$taito_project-$taito_env
-
 # Resource namespace (= tenant namespace)
 taito_resource_namespace=$taito_zone
 taito_resource_namespace_prefix=$taito_organization_abbr-$taito_company
@@ -537,15 +534,13 @@ fi
 db_database_app_username="${db_database_name}${db_database_app_user_suffix}${db_database_username_suffix}"
 db_database_app_secret="${db_database_name//_/-}-db-app.password"
 
-if [[ ${taito_env} != "local" ]]; then
-  # viewer user for browsing the database
-  db_database_viewer_username="${db_database_name}${db_database_viewer_user_suffix}${db_database_username_suffix}"
-  db_database_viewer_secret="${db_database_name//_/-}-db-viewer.password"
-  # mgr user for deploying database migrations (CI/CD)
-  db_database_mgr_username="${db_database_name}${db_database_username_suffix}"
-  db_database_mgr_secret="${db_database_name//_/-}-db-mgr.password"
-  :
-fi
+# viewer user for browsing the database
+db_database_viewer_username="${db_database_name}${db_database_viewer_user_suffix}${db_database_username_suffix}"
+db_database_viewer_secret="${db_database_name//_/-}-db-viewer.password"
+
+# mgr user for deploying database migrations (CI/CD)
+db_database_mgr_username="${db_database_name}${db_database_username_suffix}"
+db_database_mgr_secret="${db_database_name//_/-}-db-mgr.password"
 
 # Determine default user for executing database operations
 if [[ ${taito_env} == "local" ]]; then

@@ -30,3 +30,5 @@ stack:
 
   serviceAccounts:
     - id: ${taito_project}-${taito_env}-wordpress
+
+# END

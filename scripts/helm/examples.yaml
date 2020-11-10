@@ -2,36 +2,97 @@
 # Path attributes
 # ----------------------------------------------------------
 
-    # UPLOAD: /api/upload for uploading large files
+  # NOTE: These examples are for nginx-ingress controller. If some other
+  # ingress controller is being used, it might not support all of these
+  # options.
+
+  serviceDefaults:
+    # BASIC AUTH: enabled/disabled
+    basicAuthEnabled: false
+
+    # MODSECURITY: modsecurity with the default OWASP Core Rule Set
+    modsecurityEnabled: true
+
+    # LIMIT BY IP/LOCATION: https://en.wikipedia.org/wiki/ISO_3166-2
+    allowedCountries: ["FI", "SE", "NO", "DK", "EE", "US"]
+    # OR ALTERNATIVELY blockedCountries: [
+    #   "TH", "VN", "ID", "IN", "CN", "BR", "RU", "UA", "TR", "IQ"
+    # ]
+    # OR ALTERNATIVELY allowedCidrs: [
+    #   "123.123.123.123/24", "124.124.124.124/32"
+    # ]
+    # NOTE: You can block CIDRs in nginx-ingress config map
+
+  services:
     server:
       paths:
         - path: /api
+
+        # LOGIN: /api/login with rate limited login attempts
+        # rate limit: Limit number of requests from a single IP address
+        - path: /api/login
+          rewriteTarget: /login
+          limitRpm: 5               # 5 requests per minute
+              # NOTE: Actually rate limit is a lot higher as 5x bursts are
+              # accepted and there are also multiple nginx replicas that each
+              # limit separately
+
+        # UPLOAD: /api/upload with a large request body and connection limit
+        # request size: Use a large request body size limit
+        # connection limit: Limit number of connections from a single IP address
         - path: /api/upload
-          clientMaxBodySize: 100m
+          rewriteTarget: /upload
+          clientMaxBodySize: 100m   # Allow 100 MB file
+          limitConnections: 5       # Max 5 connections from a single IP address
+              # NOTE: Actually connection limit is a lot higher as there are
+              # multiple nginx replicas that each limit separately
 
-    # LONG PROCESSING: /api/process with a large read timeout
-    server:
-      paths:
-        - path: /api
+        # DOWNLOAD: /api/download with bandwith and connection limit
+        # rate limit: Limit network bandwith for very large files
+        # connection limit: Limit number of connections from a single IP address
+        - path: /api/download
+          rewriteTarget: /download
+          limitRateAfter: 102400    # Start limiting after 100 MB (102400 KB)
+          limitRate: 100            # Limit bandwith to 100 KB/s
+          limitConnections: 5       # Max 5 connections from a single IP address
+              # NOTE: Actually connection limit is a lot higher as there are
+              # multiple nginx replicas that each limit separately
+
+        # LONG PROCESSING: /api/process with a large read timeout and conn limit
+        # read timeout: Allow long processing on server before response is sent
+        # connection limit: Limit number of connections from a single IP address
         - path: /api/process
-          readTimeout: 120
+          rewriteTarget: /process
+          readTimeout: 120          # 2 minutes
+          limitConnections: 5       # Max 5 connections from a single IP address
+              # NOTE: Actually connection limit is a lot higher as there are
+              # multiple nginx replicas that each limit separately
 
-    # BASIC AUTH: /api/public with basic auth disabled
-    server:
-      paths:
-        - path: /api
-        - path: /api/public
-          basicAuthEnabled: false
+        # TODO: Sticky sessions example
 
-    # BASIC AUTH: /api/private with path specific basic auth secret
-    server:
-      paths:
-        - path: /api
+        # TODO: OAUTH example
+
+        # BASIC AUTH: /api/private with a path specific basic auth secret
+        # IP LIMIT: allow connections from a specific IP only
         - path: /api/private
+          rewriteTarget: /private
           basicAuthEnabled: true
           basicAuthHtpasswdSecret: ${taito_project}-${taito_env}-private-auth
+          allowedCidrs: [ "124.124.124.124/32" ]
 
-    # TODO: More examples
+        # MODSECURITY: /api/special with custom modsecurity rules
+        # https://github.com/SpiderLabs/ModSecurity/wiki/Reference-Manual-%28v2.x%29#configuration-directives
+        - path: /api/special
+          rewriteTarget: /special
+          modsecurityRules: |
+            SecRuleEngine On
+            SecRequestBodyAccess On
+            SecAuditEngine RelevantOnly
+            SecAuditLogParts ABCIJDEFHZ
+            SecAuditLog /dev/stdout
+            Include /etc/nginx/owasp-modsecurity-crs/nginx-modsecurity.conf
+
+        # TODO: More examples
 
 # ----------------------------------------------------------
 # Networking rules
@@ -74,6 +135,12 @@ full-stack:
       cpuLimit: 500m        # limit to 0.5 CPU
       memoryRequest: 128Mi  # request for 128 MB
       memoryLimit: 512Mi    # limit to 512 MB
+
+# ----------------------------------------------------------
+# Horizontal and vertical scaling
+# ----------------------------------------------------------
+
+# TODO
 
 # ----------------------------------------------------------
 # Node selector
@@ -159,6 +226,8 @@ full-stack:
 # External services (dedicated IP address, any port)
 # ----------------------------------------------------------
 
+  # NOTE: Dedicated IP address might not be required as nginx-ingress
+  # supports also tcp and udp connections.
   services:
     mail:
       type: external
@@ -186,12 +255,13 @@ full-stack:
   # ENABLE PERSISTENCE
   persistence:
     enabled: true
-    # a) Either use an existing disk:
+    # a) Either use an existing volume claim:
     existingClaim: existing-pvc
-    # b) Or create new:
+    # b) Or create new volume claim:
     accessMode: ReadWriteOnce # NOTE: GCP does not support ReadWriteMany
     size: 4Gi
     storageClass: fast
+    # volumeName: existing-volume (optional)
 
   # INIT FILE PERMISSIONS, USE THE DISK
   services:
@@ -200,7 +270,7 @@ full-stack:
       # Avoid duplicate mount errors by using Recreate instead of RollingUpdate
       strategyType: Recreate
       # Give volume write permissions for root(0) group
-      fsGroup: '0'
+      fsGroup: 0
       initCommand: 'chmod g+w /data/db'
       # Mount /data/db and /data/backup to the external disk
       persistentVolumeMounts:
@@ -213,6 +283,19 @@ full-stack:
           # TODO: add support for this
           persistentVolumeClaim: another-existing-pvc # Use another disk than the default
       ...
+
+# ----------------------------------------------------------
+# Database proxy (GCP cloud sql proxy)
+# ----------------------------------------------------------
+
+  services:
+    server:
+      # Database proxy config
+      db:
+        useProxy: ${gcp_db_proxy_enabled}
+        instance: ${taito_zone}:${taito_provider_region}:${db_database_instance}
+        port: ${db_database_real_port}
+        proxySecret: ${taito_provider_db_proxy_secret}
 
 # ----------------------------------------------------------
 # Sidecars
