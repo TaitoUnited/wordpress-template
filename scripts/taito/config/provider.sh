@@ -105,7 +105,7 @@ case $taito_provider in
       taito_provider_db_proxy_secret=cloudsql-gserviceaccount.key
       taito_remote_secrets="
         $taito_remote_secrets
-        $taito_provider_db_proxy_secret:copy/db-proxy
+        $taito_provider_db_proxy_secret:copy/common
       "
     fi
 
@@ -318,7 +318,7 @@ case $taito_vc_provider in
     if [[ $taito_plugins == *"semantic-release:$taito_env"* ]]; then
       taito_remote_secrets="
         $taito_remote_secrets
-        version-control-buildbot.token:read/${taito_devops_namespace}
+        version-control-buildbot.token:read/${taito_tenant_devops_namespace}
       "
     fi
     ;;
@@ -399,15 +399,15 @@ if [[ $db_database_ssl_client_cert_enabled == "true" ]]; then
   db_database_ssl_key_secret=$db_database_instance-db-ssl.key
   taito_remote_secrets="
     $taito_remote_secrets
-    $db_database_ssl_ca_secret:copy/db-proxy
-    $db_database_ssl_cert_secret:copy/db-proxy
-    $db_database_ssl_key_secret:copy/db-proxy
+    $db_database_ssl_ca_secret:copy/common
+    $db_database_ssl_cert_secret:copy/common
+    $db_database_ssl_key_secret:copy/common
   "
 elif [[ $db_database_ssl_server_cert_enabled == "true" ]]; then
   db_database_ssl_ca_secret=$db_database_instance-db-ssl.ca
   taito_remote_secrets="
     $taito_remote_secrets
-    $db_database_ssl_ca_secret:copy/db-proxy
+    $db_database_ssl_ca_secret:copy/common
   "
 fi
 

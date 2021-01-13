@@ -13,6 +13,9 @@ global:
   debug: false
 
 full-stack:
+  networkPolicyEnabled: true
+  networkPolicyProvider: ${kubernetes_network_policy_provider}
+
   persistence:
     enabled: ${wordpress_persistence_enabled}
     existingClaim:

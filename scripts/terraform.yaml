@@ -4,11 +4,19 @@
 settings:
   uptimeEnabled: false
   backupEnabled: false
-  alerts: []
-  apiKeys: []
 
   serviceAccounts:
     - id: ${taito_project}-${taito_env}-wordpress
+
+  ingress:
+    class: gateway
+    enabled: false # ingress
+    createMainDomain: false
+    domains:
+      - name: ${taito_domain}
+        # TODO: implement altDomains support
+        altDomains:
+          - name: ${taito_altdomain}
 
   services:
     wordpress:

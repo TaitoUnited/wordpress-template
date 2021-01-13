@@ -20,11 +20,23 @@ locals {
       : jsondecode(file("${path.root}/../../terraform-merged.json.tmp"))
   )["settings"]
 
+  ingress = merge(
+    {
+      # Default values
+      enabled = false,
+      class = null,
+      createMainDomain = false,
+      domains = [],
+    },
+    try(local.orig.ingress, {})
+  )
+
   services = {
-    for key in keys(local.orig.services):
+    for key in keys(coalesce(try(local.orig.services, null), {})):
     key => merge(
       {
         # Default values
+        type = null
         machineType = null
         name = null
         location = null
@@ -58,12 +70,19 @@ locals {
     )
   }
 
-  resources = merge(local.orig, { services = local.services })
+  resources = merge(
+    local.orig,
+    { alerts = coalesce(try(local.orig.alerts, null), []) },
+    { apiKeys = coalesce(try(local.orig.apiKeys, null), []) },
+    { serviceAccounts = coalesce(try(local.orig.serviceAccounts, null), []) },
+    { ingress = local.ingress },
+    { services = coalesce(local.services, {}) },
+  )
 }
 
 module "gcp" {
   source  = "TaitoUnited/project-resources/google"
-  version = "3.0.0"
+  version = "3.1.0"
 
   create_storage_buckets         = true
   create_databases               = true
