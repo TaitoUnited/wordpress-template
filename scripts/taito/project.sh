@@ -62,6 +62,11 @@ taito_secrets="
 taito_testing_secrets="
 "
 
+taito_secret_hints="
+  * basic-auth=Basic authentication is used to hide non-production environments from public
+  * serviceaccount=Service account is typically used to access Cloud resources
+"
+
 # ------ Links ------
 # Add custom links here. You can regenerate README.md links with
 # 'taito project docs'. Configuration instructions: TODO
