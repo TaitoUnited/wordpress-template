@@ -63,7 +63,7 @@ yes | cp wordpress/* \
   "${template_project_path}/wordpress/" 2> /dev/null || :
 
 echo "Generate README.md links"
-(cd "${template_project_path}" && (taito project docs || :))
+(cd "${template_project_path}" && (taito project generate || :))
 
 echo
 echo

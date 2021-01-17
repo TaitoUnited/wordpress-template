@@ -34,7 +34,7 @@ LINKS WILL BE GENERATED HERE
 
 [//]: # (GENERATED LINKS END)
 
-> You can update this section by configuring links in `scripts/taito/project.sh` and running `taito project docs`.
+> You can update this section by configuring links in `scripts/taito/project.sh` and running `taito project generate`.
 
 ## Contacts
 
