@@ -25,8 +25,8 @@
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "if [[ $taito_mode != 'ci' ]]; then echo No pre-commit validations; fi",
-      "pre-push": "if [[ $taito_mode != 'ci' ]]; then echo No pre-push validations; fi"
+      "pre-commit": "if [[ \"$taito_mode\" != 'ci' ]]; then echo No pre-commit validations; fi",
+      "pre-push": "if [[ \"$taito_mode\" != 'ci' ]]; then echo No pre-push validations; fi"
     }
   },
   "commitlint": {
