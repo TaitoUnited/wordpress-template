@@ -1,1 +1,13 @@
+# This file is used to run your application on remote servers with
+# Docker Compose. It is not needed if you use Kubernetes or cloud services
+# instead.
+
+version: '3.9'
+x-logging:
+  &default-logging
+  options:
+    max-size: '100m'
+    max-file: '10'
+  driver: json-file
+
 # TODO
