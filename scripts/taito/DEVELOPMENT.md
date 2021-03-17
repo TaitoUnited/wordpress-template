@@ -4,19 +4,19 @@ This file has been copied from [WORDPRESS-TEMPLATE](https://github.com/TaitoUnit
 
 Table of contents:
 
-* [Prerequisites](#prerequisites)
-* [Workflow](#workflow)
-* [Local development](#local-development)
-* [Development tips](#development-tips)
-* [Version control](#version-control)
-* [Deployment](#deployment)
-* [Upgrading](#upgrading)
+- [Prerequisites](#prerequisites)
+- [Workflow](#workflow)
+- [Local development](#local-development)
+- [Development tips](#development-tips)
+- [Version control](#version-control)
+- [Deployment](#deployment)
+- [Upgrading](#upgrading)
 
 ## Prerequisites
 
-* [node.js](https://nodejs.org/)
-* [docker-compose](https://docs.docker.com/compose/install/)
-* [Taito CLI](https://taitounited.github.io/taito-cli/) (or see [TAITOLESS.md](TAITOLESS.md))
+- [node.js](https://nodejs.org/)
+- [docker-compose](https://docs.docker.com/compose/install/)
+- [Taito CLI](https://taitounited.github.io/taito-cli/) (or see [TAITOLESS.md](TAITOLESS.md))
 
 ## Workflow
 
@@ -118,10 +118,10 @@ The commands mentioned above work also for server environments (`feat`, `dev`, `
     taito open admin:stag                   # Open admin GUI in browser
     taito info:stag                         # Show info
     taito status:stag                       # Show status of dev environment
-    taito shell:wordpress:stag              # Start a shell on wordpress container
     taito logs:wordpress:stag               # Tail logs of wordpress container
     taito open logs:stag                    # Open logs on browser
     taito open storage:stag                 # Open storage bucket on browser
+    taito shell:wordpress:stag              # Start a shell on wordpress container
     taito db connect:stag                   # Access database on command line
     taito db proxy:stag                     # Start a proxy for database access
     taito db import:stag ./database/fil.sql # Import a file to database
@@ -145,7 +145,7 @@ Sometimes docker may start hogging up cpu on macOS and Windows. In such case, ju
 
 If the cooling fans of your computer spin fast and the computer seems slow, a high cpu load (or too slow computer) might not be the only cause. Check that your computer is not full of dust, the environment is not too hot, and your computer is not running on low-energy mode to save battery. Many computers start to limit available cpu on too hot conditions, or when battery charge is low.
 
-Docker volume mounts can be slow on non-Linux systems. The template uses *delegated* volume mounts to mitigate this issue on macOS.
+Docker volume mounts can be slow on non-Linux systems. The template uses _delegated_ volume mounts to mitigate this issue on macOS.
 
 ## Version control
 
@@ -157,8 +157,8 @@ All commit messages must be structured according to the [Conventional Commits](h
 
 Deploying to different server environments:
 
-* staging: Merge changes from dev to stag branch using fast-forward.
-* production: Merge changes from stag branch to master branch using fast-forward. Version number and release notes are generated automatically by the CI/CD tool.
+- staging: Merge changes from dev to stag branch using fast-forward.
+- production: Merge changes from stag branch to master branch using fast-forward. Version number and release notes are generated automatically by the CI/CD tool.
 
 You can use the taito commands to manage branches, builds, and deployments. Run `taito env -h`, `taito feat -h`, `taito hotfix -h`, and `taito deployment -h` for instructions. Run `taito open builds` to see the build logs.
 
@@ -212,12 +212,12 @@ Migrate some data from staging to production:
 
 Manually:
 
-1) **local wordpress**: Update WordPress version in `wordpress/Dockerfile` and `wordpress/Dockerfile.build` files. Push changes to dev branch.
-2) **local clean start**: Clean start with `taito start --clean`, `taito init --clean`.
-3) **local database**: Open admin GUI with `taito open admin` and update the database by clicking the database update button. Also check that the version number has actually changed, plugins have been updated, and everything works ok. Update local database dump with `taito db dump data`.
-4) **local plugins**: Update plugins with `taito wp plugin update` command and push changes to dev branch. NOTE: By default only minor and patch versions are updated. This can be configured with `wordpress_plugin_update_flags` in `scripts/taito/project.sh`. Once in a while remove the `--minor` flag to update major version. You should also try `--patch` or major update if plugin update fails using the `--minor` flag.
-5) **staging wordpress**: Merge changes to staging branch. After deployment open admin GUI with `taito open admin:stag` and update the database with button. Also check that the version number has actually changed, plugins have been updated, and everything works ok.
-6) **prod wordpress**: Merge changes to prod branch. After deployment open admin GUI with `taito open admin:prod` and update the database with button. Also check that the version number has actually changed, plugins have been updated, and everything works ok.
+1. **local wordpress**: Update WordPress version in `wordpress/Dockerfile` and `wordpress/Dockerfile.build` files. Push changes to dev branch.
+2. **local clean start**: Clean start with `taito start --clean`, `taito init --clean`.
+3. **local database**: Open admin GUI with `taito open admin` and update the database by clicking the database update button. Also check that the version number has actually changed, plugins have been updated, and everything works ok. Update local database dump with `taito db dump data`.
+4. **local plugins**: Update plugins with `taito wp plugin update` command and push changes to dev branch. NOTE: By default only minor and patch versions are updated. This can be configured with `wordpress_plugin_update_flags` in `scripts/taito/project.sh`. Once in a while remove the `--minor` flag to update major version. You should also try `--patch` or major update if plugin update fails using the `--minor` flag.
+5. **staging wordpress**: Merge changes to staging branch. After deployment open admin GUI with `taito open admin:stag` and update the database with button. Also check that the version number has actually changed, plugins have been updated, and everything works ok.
+6. **prod wordpress**: Merge changes to prod branch. After deployment open admin GUI with `taito open admin:prod` and update the database with button. Also check that the version number has actually changed, plugins have been updated, and everything works ok.
 
 Reverting changes:
 
