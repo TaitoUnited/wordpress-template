@@ -1,0 +1,44 @@
+name: CI/CD Pipeline
+on:
+  push:
+    branches:
+      - dev
+      - test
+      - uat
+      - stag
+      - canary
+      - prod
+      - master
+      - main
+
+jobs:
+  pipeline:
+    name: Pipeline
+    runs-on: ubuntu-latest
+    container:
+      image: taitounited/taito-cli:ci-azure
+      env:
+        taito_mode: ci
+        taito_image: taitounited/taito-cli:ci-azure
+        taito_ci_phases:
+        AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+        AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+        IMAGE_TAG: ${{ github.sha }}
+    steps:
+      # Prepare build
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - run: taito build prepare:${GITHUB_REF##*/} $IMAGE_TAG
+
+      # Prepare artifacts for deployment
+      - run: taito artifact prepare:wordpress:${GITHUB_REF##*/} $IMAGE_TAG
+
+      # Deploy changes to target environment
+      - run: taito wp-plugin-update:${GITHUB_REF##*/} || echo "WARNING: Failed updating wordpress plugins"
+      - run: taito deployment deploy:${GITHUB_REF##*/} $IMAGE_TAG
+
+      # Release artifacts
+      - run: taito artifact release:wordpress:${GITHUB_REF##*/} $IMAGE_TAG
+
+      # Release build
+      - run: taito build release:${GITHUB_REF##*/}
