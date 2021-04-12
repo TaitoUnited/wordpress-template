@@ -24,11 +24,12 @@ settings:
 
     bucket:
       type: bucket
-      name: ${taito_random_name}-${taito_env}
+      name: ${st_bucket_name}
       location: ${taito_default_storage_location}
       storageClass: ${taito_default_storage_class}
-      cors:
-        - domain: https://${taito_domain}
+      # Cors
+      corsRules:
+        - allowedOrigins: [ "https://${taito_domain}" ]
       # Object lifecycle
       versioning: true
       versioningRetainDays: ${taito_default_storage_days}
