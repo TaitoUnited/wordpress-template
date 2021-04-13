@@ -282,7 +282,7 @@ case $taito_ci_provider in
       ${link_urls}
       * builds=https://$taito_vc_repository_url/actions Build logs
     "
-    ;;
+    ;;    
   local)
     link_urls="
       ${link_urls}

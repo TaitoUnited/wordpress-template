@@ -8,13 +8,25 @@
 # NOTE: Variables are passed to the tests without the test_TARGET_ prefix.
 ##########################################################################
 
+# Enable CI/CD tests only for dev and feature environments
+if [[ $taito_target_env == "dev" ]] || [[ $taito_target_env == "f-"* ]]; then
+  ci_exec_test=false             # enable this to execute test suites
+  ci_exec_test_init=false        # enable to run 'init --clean' before each test suite
+  ci_exec_test_init_after=false  # enable to run 'init --clean' after all tests
+fi
+
 # Environment specific settings
-if [[ $taito_env == "local" ]]; then
+test_all_TEST_ENV=$taito_target_env
+if [[ $taito_target_env == "local" ]]; then
+  test_all_TEST_ENV_REMOTE=false
   ci_test_base_url=http://wordpress-template-ingress:80
-elif [[ $taito_env == "dev" ]] || [[ $taito_env == "f-"* ]]; then
-  ci_exec_test=false        # enable this to execute test suites
-  ci_exec_test_init=false   # run 'init --clean' before each test suite
+else
+  test_all_TEST_ENV_REMOTE=true
   if [[ $taito_command == "util-test" ]]; then
-    ci_test_base_url=https://$(taito -q secret show:$taito_env basic-auth | head -1)@$taito_domain
+    # Constitute test url by combining basic auth secret and domain name
+    ci_test_base_url=https://$(cat tmp/secrets/dev/acme-azureware-dev-basic-auth.auth | sed 's/:{PLAIN}/:/')@$taito_domain
   fi
 fi
+
+# URLs for tests
+test_wordpress_TEST_URL=$ci_test_base_url

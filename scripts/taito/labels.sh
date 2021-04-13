@@ -21,6 +21,7 @@ taito_namespace=wordpress-template-$taito_env
 
 # Database defaults
 taito_default_db_type=mysql
+taito_default_db_shared=false # If true, taito_random_name is used as pg db name
 
 # Template
 template_version=1.0.0
