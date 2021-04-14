@@ -22,6 +22,65 @@ jobs:
         taito_mode: ci
         taito_image: taitounited/taito-cli:ci-azure
         taito_ci_phases:
+        IMAGE_TAG: ${{ github.sha }}
+        AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+        AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+    steps:
+      # Init
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Set environment
+        run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
+      - name: Set authentication
+        run: |
+          if [ ! -z "${{ secrets[format('{0}_AZURE_CLIENT_ID', env.BRANCH)] }}" ]; then
+            echo "AZURE_CLIENT_ID=${{ secrets[format('{0}_AZURE_CLIENT_ID', env.BRANCH)] }}" >> $GITHUB_ENV
+            echo "AZURE_CLIENT_SECRET=${{ secrets[format('{0}_AZURE_CLIENT_SECRET', env.BRANCH)] }}" >> $GITHUB_ENV
+          fi # END AZURE_CLIENT_ID
+
+      # Prepare build
+      - run: taito build prepare:$BRANCH $IMAGE_TAG
+
+      # Prepare artifacts for deployment
+      - run: taito artifact prepare:wordpress:$BRANCH $IMAGE_TAG
+
+      # Deploy changes to target environment
+      - run: taito wp-plugin-update:$BRANCH  || echo "WARNING: Failed updating wordpress plugins"
+      - run: taito deployment deploy:$BRANCH  $IMAGE_TAG
+
+      # Release artifacts
+      - run: taito artifact release:wordpress:$BRANCH $IMAGE_TAG
+
+      # Release build
+      - run: taito build release:$BRANCH
+
+
+name: CI/CD Pipeline
+on:
+  push:
+    branches:
+      - dev
+      - test
+      - uat
+      - stag
+      - canary
+      - prod
+      - master
+      - main
+
+jobs:
+  pipeline:
+    name: Pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    container:
+      image: taitounited/taito-cli:ci-azure
+      env:
+        taito_mode: ci
+        taito_image: taitounited/taito-cli:ci-azure
+        taito_ci_phases:
         AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
         AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
         IMAGE_TAG: ${{ github.sha }}
