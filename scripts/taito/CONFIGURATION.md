@@ -101,6 +101,23 @@ If you need to, you can configure Kubernetes settings by modifying `heml*.yaml` 
 
 You can add a new secret like this:
 
-1. Add a secret definition to the `taito_secrets` setting in `scripts/taito/project.sh`.
+1. Add a secret definition to the `taito_secrets` or the `taito_remote_secrets` setting in `scripts/taito/project.sh`.
 2. Map the secret definition to a secret in `docker-compose.yaml` for Docker Compose and in `scripts/helm.yaml` for Kubernetes.
 3. Run `taito secret rotate:ENV SECRET` to generate a secret value for an environment. Run the command for each environment separately. Note that the rotate command restarts all pods in the same namespace.
+
+You can use the following methods in your secret definition:
+
+- `random`: Randomly generated string (30 characters).
+- `random-N`: Randomly generated string (N characters).
+- `random-words`: Randomly generated words (6 words).
+- `random-words-N`: Randomly generated words (N words).
+- `random-uuid`: Randomly generated UUID.
+- `manual`: Manually entered string (min 8 characters).
+- `manual-N`: Manually entered string (min N characters).
+- `file`: File. The file path is entered manually.
+- `template-NAME`: File generated from a template by substituting environment variables and secrets values.
+- `htpasswd`: htpasswd file that contains 1-N user credentials. User credentials are entered manually.
+- `htpasswd-plain`: htpasswd file that contains 1-N user credentials. Passwords are stored in plain text. User credentials are entered manually.
+- `csrkey`: Secret key generated for certificate signing request (CSR).
+
+> See the [Environment variables and secrets](https://taitounited.github.io/taito-cli/tutorial/06-env-variables-and-secrets) chapter of Taito CLI tutorial for more instructions.
