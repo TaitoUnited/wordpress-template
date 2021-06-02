@@ -1,6 +1,7 @@
 {
   "name": "wordpress-template",
   "scripts": {
+    "preinstall": "if [ -f package-lock.json ]; then npx npm-force-resolutions; fi",
     "install-clean": "rm -f wordpress/data/wordpress/.user_scripts_initialized || :",
     "install-ci": "echo '# No additional dependencies need to be installed in ci mode'",
     "install-dev": "echo '# No additional dependencies need to be installed'",
@@ -111,11 +112,14 @@
     "url": "git+https://github.com/TaitoUnited/wordpress-template.git"
   },
   "devDependencies": {
-    "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
+    "@commitlint/cli": "^12.1.4",
+    "@commitlint/config-conventional": "^12.1.4",
     "git-branch-is": "^4.0.0",
-    "husky": "^4.3.5",
+    "husky": "^6.0.0",
     "npm-run-all": "^4.1.5",
-    "semantic-release": "^16.0.4"
+    "semantic-release": "^17.4.3"
+  },
+  "resolutions": {
+    "npm": "^6.14.13"
   }
 }
