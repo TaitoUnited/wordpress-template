@@ -16,7 +16,6 @@ services:
       - "./wordpress/data:/bitnami:delegated"
     user: ${taito_host_user_uid}:0
     environment:
-      HOST_OS: ${taito_host_os}
       COMMON_PUBLIC_PORT: 4635
       WORDPRESS_USERNAME: deleteme    # SHOW ON INFO
       WORDPRESS_PASSWORD: password-change-it-7983p4nWgRE2p4No2d9 # SHOW ON INFO
