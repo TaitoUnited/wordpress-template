@@ -185,7 +185,7 @@ if [[ $template_default_zone == "gcloud-temp1" ]]; then
   sed -i 's/taito_ci_namespace_id=$taito_resource_namespace/taito_ci_namespace_id=$taito_zone/' ./scripts/taito/config/main.sh
   sed -i 's/copy\/common/copy\/devops/' ./scripts/taito/config/provider.sh
   sed -i "/^    namespace: ingress-nginx/a\    oldRewritePolicy: true" scripts/helm.yaml
-else
+elif [[ -f ./scripts/helm.yaml ]]; then
   sed -i "/# For old gcp environments/d" ./scripts/helm.yaml
 fi
 
@@ -288,6 +288,7 @@ fi
 
 # Remove extra template stuff from CI/CD scripts
 rm -rf cloudbuild-template.yaml
+sed -i "s|\${_TEMPLATE_DEFAULT_TAITO_IMAGE}|${template_default_taito_image:-}|g" .github/workflows/pipeline.yaml
 sed -i "s|\${_TEMPLATE_DEFAULT_TAITO_IMAGE}|${template_default_taito_image:-}|g" cloudbuild.yaml
 sed -i "s|_IMAGE_REGISTRY: eu.gcr.io/\$PROJECT_ID|_IMAGE_REGISTRY: ${template_default_container_registry}|" cloudbuild.yaml
 sed -i "s|\${_TEMPLATE_DEFAULT_TAITO_IMAGE}|${template_default_taito_image}|g" azure-pipelines.yml
@@ -302,6 +303,12 @@ sed -i "s/\$template_default_taito_image_username/${template_default_taito_image
 sed -i "s/\$template_default_taito_image_password/${template_default_taito_image_password:-}/g" ${ci_scripts}
 sed -i "s/\$template_default_taito_image_email/${template_default_taito_image_email:-}/g" ${ci_scripts}
 sed -i "s|\$template_default_taito_image|${template_default_taito_image}|g" ${ci_scripts}
+
+# Remove VPN step
+# TODO: Do this for all ci_scripts
+if [[ $template_default_vpn_enabled != "true" ]]; then
+  sed -i "/^      # Start VPN\r*\$/,/^\r*$/d" .github/workflows/pipeline.yaml
+fi
 
 ################################
 # Remove obsolete CI/CD scripts
