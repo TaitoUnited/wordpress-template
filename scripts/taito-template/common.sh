@@ -201,9 +201,12 @@ if [[ ${template_default_postgres_ssl_enabled} != "true" ]] ||
   if [[ -f docker-compose-cicd.yaml ]]; then
     sed -i '/DATABASE_SSL_KEY/d' docker-compose-cicd.yaml
     sed -i '/database_ssl_key/d' docker-compose-cicd.yaml
+    sed -i '/DATABASE_SSL_CERT/d' docker-compose-cicd.yaml
+    sed -i '/database_ssl_cert/d' docker-compose-cicd.yaml
   fi
   if [[ -f scripts/taito/testing.sh ]]; then
-    sed -i '/database_ssl_key/d' scripts/taito/testing.sh
+    sed -i '/database_ssl_key/d' scripts/taito/project.sh
+    sed -i '/database_ssl_cert/d' scripts/taito/project.sh
   fi
 fi
 if [[ ${template_default_postgres_ssl_enabled} != "true" ]] ||
@@ -213,7 +216,7 @@ if [[ ${template_default_postgres_ssl_enabled} != "true" ]] ||
     sed -i '/database_ssl_ca/d' docker-compose-cicd.yaml
   fi
   if [[ -f scripts/taito/testing.sh ]]; then
-    sed -i '/database_ssl_ca/d' scripts/taito/testing.sh
+    sed -i '/database_ssl_ca/d' scripts/taito/project.sh
   fi
 fi
 
@@ -303,12 +306,6 @@ sed -i "s/\$template_default_taito_image_username/${template_default_taito_image
 sed -i "s/\$template_default_taito_image_password/${template_default_taito_image_password:-}/g" ${ci_scripts}
 sed -i "s/\$template_default_taito_image_email/${template_default_taito_image_email:-}/g" ${ci_scripts}
 sed -i "s|\$template_default_taito_image|${template_default_taito_image}|g" ${ci_scripts}
-
-# Remove VPN step
-# TODO: Do this for all ci_scripts
-if [[ $template_default_vpn_enabled != "true" ]]; then
-  sed -i "/^      # Start VPN\r*\$/,/^\r*$/d" .github/workflows/pipeline.yaml
-fi
 
 ################################
 # Remove obsolete CI/CD scripts
