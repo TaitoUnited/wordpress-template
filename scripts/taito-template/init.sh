@@ -69,6 +69,7 @@ sed -i "s/7587/${db_port}/g" \
   scripts/taito/TAITOLESS.md www/README.md &> /dev/null || :
 sed -i "s/4635/${ingress_port}/g" \
   docker-compose.yaml \
+  scripts/terraform-dev.yaml \
   scripts/taito/project.sh scripts/taito/env-local.sh \
   scripts/taito/TAITOLESS.md www/README.md &> /dev/null || :
 
