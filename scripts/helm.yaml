@@ -51,6 +51,7 @@ full-stack:
     # and helm/examples.yaml for some examples.
 
     wordpress:
+      # TODO: Block xmlrpc.php calls by default (currently hard coded in helm chart)
       paths:
         - path:
           clientMaxBodySize: 5m
