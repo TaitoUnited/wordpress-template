@@ -33,7 +33,7 @@ services:
   # NOTE: For staging database
   # wordpress-template-database:
   #   container_name: wordpress-template-database
-  #   image: ${taito_image:-taitounited/taito-cli:latest}
+  #   image: ${taito_image:-ghcr.io/taitounited/taito-cli:latest}
   #   restart: unless-stopped
   #   entrypoint: /bin/sh -c "cd /project && taito db-proxy:stag 3306"
   #   user: taito
