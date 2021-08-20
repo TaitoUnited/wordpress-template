@@ -1,0 +1,4 @@
+# Ignore all inside cache folder except specific files
+!/wordpress/wp-content/cache
+/wordpress/wp-content/cache/*
+!/wordpress/wp-content/cache/index.html

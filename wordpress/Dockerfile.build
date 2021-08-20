@@ -1,11 +1,11 @@
-FROM bitnami/wordpress:5.5.1 as builder
+FROM bitnami/wordpress:5.8.0 as builder
 
 USER root
 
 # TODO: remove this (hack to go around montly upload folder created by root)
 RUN apt-get -y update && apt-get -y install acl
 
-COPY *.sh *.js /template/
+COPY *.sh /template/
 RUN /template/setup.sh
 
 # Add init.sh to the beginning of /app-entrypoint.sh

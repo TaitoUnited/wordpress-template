@@ -11,34 +11,10 @@
 # TODO: wp-config.php: define( 'WP_HOME', 'http://' . $_SERVER['HTTP_HOST'] . '/' );
 # TODO: ---> replace all of this with a wp-config.php mounted from secret
 
-echo "setup.sh: Adding support for database environment variables"
-
-echo "setup.sh: Modifying getDatabaseProperties() function of helpers.js"
-cp /.nami/components/com.bitnami.wordpress/helpers.js \
-  /.nami/components/com.bitnami.wordpress/helpers.orig.js
-sed 's/app.helpers.getDatabaseProperties/app.helpers.getDatabasePropertiesOrig/' \
-  /.nami/components/com.bitnami.wordpress/helpers.orig.js \
-  > /.nami/components/com.bitnami.wordpress/helpers.js
-cat /template/helpers.js \
-  >> /.nami/components/com.bitnami.wordpress/helpers.js
-
-echo "setup.sh: Updating wp-config-sample.php with environment variable references"
-cp /opt/bitnami/wordpress/wp-config-sample.php /opt/bitnami/wordpress/wp-config-sample.orig.php
-sed "s/define( 'DB_NAME'.*$/define( 'DB_NAME', getenv('WORDPRESS_DATABASE_NAME'));/" \
-  /opt/bitnami/wordpress/wp-config-sample.orig.php |
-sed "s/define( 'DB_USER'.*$/define( 'DB_USER', getenv('WORDPRESS_DATABASE_USER'));/" |
-sed "s/define( 'DB_PASSWORD'.*$/define( 'DB_PASSWORD', getenv('WORDPRESS_DATABASE_PASSWORD'));/" |
-sed "s/define( 'DB_HOST'.*$/define( 'DB_HOST', getenv('MARIADB_HOST') . ':' . getenv('MARIADB_PORT_NUMBER'));/" \
-  > /opt/bitnami/wordpress/wp-config-sample.php
-
-# TODO: duplicate code
-echo "setup.sh: Updating wp-config.php with environment variable references"
-cp /opt/bitnami/wordpress/wp-config.php /opt/bitnami/wordpress/wp-config.orig.php
-sed "s/define( 'DB_NAME'.*$/define( 'DB_NAME', getenv('WORDPRESS_DATABASE_NAME'));/" \
-  /opt/bitnami/wordpress/wp-config.orig.php |
-sed "s/define( 'DB_USER'.*$/define( 'DB_USER', getenv('WORDPRESS_DATABASE_USER'));/" |
-sed "s/define( 'DB_PASSWORD'.*$/define( 'DB_PASSWORD', getenv('WORDPRESS_DATABASE_PASSWORD'));/" |
-sed "s/define( 'DB_HOST'.*$/define( 'DB_HOST', getenv('MARIADB_HOST') . ':' . getenv('MARIADB_PORT_NUMBER'));/" \
-  > /opt/bitnami/wordpress/wp-config.php
+echo "setup.sh: Move non-public files from Wordpress content root"
+mkdir -p /moved
+mv /opt/bitnami/wordpress/readme.html /moved
+mv /opt/bitnami/wordpress/license.txt /moved
+mv /opt/bitnami/wordpress/licenses /moved
 
 echo "setup.sh: DONE"

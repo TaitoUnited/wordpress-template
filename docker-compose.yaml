@@ -19,8 +19,8 @@ services:
       COMMON_PUBLIC_PORT: 4635
       WORDPRESS_USERNAME: deleteme    # SHOW ON INFO
       WORDPRESS_PASSWORD: password-change-it-7983p4nWgRE2p4No2d9 # SHOW ON INFO
-      MARIADB_HOST: wordpress-template-database
-      MARIADB_PORT_NUMBER: 3306
+      WORDPRESS_DATABASE_HOST: wordpress-template-database
+      WORDPRESS_DATABASE_PORT_NUMBER: 3306
       # NOTE: For staging database
       # WORDPRESS_DATABASE_NAME: wptemplatestag
       # WORDPRESS_DATABASE_USER: wptemplatestag
