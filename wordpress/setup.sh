@@ -1,10 +1,6 @@
 #!/bin/bash -e
 
-# Custom wordpress-template implementation for fetching database settings
-# from environment variables.
-# https://github.com/bitnami/bitnami-docker-wordpress/issues/128#issuecomment-389427845
-
-# TODO: all secrets (e.g. db password) should be read from disk mount instead of env vars
+# TODO: all secrets should be read from disk mount secret instead of env vars
 # TODO: replace also salts and keys, so that they can be kept in kubernetes secrets
 # TODO: wp-config.php: define( 'AUTOMATIC_UPDATER_DISABLED', true ); -> or leave on?
 # TODO: wp-config.php: define( 'WP_SITEURL', 'http://' . $_SERVER['HTTP_HOST'] . '/' );

@@ -1,35 +1,28 @@
-FROM bitnami/wordpress:5.8.0 as builder
+FROM bitnami/wordpress:5.8.2 as builder
 
 USER root
-
-# TODO: remove this (hack to go around montly upload folder created by root)
-RUN apt-get -y update && apt-get -y install acl
 
 COPY *.sh /template/
 RUN /template/setup.sh
 
-# Add init.sh to the beginning of /app-entrypoint.sh
-RUN cp /app-entrypoint.sh /app-entrypoint-orig.sh
-RUN cat /template/init.sh > /template/temp.sh && \
-  cat /app-entrypoint.sh | grep -v '#!/' >> /template/temp.sh && \
-  mv /template/temp.sh /app-entrypoint.sh && \
-  chmod +x /app-entrypoint.sh
+# TODO: remove this (hack to go around montly upload folder created by root)
+RUN apt-get -y update && apt-get -y install acl
 
+# Copy data on image
 RUN rm -r /bitnami/wordpress
-
-COPY ./data /data-image
+COPY ./data /bitnami
 
 # Add read permissions for wordpress user
-RUN chmod -R 0550 /data-image
-RUN chown -R 1001:1001 /data-image
+RUN chmod -R 0550 /bitnami/wordpress
+RUN chown -R 1001:1001 /bitnami/wordpress
 
 # Give wordpress write access to uploads directory
-RUN mkdir -p /data-image/wordpress/wp-content/uploads
-RUN chmod -R 0770 /data-image/wordpress/wp-content/uploads
-RUN chown -R 1001:1001 /data-image/wordpress/wp-content/uploads
+RUN mkdir -p /bitnami/wordpress/wordpress/wp-content/uploads
+RUN chmod -R 0770 /bitnami/wordpress/wordpress/wp-content/uploads
+RUN chown -R 1001:1001 /bitnami/wordpress/wordpress/wp-content/uploads
 
 # TODO: remove this (hack to go around montly upload folder created by root)
-RUN chmod g+ws /data-image/wordpress/wp-content/uploads && \
-    setfacl -dm u::rwx,g::rwx,o::rx /data-image/wordpress/wp-content/uploads
+RUN chmod g+ws /bitnami/wordpress/wordpress/wp-content/uploads && \
+    setfacl -dm u::rwx,g::rwx,o::rx /bitnami/wordpress/wordpress/wp-content/uploads
 
 USER 1001

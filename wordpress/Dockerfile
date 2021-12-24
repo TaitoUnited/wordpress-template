@@ -1,4 +1,4 @@
-FROM bitnami/wordpress:5.8.0 as builder
+FROM bitnami/wordpress:5.8.2 as builder
 
 USER root
 
