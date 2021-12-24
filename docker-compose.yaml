@@ -43,6 +43,12 @@ services:
   #     - "127.0.0.1:7587:3306"
   #   volumes:
   #     - ".:/project:delegated"
+  #     # Mount cloud credentials for db proxy
+  #     - "${HOME}/.aws:/home/taito/.aws"
+  #     - "${HOME}/.azure:/home/taito/.azure"
+  #     - "${HOME}/.config/doctl:/home/taito/.config/doctl"
+  #     - "${HOME}/.config/gcloud:/home/taito/.config/gcloud"
+  #     - "${HOME}/.kube:/home/taito/.kube"
   #   environment:
   #     taito_docker: 'true'
 
