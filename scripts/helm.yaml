@@ -55,6 +55,9 @@ full-stack:
       paths:
         - path:
           clientMaxBodySize: 5m
+        - path: /wp-login.php
+          rewriteTargetDisabled: true
+          limitRpm: 3
       port: 8080
       livenessPath: /wp-login.php
       # TODO: https://github.com/kubernetes/kubernetes/issues/27114
