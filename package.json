@@ -11,6 +11,7 @@
     "info:local": "cat docker-compose.yaml | grep '# SHOW ON INFO'",
     "info": "echo 'If the admin account is shared, you probably know where to find the shared credentials.' && echo \"Basic auth user accounts for hiding the ${taito_env} environment:\" && taito ${taito_options} secret show:${taito_env} basic-auth && echo 'Initial admin user is \"deleteme\". Initial password is shown below.' && taito ${taito_options} secret show:stag admin.initialpassword",
     "wp-plugin-update": "./scripts/update/wp-plugin-update.sh",
+    "composer-update": "taito exec:wordpress:${taito_env} /bin/bash /template/composer-update.sh",
     "sync-to": "echo TODO git pull --rebase && sync data/files to ${taito_env}",
     "sync-from": "echo TODO git pull --rebase && sync data/files from ${taito_env}",
     "sync-to:local": "echo Give environment",

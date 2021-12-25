@@ -4,13 +4,18 @@ This file has been copied from [WORDPRESS-TEMPLATE](https://github.com/TaitoUnit
 
 ## Prerequisites
 
-* [npm](https://github.com/npm/cli) that usually ships with [Node.js](https://nodejs.org/)
-* [Docker Compose](https://docs.docker.com/compose/install/)
-* [Taito CLI](https://taitounited.github.io/taito-cli/) (or see [TAITOLESS.md](TAITOLESS.md))
+- [npm](https://github.com/npm/cli) that usually ships with [Node.js](https://nodejs.org/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+- [Taito CLI](https://taitounited.github.io/taito-cli/) (or see [TAITOLESS.md](TAITOLESS.md))
 
 ## Local development environment
 
 Start your local development environment by running `taito develop`. Once the command starts to install libraries, you can leave it on the background while you continue with configuration. Once the application has started, open the web gui with `taito open wordpress`. You can open the admin gui with `taito open admin` and display initial admin credentials with `taito info`. If the application fails to start, run `taito trouble` to see troubleshooting. More information on local development you can find from [DEVELOPMENT.md](DEVELOPMENT.md).
+
+It is recommended to use [composer](https://getcomposer.org) to install WordPress plugins:
+
+- Move `wordpress/data/composer.json` file to `wordpress/data/wordpress/composer.json`, and add your plugins there.
+- Run `taito composer update` to install the plugins.
 
 ## Basic settings
 
@@ -19,7 +24,7 @@ Start your local development environment by running `taito develop`. Once the co
 3. Run `taito project apply`
 4. Commit and push changes
 
-* [ ] All done
+- [ ] All done
 
 ## Your first remote environment (stag)
 
@@ -69,7 +74,7 @@ You should use really strong passwords for your admin accounts. You can generate
 
 > TIP: You can copy local database to staging with `taito db dump:local dump.sql`, replace urls in dump.sql, `taito db import:stag dump.sql`, `rm dump.sql`.
 
-* [ ] All done
+- [ ] All done
 
 ## Configuring file persistence (for media, etc)
 
@@ -78,14 +83,15 @@ Persistent volume claim (PVC) is disabled by default. This means that all data m
 If you don't need to manage media files directly on the production website, you can manage media files with your locally running wordpress and save the media files in git. This way the media files will be under version control, and will be bundled inside the Docker container.
 
 You can also store media files to a storage bucket with one of the following wp-plugins. Note that bucket and service account are created automatically by Terraform on `taito env apply:ENV`. You can use dev environment resources also for local development (see [Creating a new server environment](#creating-a-new-server-environment)). You can open the bucket with `taito open storage:ENV` and the service account details with `taito open services:ENV`.
-  * [wp-stateless](https://wordpress.org/plugins/wp-stateless/) for Google Cloud. Settings: mode=`Stateless`, bucket=`wordpress-template-ENV`, bucket folder=`/media`, create a JSON key for `wordpress-template-ENV` service account from gcp console (`taito open services:ENV` -> Credentials -> Create service account key).
-  * [https://github.com/humanmade/S3-Uploads](S3-Uploads) for AWS.
+
+- [wp-stateless](https://wordpress.org/plugins/wp-stateless/) for Google Cloud. Settings: mode=`Stateless`, bucket=`wordpress-template-ENV`, bucket folder=`/media`, create a JSON key for `wordpress-template-ENV` service account from gcp console (`taito open services:ENV` -> Credentials -> Create service account key).
+- [https://github.com/humanmade/S3-Uploads](S3-Uploads) for AWS.
 
 Remember to delete all service account keys and other secrets from your local disk.
 
 > TIP: If you use a storage bucket or other external resources in your WordPress setup, but you do not need a the `dev` remote environment, you can create `dev` environment resources by running `taito env apply:dev terraform` and use those resources in local development. Or alternatively you can also use the `stag` environment resources directly also for local development (see [local development](DEVELOPMENT.md#local-development)).
 
-* [ ] All done
+- [ ] All done
 
 ---
 

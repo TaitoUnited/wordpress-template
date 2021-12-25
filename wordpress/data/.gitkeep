@@ -2,3 +2,24 @@
 !/wordpress/wp-content/cache
 /wordpress/wp-content/cache/*
 !/wordpress/wp-content/cache/index.html
+
+# Ignore all other themes except for the custom-app-theme
+!/wordpress/wp-content/themes
+/wordpress/wp-content/themes/*
+!/wordpress/wp-content/themes/custom-app-theme
+
+# Keeping uploads in git is not recommended
+!/wordpress/wp-content/uploads
+
+# Ignore all plugins except the ones that are whitelisted
+!/wordpress/wp-content/plugins
+/wordpress/wp-content/plugins/*
+
+# Plugin whitelist
+# NOTE: Whitelist plugins here
+
+# Ignore composer vendor folder
+/wordpress/vendor/
+
+# Container startup script init flag
+/wordpress/.user_scripts_initialized

@@ -51,6 +51,11 @@ Open admin GUI in browser:
 
     taito open admin
 
+Install plugins with composer:
+
+    # Add your plugins in `wordpress/data/wordpress/composer.json` and
+    # run `taito composer update` to install the plugins.
+
 Access local or staging database:
 
     taito db connect                          # access using a command-line tool
@@ -209,6 +214,8 @@ Migrate some data from staging to production:
 ## Upgrading
 
 ### WordPress and plugins
+
+> TODO: Add instructions for upgrading plugins installed with composer.
 
 Manually:
 

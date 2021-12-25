@@ -1,3 +1,26 @@
+# NOTE: remember to change the version number a few lines below as well
+FROM bitnami/wordpress:5.8.2 as builder
+
+USER root
+
+# OPTIONAL: Install nodejs
+# RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash -
+# RUN apt-get install -y nodejs
+
+COPY ./data /data-image
+
+# Install external wp plugins
+WORKDIR /data-image/wordpress
+RUN composer install
+
+# OPTIONAL: Build plugins
+# ...
+
+
+
+
+
+
 FROM bitnami/wordpress:5.8.2 as builder
 
 USER root
@@ -10,7 +33,7 @@ RUN apt-get -y update && apt-get -y install acl
 
 # Copy data on image
 RUN rm -r /bitnami/wordpress
-COPY ./data /bitnami
+COPY --from=builder /data-image /bitnami
 
 # Add read permissions for wordpress user
 RUN chmod -R 0550 /bitnami/wordpress
