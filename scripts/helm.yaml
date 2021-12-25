@@ -59,7 +59,10 @@ full-stack:
           rewriteTargetDisabled: true
           limitRpm: 3
       port: 8080
-      livenessPath: /wp-login.php
+      livenessCommand:
+        - sh
+        - -c
+        - 'curl -I 127.0.0.1:8080/wp-config.php | grep "200 OK"'
       # TODO: https://github.com/kubernetes/kubernetes/issues/27114
       livenessInitialDelay: 360
       readinessFailureThreshold: 36 # livenessInitialDelay / 10
