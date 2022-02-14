@@ -1,6 +1,7 @@
 {
   "name": "wordpress-template",
   "scripts": {
+    "prepare": "husky install",
     "install-clean": "rm -f wordpress/data/wordpress/.user_scripts_initialized || :",
     "install-ci": "echo '# No additional dependencies need to be installed in ci mode'",
     "install-dev": "echo '# No additional dependencies need to be installed'",
@@ -20,15 +21,11 @@
     "dep-check": "npm run _dep-check-script -- . ",
     "dep-check:root": "npm run _dep-check-script -- . ",
     "_dep-check-script": "sh -c 'echo --- ${0} --- && cd ${0} && (npm-check ${@} || :) && echo && echo \"NOTE: Many of the devDependencies and ~ references are actually in use even if reported unused. But all unused dependencies can usually be removed from package.json.\" && echo' ",
+    "husky:commit-msg": "commitlint --edit",
+    "husky:pre-commit": "if [ \"$taito_mode\" != 'ci' ]; then echo No pre-commit validations; fi",
+    "husky:pre-push": "if [ \"$taito_mode\" != 'ci' ]; then echo No pre-push validations; fi",
     "release-pre:prod": "semantic-release --dry-run",
     "release-post:prod": "semantic-release --no-ci"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "if [[ \"$taito_mode\" != 'ci' ]]; then echo No pre-commit validations; fi",
-      "pre-push": "if [[ \"$taito_mode\" != 'ci' ]]; then echo No pre-push validations; fi"
-    }
   },
   "commitlint": {
     "extends": [
