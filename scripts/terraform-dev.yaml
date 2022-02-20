@@ -3,7 +3,8 @@
 settings:
   services:
     bucket:
-      cors:
-        - domain: https://${taito_domain}
-        - domain: http://localhost:4635
+      corsRules:
+        - allowedOrigins:
+            - https://${taito_domain}
+            - http://localhost:4635
 # END
