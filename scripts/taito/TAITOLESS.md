@@ -4,16 +4,16 @@ This file has been copied from [WORDPRESS-TEMPLATE](https://github.com/TaitoUnit
 
 Table of contents:
 
-* [Prerequisites](#prerequisites)
-* [Quick start](#quick-start)
-* [Testing](#testing)
-* [Configuration](##onfiguration)
+- [Prerequisites](#prerequisites)
+- [Quick start](#quick-start)
+- [Testing](#testing)
+- [Configuration](##onfiguration)
 
 ## Prerequisites
 
-* [npm](https://github.com/npm/cli) that usually ships with [Node.js](https://nodejs.org/)
-* [Docker Compose](https://docs.docker.com/compose/install/)
-* [MySQL client](https://dev.mysql.com/doc/refman/8.0/en/programs-client.html)
+- [Node.js (LTS version)](https://nodejs.org/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+- [MySQL client](https://dev.mysql.com/doc/refman/8.0/en/programs-client.html)
 
 ## Quick start
 
@@ -55,14 +55,14 @@ Instructions defined in [CONFIGURATION.md](CONFIGURATION.md) apply. You just nee
 
 ### Creating an environment
 
-* Run taito-config.sh to set the environment variables for the environment in question (dev, test, stag, canary, or prod):
-    ```
-    export taito_target_env=dev
-    . taito-config.sh
-    ```
-* Run terraform scripts that are located at `scripts/terraform/`. Use `scripts/terraform/common/backend.tf` as backend, if you want to store terraform state on git. Note that the terraform scripts assume that a cloud provider project defined by `taito_resource_namespace` and `taito_resource_namespace_id` already exists and Terraform is allowed to create resources for that project.
-* (TODO: create database with terraform instead): Create a relational database (or databases) for an environment e.g. by using cloud provider web UI. See `db_*` settings in `scripts/taito/main.sh` for database definitions. Create two user accounts for the database: `FULL_STACK_TEMPLATE_ENV` for deploying the database migrations (broad user rights) and `FULL_STACK_TEMPLATE_ENV_app` for the application (concise user rights). Configure also database extensions if required by the application (see `database/db.sql`).
-* Set Kubernetes secret values with `kubectl`. The secrets are defined by `taito_secrets` in `scripts/taito/project.sh`, and they are referenced in `scripts/helm*.yaml` files.
+- Run taito-config.sh to set the environment variables for the environment in question (dev, test, stag, canary, or prod):
+  ```
+  export taito_target_env=dev
+  . taito-config.sh
+  ```
+- Run terraform scripts that are located at `scripts/terraform/`. Use `scripts/terraform/common/backend.tf` as backend, if you want to store terraform state on git. Note that the terraform scripts assume that a cloud provider project defined by `taito_resource_namespace` and `taito_resource_namespace_id` already exists and Terraform is allowed to create resources for that project.
+- (TODO: create database with terraform instead): Create a relational database (or databases) for an environment e.g. by using cloud provider web UI. See `db_*` settings in `scripts/taito/main.sh` for database definitions. Create two user accounts for the database: `FULL_STACK_TEMPLATE_ENV` for deploying the database migrations (broad user rights) and `FULL_STACK_TEMPLATE_ENV_app` for the application (concise user rights). Configure also database extensions if required by the application (see `database/db.sql`).
+- Set Kubernetes secret values with `kubectl`. The secrets are defined by `taito_secrets` in `scripts/taito/project.sh`, and they are referenced in `scripts/helm*.yaml` files.
 
 ### Setting up CI/CD
 
