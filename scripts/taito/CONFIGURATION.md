@@ -4,7 +4,7 @@ This file has been copied from [WORDPRESS-TEMPLATE](https://github.com/TaitoUnit
 
 ## Prerequisites
 
-- [npm](https://github.com/npm/cli) that usually ships with [Node.js](https://nodejs.org/)
+- [Node.js (LTS version)](https://nodejs.org/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 - [Taito CLI](https://taitounited.github.io/taito-cli/) (or see [TAITOLESS.md](TAITOLESS.md))
 

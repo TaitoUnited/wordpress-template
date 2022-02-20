@@ -14,7 +14,7 @@ Table of contents:
 
 ## Prerequisites
 
-- [node.js](https://nodejs.org/)
+- [Node.js (LTS version)](https://nodejs.org/)
 - [docker-compose](https://docs.docker.com/compose/install/)
 - [Taito CLI](https://taitounited.github.io/taito-cli/) (or see [TAITOLESS.md](TAITOLESS.md))
 
