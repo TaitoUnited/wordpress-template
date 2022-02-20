@@ -7,10 +7,10 @@ global:
   publicPort: 443
   logProvider: ${taito_logging_provider}
   logFormat: ${taito_logging_format}
-  logLevel: info    # trace, debug, info, warn, error, fatal
+  logLevel: info # trace, debug, info, warn, error, fatal
   registry: ${taito_container_registry}
-  imagePullPolicy: ''
-  debug: 'false'
+  imagePullPolicy: ""
+  debug: "false"
 
 full-stack:
   networkPolicyEnabled: true
@@ -77,16 +77,16 @@ full-stack:
           volumePath: wordpress
           readOnly: false
       db: # For old gcp environments
-         useProxy: ${gcp_db_proxy_enabled} # For old gcp environments
-         instance: ${taito_zone}:${taito_provider_region}:${db_database_instance} # For old gcp environments
-         port: ${db_database_real_port} # For old gcp environments
-         proxySecret: ${taito_provider_db_proxy_secret} # For old gcp environments
+        useProxy: ${gcp_db_proxy_enabled} # For old gcp environments
+        instance: ${taito_zone}:${taito_provider_region}:${db_database_instance} # For old gcp environments
+        port: ${db_database_real_port} # For old gcp environments
+        proxySecret: ${taito_provider_db_proxy_secret} # For old gcp environments
       secretEnv:
         WORDPRESS_DATABASE_PASSWORD: ${db_database_mgr_secret}
         WORDPRESS_PASSWORD: ${taito_project}-${taito_env}-admin.initialpassword
       env:
-        WORDPRESS_DATABASE_HOST: '${db_database_real_host}'
-        WORDPRESS_DATABASE_PORT_NUMBER: '${db_database_real_port}'
+        WORDPRESS_DATABASE_HOST: "${db_database_real_host}"
+        WORDPRESS_DATABASE_PORT_NUMBER: "${db_database_real_port}"
         TODO_MARIADB_SSL_ENABLED: "${db_database_ssl_enabled}" # TODO: require ssl
         WORDPRESS_DATABASE_NAME: ${db_database_name}
         WORDPRESS_DATABASE_USER: ${db_database_mgr_username}

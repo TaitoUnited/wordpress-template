@@ -6,5 +6,4 @@ settings:
       cors:
         - domain: https://${taito_domain}
         - domain: http://localhost:4635
-
 # END

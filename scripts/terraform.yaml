@@ -31,7 +31,7 @@ settings:
       storageClass: ${taito_default_storage_class}
       # Cors
       corsRules:
-        - allowedOrigins: [ "https://${taito_domain}" ]
+        - allowedOrigins: ["https://${taito_domain}"]
       # Object lifecycle
       versioning: true
       versioningRetainDays: ${taito_default_storage_days}
@@ -43,5 +43,4 @@ settings:
       objectAdmins:
         - id: ${taito_project}-${taito_env}-wordpress
       objectViewers:
-
 # END
