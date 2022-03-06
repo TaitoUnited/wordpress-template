@@ -1,5 +1,5 @@
 # NOTE: remember to change the version number a few lines below as well
-FROM bitnami/wordpress:5.8.3 as builder
+FROM bitnami/wordpress:5.9.1 as builder
 
 USER root
 
@@ -21,7 +21,7 @@ RUN composer install
 
 
 
-FROM bitnami/wordpress:5.8.3
+FROM bitnami/wordpress:5.9.1
 
 USER root
 
