@@ -31,7 +31,9 @@ case $taito_provider in
       storage_name=$(env | grep "^st_${bucket}_name" | head -n1 | sed 's/.*=//')
       storage_url="https://portal.azure.com/#blade/Microsoft_Azure_Storage/ContainerMenuBlade/overview/storageAccountId/%2Fsubscriptions%2F${taito_provider_billing_account_id}%2FresourceGroups%2F${taito_resource_namespace}%2Fproviders%2FMicrosoft.Storage%2FstorageAccounts%2F${storage_name//-/}/path/${storage_name}"
       if [[ $taito_env == "local" ]]; then
-        storage_url="$taito_app_url/minio/$bucket"
+        storage_url="$taito_storage_url/object-browser"
+        # TODO: minio does not currently redirect to login page
+        # storage_url="$taito_storage_url/object-browser/$bucket"
       fi
 
       link_urls="
@@ -50,7 +52,7 @@ case $taito_provider in
     "
 
     # Secrets
-    taito_secret_resource_path="arn:aws:ssm:${taito_provider_region}:${taito_provider_org_id}:parameter/${taito_zone}/${taito_namespace}"
+    taito_secret_resource_path="arn:aws:secretsmanager:${taito_provider_region}:${taito_provider_org_id}:secret:/${taito_zone}/${taito_namespace}"
     taito_secret_name_path="/${taito_zone}/${taito_namespace}"
 
     # Kubernetes
@@ -62,7 +64,9 @@ case $taito_provider in
       storage_name=$(env | grep '^st_bucket_name' | head -n1 | sed 's/.*=//')
       storage_url="https://s3.console.aws.amazon.com/s3/buckets/${storage_name}/?region=${taito_provider_region}&tab=overview"
       if [[ $taito_env == "local" ]]; then
-        storage_url="$taito_app_url/minio/$bucket"
+        storage_url="$taito_storage_url/object-browser"
+        # TODO: minio does not currently redirect to login page
+        # storage_url="$taito_storage_url/object-browser/$bucket"
       fi
 
       link_urls="
@@ -114,7 +118,9 @@ case $taito_provider in
       storage_name=$(env | grep '^st_bucket_name' | head -n1 | sed 's/.*=//')
       storage_url="https://console.cloud.google.com/storage/browser/${storage_name}?project=$taito_resource_namespace_id"
       if [[ $taito_env == "local" ]]; then
-        storage_url="$taito_app_url/minio/$bucket"
+        storage_url="$taito_storage_url/object-browser"
+        # TODO: minio does not currently redirect to login page
+        # storage_url="$taito_storage_url/object-browser/$bucket"
       fi
 
       link_urls="
@@ -426,7 +432,7 @@ if [[ ${taito_vpn_enabled} != "true" ]] &&
   ssh_forward_for_db="${ssh_db_proxy}"
 
   ssh_db_proxy_enabled=true
-  if [[ ${taito_provider} == "aws" ]]; then
+  if [[ ${taito_ci_provider} == "aws" ]]; then
     # CI/CD has direct VPC access on AWS
     ci_disable_db_proxy="true"
   fi
