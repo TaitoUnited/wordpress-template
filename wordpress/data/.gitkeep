@@ -9,9 +9,10 @@
 !/wordpress/wp-content/themes/custom-app-theme
 
 # Keeping uploads in git is not recommended
-!/wordpress/wp-content/uploads
+/wordpress/wp-content/uploads
 
 # Ignore all plugins except the ones that are whitelisted
+# as most plugins are installed with composer.
 !/wordpress/wp-content/plugins
 /wordpress/wp-content/plugins/*
 
