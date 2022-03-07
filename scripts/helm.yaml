@@ -53,7 +53,7 @@ full-stack:
     wordpress:
       # TODO: Block xmlrpc.php calls by default (currently hard coded in helm chart)
       paths:
-        - path:
+        - path: /
           clientMaxBodySize: 5m
         - path: /wp-login.php
           rewriteTargetDisabled: true

@@ -22,7 +22,7 @@ settings:
 
   services:
     wordpress:
-      uptimePath: /docs
+      uptimePath: /
 
     bucket:
       type: bucket
@@ -33,7 +33,7 @@ settings:
       corsRules:
         - allowedOrigins: ["https://${taito_domain}"]
       # Object lifecycle
-      versioning: true
+      versioningEnabled: true
       versioningRetainDays: ${taito_default_storage_days}
       # Backup (TODO: implement)
       backupRetainDays: ${taito_default_storage_backup_days}
