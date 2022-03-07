@@ -17,6 +17,24 @@ It is recommended to use [composer](https://getcomposer.org) to install WordPres
 - Move `wordpress/data/composer.json` file to `wordpress/data/wordpress/composer.json`, and add your plugins there.
 - Run `taito composer update` to install the plugins.
 
+File `wordpress/data/wordpress/wp-config.php` was created when you started wordpress the first time. You should modify the file so that database details are read from environment variables. It is recommended (but not mandatory) to do the same also for **Authentication unique keys and salts** as this way you can read them from secrets and avoid having the same keys/salts on every environment. For example:
+
+```
+/** The name of the database for WordPress */
+define( 'DB_NAME', getenv( 'WORDPRESS_DATABASE_NAME' ) );
+/** Database username */
+define( 'DB_USER', getenv( 'WORDPRESS_DATABASE_USER' ) );
+/** Database password */
+define( 'DB_PASSWORD', getenv( 'WORDPRESS_DATABASE_PASSWORD' ) );
+/** Database hostname */
+define( 'DB_HOST', getenv( 'WORDPRESS_DATABASE_HOST' ) . ':' . getenv( 'WORDPRESS_DATABASE_PORT_NUMBER' ) );
+
+/**#@+
+ * Authentication unique keys and salts.
+ ...
+ ...
+```
+
 ## Basic settings
 
 1. Run `taito open conventions` in the project directory to see organization specific settings that you should configure for your git repository. At least you should set `dev` as the default branch to avoid people using master branch for development by accident.
