@@ -5,4 +5,5 @@ USER root
 COPY *.sh /template/
 RUN /template/setup.sh
 
-USER 1001
+ARG USER_UID=1001
+USER "${USER_UID}"
