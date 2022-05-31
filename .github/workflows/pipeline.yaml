@@ -24,7 +24,7 @@ jobs:
         taito_image: ${_TEMPLATE_DEFAULT_TAITO_IMAGE}
         taito_ci_phases:
         IMAGE_TAG: ${{ github.sha }}
-        DOCKER_HOST_PATH: /__w/wordpress-template/wordpress-template
+        DOCKER_HOST_PATH: /home/runner/work/wordpress-template/wordpress-template
         AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
         AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
     steps:
