@@ -40,12 +40,12 @@ RUN chmod -R 0550 /bitnami/wordpress
 RUN chown -R 1001:1001 /bitnami/wordpress
 
 # Give wordpress write access to uploads directory
-RUN mkdir -p /bitnami/wordpress/wordpress/wp-content/uploads
-RUN chmod -R 0770 /bitnami/wordpress/wordpress/wp-content/uploads
-RUN chown -R 1001:1001 /bitnami/wordpress/wordpress/wp-content/uploads
+RUN mkdir -p /bitnami/wordpress/wp-content/uploads
+RUN chmod -R 0770 /bitnami/wordpress/wp-content/uploads
+RUN chown -R 1001:1001 /bitnami/wordpress/wp-content/uploads
 
 # TODO: remove this (hack to go around montly upload folder created by root)
-RUN chmod g+ws /bitnami/wordpress/wordpress/wp-content/uploads && \
-    setfacl -dm u::rwx,g::rwx,o::rx /bitnami/wordpress/wordpress/wp-content/uploads
+RUN chmod g+ws /bitnami/wordpress/wp-content/uploads && \
+    setfacl -dm u::rwx,g::rwx,o::rx /bitnami/wordpress/wp-content/uploads
 
 USER 1001
